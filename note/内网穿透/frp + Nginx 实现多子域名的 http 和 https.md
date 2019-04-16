@@ -119,8 +119,8 @@ server {
     # 泛域名 http
     server_name  *.example.com;
 	
-	# http 强转 https
-	rewrite ^(.*)$  https://$host$1 permanent;
+    # http 强转 https
+    rewrite ^(.*)$  https://$host$1 permanent;
 
     # Load configuration files for the default server block.
     include /etc/nginx/default.d/*.conf;
@@ -139,27 +139,27 @@ server {
 
 server {
 
-	# 对于我们而言，必须是泛域名证书
-    server_name *.sofragrant.com;
+    # 多子域名，需要是泛域名证书
+    server_name *.example.com;
     
     listen 443 http2 ssl;
     ssl on;
     
     # 存放域名证书位置
-	ssl_certificate          /etc/letsencrypt/live/sofragrant.com/fullchain.pem;
-    ssl_certificate_key      /etc/letsencrypt/live/sofragrant.com/privkey.pem;
-    ssl_trusted_certificate  /etc/letsencrypt/live/sofragrant.com/chain.pem;
+    ssl_certificate          /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key      /etc/letsencrypt/live/example.com/privkey.pem;
+    ssl_trusted_certificate  /etc/letsencrypt/live/example.com/chain.pem;
 
     location / {
     
       # DNS解析地址，用的谷歌的，你也可以换成别家的
-	  resolver 8.8.8.8;
+      resolver 8.8.8.8;
 	  
-	  # 相当于向 frps 请求 http://(pn码).example.com:8080
+      # 相当于向 frps 请求 http://$ID.example.com:8080
       proxy_pass http://$server_name:8080;
       
       # 剩下的不要动，直接复制
-	  proxy_set_header Host $host;
+      proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header REMOTE-HOST $remote_addr;
