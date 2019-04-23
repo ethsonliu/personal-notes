@@ -1,17 +1,21 @@
-### 1 : 安装 VMware Tools
+### 安装 VMware Tools
 
 ```
 tar -xzvf  VMwareTools-10.0.6-3595377.tar.gz
 sudo ./wmware-install.pl
 ```
 
-### 2 ：删掉不必要应用（仅个人而言）
+### 删掉不必要应用（仅个人而言）
 
 ```
 sudo apt-get remove thunderbird empathy simple-scan gnome-mahjongg aisleriot gnome-mines gnome-sudoku onboard
 ```
 
-### 2 : 安装 gnome-tweak-tool
+### 改变源
+
+【设置】-【软件更新】，选择阿里云镜像站点
+
+### 安装 gnome-tweak-tool
 
 ```
 sudo apt-get install gnome-tweak-tool
@@ -24,7 +28,7 @@ sudo apt-get install gnome-shell-extensions
 # 4: 重启
 ```
 
-### 3 ：图标主题
+### 图标主题
 
 开源地址：[https://github.com/PapirusDevelopmentTeam/papirus-icon-theme](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
 
@@ -32,13 +36,13 @@ sudo apt-get install gnome-shell-extensions
 
 再到第 2 步安装的 gnome-tweak-tool 中启用。
 
-### 4 ：桌面主题
+### 桌面主题
 
  - [arc-theme](https://github.com/NicoHood/arc-theme)
  - [materia-theme](https://github.com/nana-4/materia-theme)
  - [adapta-gtk-theme](https://github.com/adapta-project/adapta-gtk-theme)
 
-### 5 ：字体
+### 字体
 
 下载 Consolas 字体：https://github.com/Hapoa/_Repository/blob/master/YaHeiConsolas.tar.gz
 
@@ -51,7 +55,7 @@ cd /usr/share/fonts/vista/
 sudo mkfontscale && sudo mkfontdir && sudo fc-cache -fv
 ```
 
-### 6 ：安装 Qt
+### 安装 Qt
 
 原文链接：https://wiki.qt.io/Install_Qt_5_on_Ubuntu
 
