@@ -2,7 +2,6 @@
 
 ## 一：实现 http
 
-![](https://github.com/Hapoa/personal-notes/blob/master/image/001.png)
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/image/001.png)
 
 在局域网内有大量设备，里边各运行一个 web 服务，现在希望如果用户在外地，可以用手机访问这些设备的 web 服务，自然用到内网穿透，此处选择 frp。
