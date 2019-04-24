@@ -109,7 +109,7 @@ chmod a+x certbot-auto
 
 到了这一步就成功了，你的证书文件都放在一个目录下，它上面已经说了。
 
-然后最后一步，修改文件`/etc/gninx/conf.d/default.conf`，可以直接复制进去（这个文件只要被更新，都需要重新加载配置文件，命令是`nginx -s reload`），
+然后最后一步，修改文件`/etc/inx/conf.d/default.conf`，可以直接复制进去（这个文件只要被更新，都需要重新加载配置文件，命令是`nginx -s reload`），
 
 ```
 server {
