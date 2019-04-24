@@ -2,7 +2,7 @@
 
 ## 一：实现 http
 
-![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/image/001.png)
+![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/001.png)
 
 在局域网内有大量设备，里边各运行一个 web 服务，现在希望如果用户在外地，可以用手机访问这些设备的 web 服务，自然用到内网穿透，此处选择 frp。
 
@@ -39,7 +39,7 @@ subdomain = $ID
 
 ## 二：实现 https
 
-![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/image/002.png)
+![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/002.png)
 
 现在又要求，启用访问加密，自然想到 https。
 
@@ -101,11 +101,11 @@ chmod a+x certbot-auto
 ./certbot-auto --server https://acme-v02.api.letsencrypt.org/directory -d "*.example.com" --manual --preferred-challenges dns-01 certonly
 ```
 
-![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/image/003.png)
+![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/003.png)
 
 要域名解析那边添加一条 TXT 记录，确认生效的命令是，`dig _acme-challenge.example.com txt`，如果报错没有`dig`命令，运行以下命令进行安装`yum install bind-utils`。如果成功再继续上面的步骤，不成功就再等等，等解析生效。
 
-![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/image/004.png)
+![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/004.png)
 
 到了这一步就成功了，你的证书文件都放在一个目录下，它上面已经说了。
 
