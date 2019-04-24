@@ -15,6 +15,13 @@ sudo apt-get remove thunderbird empathy simple-scan gnome-mahjongg aisleriot gno
 
 【设置】-【软件更新】，选择阿里云镜像站点
 
+### 右键当前目录打开终端
+
+```
+sudo apt-get install nautilus-open-terminal
+nautilus -q # 使插件生效，如果还是不行的重启
+```
+
 ### 安装 gnome-tweak-tool
 
 ```
