@@ -35,6 +35,8 @@ local_port = 80
 subdomain = $ID
 ```
 
+frp的启动命令分别为`./frps -c ./frps.ini`和`./frpc -c ./frpc.ini`，后台启动命令为`nohup ./frps -c frps.ini >/dev/null 2>&1 &`。
+
 然后网页端访问`http://$ID.example.com:8080`即可访问内网的 web 服务。
 
 ## 二：实现 https
