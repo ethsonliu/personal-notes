@@ -17,7 +17,7 @@ ps -ef
 top -p 2913
 
 # ps 指令
-ps -aux | grep kafka
+ps -aux | grep frps
 # 显示如下，
 # root      4340  0.0  1.1 113744 11984 pts/0    Sl   18:11   0:00 ./frps -c ./frps.ini
 # root      4375  0.0  0.0 112708   980 pts/0    R+   18:38   0:00 grep --color=auto frps
