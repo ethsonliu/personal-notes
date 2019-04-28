@@ -58,8 +58,6 @@
     │  main.cpp
     │  version.h
     │  common.h
+    |  change_log.md
     ```
-
-    
-
-    
+17. 程序都是有发布说明的，命名为`change_log.md`
