@@ -178,3 +178,5 @@ Nginx 重新加载配置文件后，先启动公网上的 frps，再启动位于
 
 - [申请Let's Encrypt通配符HTTPS证书](https://my.oschina.net/kimver/blog/1634575)
 - [Nginx + Frp + Let'sEncrypt 泛域名证书](http://morecoder.com/article/1173275.html)
+- [原文：记录一次迁移wss WebSocket的事故](https://blog.csdn.net/qq_28804275/article/details/80891921)
+- [转载：记录一次迁移wss WebSocket的事故](https://blog.csdn.net/hfismyangel/article/details/82758629)
