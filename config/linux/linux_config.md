@@ -21,8 +21,10 @@ nautilus -q # 使插件生效，如果还是不行的重启
 ### 安装 Unity Tweak Tool
 
 ```
+# Ubuntu 14.04
 sudo apt-get install unity-tweak-tool
 
+# Ubuntu 18.04
 # sudo apt-get install gnome-tweak-tool
 # sudo apt-get install gnome-shell-extensions
 
