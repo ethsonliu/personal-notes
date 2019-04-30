@@ -22,6 +22,15 @@ nautilus -q # 使插件生效，如果还是不行的重启
 
 ```
 sudo apt-get install unity-tweak-tool
+
+# sudo apt-get install gnome-tweak-tool
+# sudo apt-get install gnome-shell-extensions
+
+# 安装 dash-to-panel
+# 1: https://extensions.gnome.org/extension/1160/dash-to-panel/
+# 2: 解压至 home
+# 3: CTRL + H, 打开隐藏文件，放至 .local/share/gnome-shell/extensions/
+# 4: 重启
 ```
 
 ### 图标主题
