@@ -1,14 +1,10 @@
+以下操作均在 Ubuntu 14.04 上。
+
 ### 安装 VMware Tools
 
 ```
 tar -xzvf  VMwareTools-10.0.6-3595377.tar.gz
 sudo ./wmware-install.pl
-```
-
-### 删掉不必要应用（仅个人而言）
-
-```
-sudo apt-get remove thunderbird empathy simple-scan gnome-mahjongg aisleriot gnome-mines gnome-sudoku onboard
 ```
 
 ### 改变源
@@ -22,17 +18,10 @@ sudo apt-get install nautilus-open-terminal
 nautilus -q # 使插件生效，如果还是不行的重启
 ```
 
-### 安装 gnome-tweak-tool
+### 安装 Unity Tweak Tool
 
 ```
-sudo apt-get install gnome-tweak-tool
-sudo apt-get install gnome-shell-extensions
-
-# 安装 dash-to-panel
-# 1: https://extensions.gnome.org/extension/1160/dash-to-panel/
-# 2: 解压至 home
-# 3: CTRL + H, 打开隐藏文件，放至 .local/share/gnome-shell/extensions/
-# 4: 重启
+sudo apt-get install unity-tweak-tool
 ```
 
 ### 图标主题
@@ -41,7 +30,7 @@ sudo apt-get install gnome-shell-extensions
 
 下载下来解压，将 `Papirus` 几个目录，复制到`/usr/share/icons/`下。
 
-再到第 2 步安装的 gnome-tweak-tool 中启用。
+再到第 2 步安装的 unity-tweak-tool 中启用。
 
 ### 桌面主题
 
@@ -51,7 +40,7 @@ sudo apt-get install gnome-shell-extensions
 
 ### 字体
 
-下载 Consolas 字体：https://github.com/Hapoa/_Repository/blob/master/YaHeiConsolas.tar.gz
+下载 Consolas 字体：https://github.com/Hapoa/personal-notes/blob/master/config/linux/YaHeiConsolas.tar.gz
 
 ```
 tar -zxvf YaHeiConsolas.tar.gz
