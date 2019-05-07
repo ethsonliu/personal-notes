@@ -37,15 +37,14 @@
     #   include <QString>
     #endif
     
-    #include <plog/Log.h>
-    
-    #include <cassert>
+    #include <plog/Log.h> // for log
+    #include <cassert> // for function assert
     
     #define UNUSED(e) (void)e
     
     #endif /* HC_SRC_CONFIG_H */
     ```
-
+    
 16. 在 14 和 15 的基础上，文件结构最好将它们从其他正常`h/cpp`分离开，和`main.cpp`放在一起，即大致如下，
 
     ```
@@ -60,4 +59,16 @@
     │  common.h
     |  change_log.md
     ```
+    
 17. 程序都是有发布说明的，命名为`change_log.md`
+
+18. 桌面应用程序因为牵扯到屏幕适配，目前的做法是在运行前获取屏幕大小，并得到比例，将这个比例放在`common.h`中，例如，
+
+    ```
+    // common.h
+    
+    extern float gRatio;
+    #define FIT(n) static_cast<int>(((n) * gRatio))
+    ```
+
+    
