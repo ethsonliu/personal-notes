@@ -18,7 +18,7 @@
 
 10. 对于静态存储周期（全局、静态，包括类内静态和函数内静态）的变量，其风格如下，全局加前缀`g`，静态加前缀's'，例如`int gDaysInAWeek = 7`，`static int sDaysInAWeek = 7`。
 
-11. 如果一个常量想多个单元引用的话，需要显式以 `extern` 声明，`extern const int gcDaysInAWeek = 7;`，因为定义于全局作用域的`const`自带`static`属性
+11. 如果一个常量想多个单元引用的话，需要显式以 `extern` 声明，`extern const int gcDaysInAWeek = 7;`，因为定义于全局作用域的`const`自带`static`属性，也就是说一个常量是可以定义于头文件的。
 
 12. 如果一个常量只是本单元使用，则直接`const int scDaysInAWeek = 7;` 或 `static const int scDaysInAWeek = 7;`也可。
 
