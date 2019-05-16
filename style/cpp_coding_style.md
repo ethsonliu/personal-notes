@@ -16,13 +16,13 @@
 
 9. 注释风格遵循 Doxygen，类内、函数体内等注释使用`/*    */`
 
-10. 对于静态存储周期（全局、静态，包括类内静态和函数内静态）的变量，其风格如下，全局加前缀`g`，静态加前缀's'，例如`int gDaysInAWeek = 7`，`static int sDaysInAWeek = 7`。
+10. 对于静态存储周期（全局、静态，包括类内静态和函数内静态）的变量，全局加前缀`g`，例如`int gDaysInAWeek = 7`，静态变量和普通变量一样，`static int daysInAWeek = 7`。注意，面向对象编程中，你几乎用不到全局变量，请考虑把它改为类内静态变量，例如`int MYClass::daysInAWeek = 7;`
 
-11. 常量字母都是大写，不管其存储周期为何
+11. 常量都大写，不管其存储周期为何，`const int DAYS_IN_A_WEEK = 7;`
 
 12. 如果一个常量想多个单元引用的话，需要显式以 `extern` 声明，`extern const int DAYS_IN_A_WEEK = 7;`，因为定义于全局作用域的常量自带`static`属性，也就是说一个常量是可以定义于头文件的
 
-13. 关于程序的版本（用字符串或者数字表示），放在一个`version.h`中定义，该文件只放版本的宏，宏的名称为`$appname_VERSION`。
+13. 关于程序的版本（用字符串或者数字表示），放在一个`version.h`中定义，该文件只放版本的宏，宏的名称为`$appname_VERSION`
 
     ```c++
     const char* const APPNAME_VERSION = "1.6";
