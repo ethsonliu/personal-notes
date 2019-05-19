@@ -24,14 +24,13 @@
 
 13. 关于程序的版本（用字符串或者数字表示），放在一个`version.h`中定义，该文件只放版本的宏，宏的名称为`$appname_VERSION`
 
-    ```c++
-    const char* const APPNAME_VERSION = "1.6";
-    ```
-
+```c++
+const char* const APPNAME_VERSION = "1.6";
+```
 
 14. 考虑到日志，和一些几乎每个文件都需要的宏，或者头文件，可以统一放在`global.h`，比如，
 
-   ```
+```c++
 #ifndef HC_SRC_GLOBAL_H
 #define HC_SRC_GLOBAL_H
 
@@ -46,11 +45,11 @@
 #define UNUSED(e) (void)e
    
 #endif /* HC_SRC_GLOBAL_H */
-   ```
+```
 
 15. 文件结构最好将它们从其他正常`h/cpp`分离开，和`main.cpp`放在一起，即大致如下，
 
-   ```
+```
 ├─src
 │  └─folder1
 │  └─folder1
@@ -61,17 +60,16 @@
 |  global.h
 |  global.cpp # 如果你的程序需要自定义一些类如标准 algorithm 内的函数，可以放在这里，比如字符串割
 |  change_log.md
-   ```
+```
 
 16. 程序都是有发布说明的，命名为`change_log.md`
 
 17. 桌面应用程序因为牵扯到屏幕适配，目前的做法是在运行前获取屏幕大小，并得到比例，将这个比例放在`global.h`中，例如，
 
-   ```
+```
 // global.h
 
 #include "src/resolution.h" /* 屏幕适配方案 */
 #define FIT(n) Resolution::fit(n) /* fit 函数实现了适配比与 n 的乘积，并返回一个 int */
-   ```
-
+```
    
