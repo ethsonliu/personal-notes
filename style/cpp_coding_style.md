@@ -71,7 +71,7 @@
 // global.h
 
 #include "src/resolution.h" /* 屏幕适配方案 */
-#define FIT(n) Resolution::fit(n) /* fit 函数实现了适配比与 n 的乘机，并返回一个 int */
+#define FIT(n) Resolution::fit(n) /* fit 函数实现了适配比与 n 的乘积，并返回一个 int */
    ```
 
    
