@@ -10,9 +10,9 @@
 
 6. 尽可能以 `sizeof(varname)` 代替 `sizeof(type)`
 
-7. 枚举命名`enum class ShapeName { eHorLine, eVerLine, eWidth };`
+7. 枚举命名`enum class ShapeName { HorLine, VerLine, Width };`
 
-8. 函数名，`getName()`和`setName()`，一一对应
+8. 函数名，`getName()`和`setName()`，一一对应，set和get的内容应该和你要修改的变量名字一致，函数名长点没事
 
 9. 注释风格遵循 Doxygen，类内、函数体内等注释使用`/*    */`
 
