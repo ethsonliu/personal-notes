@@ -72,4 +72,5 @@ const char* const APPNAME_VERSION = "1.6";
 #include "src/resolution.h" /* 屏幕适配方案 */
 #define FIT(n) Resolution::fit(n) /* fit 函数实现了适配比与 n 的乘积，并返回一个 int */
 ```
-   
+
+18. 若是 Qt 程序，接口全用 Qt 自己提供的，以保证兼容性。若不是 Qt 程序，可以使用 CMake，需要注意`assert`的使用，尤其是在`release`模式下，对宏`NDEBUG`的定义
