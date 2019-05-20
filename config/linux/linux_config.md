@@ -76,7 +76,8 @@ sudo apt-get install build-essential
 # 安装 generic font configuration library - runtime
 sudo apt-get install libfontconfig1
 
-# 安装 OpenGL
+# 安装 OpenGL (需要一条一条执行)
 sudo apt-get install mesa-common-dev
+
 sudo apt-get install libglu1-mesa-dev -y
 ```
