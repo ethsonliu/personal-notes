@@ -16,7 +16,7 @@ OpenSSL库的安装
 
 配置
 
-`./configure或./config`
+`./onfigure或./config`
 
 编译
 
