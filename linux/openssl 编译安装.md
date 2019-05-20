@@ -4,10 +4,6 @@ OpenSSL库的安装
 
 下载页面：http://www.openssl.org/source/
 
-选择最新版本下载
-
-<http://www.openssl.org/source/openssl-1.0.1s.tar.gz>
-
 解压：
 
 `tar –zxvf openssl-1.0.1s.tar.gz，解压目录为：openssl-1.0.1s`
