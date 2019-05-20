@@ -24,4 +24,4 @@ test
 
 #### 2. third_party 目录安排
 
-对于`third_party`下的库的目录安排，应当将`PWD/third_party`目录放进工程`path`中，包含库的头文件时，需指定库的名称，以防止库文件名冲突，例如`#include <cJOSN/cJSON.h>`。另外，里边放的库的名称该是大写就大写。
+对于`third_party`下的库的目录安排，应当将`PWD/third_party`目录放进工程`path`中，包含库的头文件时，需指定库的名称，以防止库文件名冲突，例如`#include <cJOSN/cJSON.h>`。另外，里边放的库的名称该是大写就大写。各个库包含的内容只是需要`include`的头文件，不包括实现文件、编译好的库文件等等。
