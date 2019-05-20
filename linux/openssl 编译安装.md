@@ -24,6 +24,6 @@ OpenSSL库的安装
 
 安装
 
-`make install`，安装在`/usr/local/`和`/usr/local/bin`和`/usr/local/include`
+`sudo make install`，安装在`/usr/local/`和`/usr/local/bin`和`/usr/local/include`
 
 参考：https://skynineblog.wordpress.com/2016/04/08/linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85-openssl%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95/
