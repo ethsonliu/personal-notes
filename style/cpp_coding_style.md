@@ -16,6 +16,32 @@
 
 9. 注释风格遵循 Doxygen，类内、函数体内等注释使用`/*    */`
 
+```c++
+/**
+ * @fn modify_value
+ *
+ * This is a function.
+ *
+ * @param[in]  val      Value calculations are based off.
+ * @param[out] variable Function output is written to this variable.
+ *
+ * @return 对返回值的描述，或者用下面的
+ * @retval 0 失败
+ * @retval 1 成功
+ *
+ * @exception 对异常的描述
+ * @note       注解
+ * @attention  注意
+ */
+int modify_value(int val, int *variable)
+{
+    val *= 5;
+    int working = val % 44;
+    *variable = working;
+    return 1;
+}
+```
+
 10. 对于静态存储周期（全局、静态，包括类内静态和函数内静态）的变量，全局加前缀`g`，例如`int gDaysInAWeek = 7`，静态变量和普通变量一样，`static int daysInAWeek = 7`。注意，面向对象编程中，你几乎用不到全局变量，请考虑把它改为类内静态变量，例如`int MYClass::daysInAWeek = 7;`
 
 11. 常量都大写，不管其存储周期为何，`const int DAYS_IN_A_WEEK = 7;`
