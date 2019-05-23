@@ -12,7 +12,7 @@ and JANSSON_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 ```
 
-这个库在 make install 后生成一个 jansson.pc 文件，拿到它的路径，然后把下面的代理放进 /etc/profile 里，
+这个库在 make install 后生成一个 jansson.pc 文件，拿到它的路径，然后把下面的代码放进 /etc/profile 里，
 
 ```
 export PKG_CONFIG_PATH=/home/hapoa/pkgconfig/
