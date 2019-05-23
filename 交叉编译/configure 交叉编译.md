@@ -10,3 +10,6 @@
 
 CC 指定编译器，如果是 c 库，请用 gcc。
 
+如果有一个新的库需要依赖之前交叉编译的库，就把依赖的库和头文件分别放在交叉编译工具链的 lib 和 include 目录下。
+
+如果都是`./configure ...`命令执行编译的话，make install 后会生成一个 pkgconfig 目录，里边的 文件路径需要放在 /etc/profile 里，当然如果你的工具链 lib 目录里有 pkgconfig 目录，就放在一起，统一管理，具体参照：https://github.com/Hapoa/personal-notes/blob/master/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/configure%20%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91.md
