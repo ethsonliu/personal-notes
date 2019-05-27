@@ -7,7 +7,7 @@
 如果编译静态库，就得用 cmake ，建一个 build 目录，cd 进去，然后 
 
 ```
-cmake .. -DPAHO_BUILD_STATIC=TRUE -DCMAKE_C_COMPILER=/home/work/project/cbox/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc -DPAHO_WITH_SSL = true
+cmake .. -DPAHO_BUILD_STATIC=TRUE -DCMAKE_C_COMPILER=/home/work/project/cbox/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc -DPAHO_WITH_SSL=true
 ```
 
 其中 DPAHO_BUILD_STATIC 指定为静态库，DCMAKE_C_COMPILER 指定编译器，DPAHO_WITH_SSL 指定开启 SSL。
@@ -32,4 +32,3 @@ ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 ```
 
 改为你想要的路径，然后再执行`make install`即可。（注意，如果是要安装到 /usr/local 就用 sudo make install，因为需要权限，如果只是本目录就不要用 sudo）
-
