@@ -178,5 +178,5 @@ $ gcc -o mosquitto_client_sub mosquitto_client_sub.c -lmosquitto
 
 参考：
 
-1. http://shaocheng.li/post/blog/2015-08-11
-2. https://blog.csdn.net/dancer__sky/article/details/77855249
+1. [http://shaocheng.li/post/blog/2015-08-11](http://shaocheng.li/post/blog/2015-08-11)
+2. [https://blog.csdn.net/dancer__sky/article/details/77855249](https://blog.csdn.net/dancer__sky/article/details/77855249)
