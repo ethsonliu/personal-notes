@@ -1,0 +1,1 @@
+在 1980 屏幕上，【Edit】-【Preferences】-【Built-in Text Editors】，字体选【宋体】，大小 10。
