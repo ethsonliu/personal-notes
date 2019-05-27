@@ -1,4 +1,4 @@
-进入 http://repo.mysql.com/，里面包含了所有可用的 MySQL 源。选择一个合适的版本，进行下载：
+进入 <http://repo.mysql.com/>，里面包含了所有可用的 MySQL 源。选择一个合适的版本，进行下载：
 
 ```shell
 wget http://repo.mysql.com/mysql80-community-release-el7.rpm
