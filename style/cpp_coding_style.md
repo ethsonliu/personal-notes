@@ -48,13 +48,8 @@ int modify_value(int val, int *variable)
 
 12. 如果一个常量想多个单元引用的话，需要显式以 `extern` 声明，`extern const int DAYS_IN_A_WEEK = 7;`，因为定义于全局作用域的常量自带`static`属性，也就是说一个常量是可以定义于头文件的
 
-13. 关于程序的版本（用字符串或者数字表示），放在一个`version.h`中定义，该文件只放版本的宏，宏的名称为`$appname_VERSION`
 
-```c++
-const char* const APPNAME_VERSION = "1.6";
-```
-
-14. 考虑到日志，和一些几乎每个文件都需要的宏，或者头文件，可以统一放在`global.h`，比如，
+14. 考虑到日志，和一些几乎每个文件都需要的版本号、宏，或者头文件，可以统一放在`global.h`，比如，
 
 ```c++
 #ifndef HC_SRC_GLOBAL_H
@@ -64,12 +59,14 @@ const char* const APPNAME_VERSION = "1.6";
 #include <QDebug>
 #include <QString>
 #endif
-   
+
 #include <plog/Log.h> // for log
 #include <cassert> // for function assert
-   
+
+const char* const APPNAME_VERSION = "1.6";
+
 #define UNUSED(e) (void)e
-   
+
 #endif /* HC_SRC_GLOBAL_H */
 ```
 
