@@ -1,6 +1,6 @@
 ## 修改字体和大小
 
-在 1980 屏幕上，【Edit】-【Preferences】-【Built-in Text Editors】，字体选【宋体】，大小 11。
+在 1980 屏幕上，【Edit】-【Preferences】-【Built-in Text Editors】，字体选【宋体】，大小 10。
 
 ## 去掉拼写检查
 
