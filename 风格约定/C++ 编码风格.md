@@ -4,8 +4,8 @@
   - [define 保护](#define-保护)
   - [前置声明](#前置声明)
   - [include 的路径及顺序](#include-的路径及顺序)
-- 作用域
-
+- [作用域](#作用域)
+- [参考](#参考)
 
 
 ## 头文件
@@ -55,3 +55,21 @@ void test(D* x) { f(x); }  // calls f(B*)
 如果仅仅为了能前置声明而重构代码（比如用指针成员代替对象成员），会使代码变得更慢更复杂，得不偿失。
 
 ### include 的路径及顺序
+
+1. The prototype/interface header for this implementation (ie, the .h/.hh file that corresponds to this .cpp/.cc file).
+2. Other headers from the same project, as needed.
+3. Headers from other non-standard, non-system libraries (for example, Qt, Eigen, etc).
+4. Headers from other "almost-standard" libraries (for example, Boost)
+5. Standard C++ headers (for example, iostream, functional, etc.)
+6. Standard C headers (for example, cstdint, dirent.h, etc.)
+
+为什么不采用 Google 推荐的呢？第一，我没看懂它那样的用意；第二，上面这六条大致是符合我自己的思路的。
+
+## 作用域
+
+
+
+## 参考
+
+- [Google 开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/contents/)
+- [Stackoverflow. C/C++ include header file order](https://stackoverflow.com/questions/2762568/c-c-include-header-file-order)
