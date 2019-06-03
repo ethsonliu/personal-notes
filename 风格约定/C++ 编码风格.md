@@ -19,7 +19,11 @@
   - [参数顺序](#参数顺序)
   - [编写简短函数](#编写简短函数)
   - [缺省参数](#缺省参数)
-- [](#)
+- [命名约定](#命名约定)
+  - [文件命名](#文件命名)
+  - [类型命名](#类型命名)
+  - [变量命名](#变量命名)
+- [其它 C++ 特性](#其它-C++-特性)
 - [参考](#参考)
 
 
@@ -172,6 +176,51 @@ for (int i = 0; i < 1000000; ++i)
 ### 缺省参数
 
 只允许在非虚函数中使用缺省参数。
+
+## 命名约定
+
+### 文件命名
+
+文件名要全部小写，单词之间以`_`连接。
+
+文件名对该文件的描述要清晰，不要用简写。
+
+例如`my_useful_class.cpp`。
+
+### 类型命名
+
+类型名称的每个单词首字母均大写，不包含下划线: `MyExcitingClass`，`MyExcitingEnum`。
+
+所有类型命名，例如，类，结构体，类型定义 (typedef)，枚举，类型模板参数，均使用相同约定。
+
+```c++
+// 类和结构体
+class UrlTable { ...
+class UrlTableTester { ...
+struct UrlTableProperties { ...
+
+// 类型定义
+typedef hash_map<UrlTableProperties *, string> PropertiesMap;
+
+// using 别名
+using PropertiesMap = hash_map<UrlTableProperties *, string>;
+
+// 枚举
+enum UrlTableErrors { ...
+```
+
+### 变量命名
+
+普通变量命名，首字母小写，后面的单词首字母大写，例如：
+
+```c++
+int tablesNumber;
+string tableName;
+```
+
+类数据成员，前缀加`m_`，剩下和普通变量命名一致。
+
+## 其它 C++ 特性
 
 ## 参考
 
