@@ -23,6 +23,7 @@
   - [文件命名](#文件命名)
   - [类型命名](#类型命名)
   - [变量命名](#变量命名)
+  - [函数命名](#函数命名)
 - [其它 C++ 特性](#其它-C++-特性)
 - [参考](#参考)
 
@@ -218,7 +219,37 @@ int tablesNumber;
 string tableName;
 ```
 
-类数据成员，前缀加`m_`，剩下的和普通变量命名一致。
+类数据成员，前缀加`m_`，剩下的和普通变量命名一致。例如：
+
+```c++
+class TableInfo
+{
+  ...
+ private:
+  string m_tableName;
+  Pool<TableInfo>* m_pool;
+};
+```
+
+结构体变量，遵循普通变量命名，例如：
+
+```c++
+struct UrlTableProperties
+{
+  string name;
+  int numEntries;
+};
+```
+
+静态变量，不管位于哪个作用域，即类（或者结构体）的静态变量，函数内静态变量等等，命名规则一律和普通变量命名一致。
+
+常量，一律大写，例如：
+
+```c++
+const int DAYS_IN_A_WEEK = 7;
+```
+
+### 函数命名
 
 ## 其它 C++ 特性
 
