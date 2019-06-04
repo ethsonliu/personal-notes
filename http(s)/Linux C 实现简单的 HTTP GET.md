@@ -66,4 +66,4 @@ void* thread_http(void*)
 
 - CSDN . [基于openssl的https client例子](https://blog.csdn.net/jun2016425/article/details/78827670)
 - CSDN . [用C语言实现一个简单的HTTP客户端（HTTP Client）](https://blog.csdn.net/gobitan/article/details/1551186)
-- 博客园 . [[C++：C语言实现HTTP的GET和POST请求](https://www.cnblogs.com/diligenceday/p/6255788.html)](https://www.cnblogs.com/diligenceday/p/6255788.html)
+- 博客园 . [C++：C语言实现HTTP的GET和POST请求](https://www.cnblogs.com/diligenceday/p/6255788.html)
