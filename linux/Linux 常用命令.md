@@ -28,3 +28,51 @@ cat /proc/2913/status
 # 其中，VmRSS=内存KB
 ```
 
+#### 端口占用
+
+查看服务器 8000 端口的占用情况：
+
+```
+# lsof -i:8000
+COMMAND   PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+nodejs  26993 root   10u  IPv4 37999514      0t0  TCP *:8000 (LISTEN)
+```
+
+netstat -tunlp 用于显示 tcp，udp 的端口和进程等相关情况。
+
+```
+[root@iZ94xyihsxsZ home]# netstat -tunlp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      943/php-fpm: master
+tcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN      944/redis-server 12
+tcp        0      0 0.0.0.0:4431            0.0.0.0:*               LISTEN      14165/nginx: master
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      14165/nginx: master
+tcp        0      0 0.0.0.0:2230            0.0.0.0:*               LISTEN      942/sshd
+tcp6       0      0 :::4443                 :::*                    LISTEN      8772/ngrokd
+tcp6       0      0 :::443                  :::*                    LISTEN      8772/ngrokd
+tcp6       0      0 :::8000                 :::*                    LISTEN      8772/ngrokd
+tcp6       0      0 :::3306                 :::*                    LISTEN      1235/mysqld
+tcp6       0      0 :::61451                :::*                    LISTEN      859/dotnet
+tcp6       0      0 :::8085                 :::*                    LISTEN      5164/node /var/loca
+udp        0      0 120.76.211.89:123       0.0.0.0:*                           425/ntpd
+udp        0      0 10.25.139.78:123        0.0.0.0:*                           425/ntpd
+udp        0      0 127.0.0.1:123           0.0.0.0:*                           425/ntpd
+udp        0      0 0.0.0.0:123             0.0.0.0:*                           425/ntpd
+udp6       0      0 :::123                  :::*                                425/ntpd
+
+```
+
+例如查看 8000 端口的情况，使用以下命令：
+
+```
+# netstat -tunlp | grep 8000
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      26993/nodejs   
+```
+
+Linux查看程序端口占用情况
+使用命令：
+
+```
+ps -aux | grep tomcat
+```
