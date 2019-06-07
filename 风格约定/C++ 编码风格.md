@@ -32,8 +32,8 @@
   - [文件注释](#文件注释)
   - [类注释](#类注释)
   - [函数注释](#函数注释)
+  - [块内注释](#块内注释)
   - [TODO 注释](#TODO-注释)
-- [其它 C++ 特性](#其它-C++-特性)
 - [参考](#参考)
 
 
@@ -314,7 +314,7 @@ enum class EnumType
 
 ### 注释风格
 
-统一以`/**/`风格。
+统一以 Javadoc `/**  */`风格，具体参考 jdk，这里只做简单举例和描述。
 
 ### 文件注释
 
@@ -322,11 +322,84 @@ enum class EnumType
 
 ### 类注释
 
+```c++
+/**
+ * Utility methods for packing/unpacking primitive values in/out of byte arrays
+ * using big-endian byte ordering.
+ */
+class Bits
+{
+
+}
+```
+
 ### 函数注释
+
+```c++
+/**
+ * Retrieves the contents of the SQL <code>ARRAY</code> value designated
+ * by this.
+ *
+ * @param     checkKind
+ *            the kind of bounds check, whose name may correspond
+ *            to the name of one of the range check methods, checkIndex.
+ *
+ * @param     args
+ *            the out-of-bounds arguments that failed the range check.
+ *            If the checkKind corresponds a the name of a range check method.
+ *
+ * @return    an array in the Java programming language that contains
+ *            the ordered elements of the SQL <code>ARRAY</code> value.
+ *
+ * @exception SQLException
+ *            if an error occurs while attempting to access the array.
+ *
+ * @exception SQLFeatureNotSupportedException
+ *            if the JDBC driver does not support this method.
+ */
+Object getArray(int checkKind, String args);
+{
+}
+```
+
+### 块内注释
+
+```c++
+class Base
+{
+  /** The number of nodes, which is also used to determine the next node index. */
+  protected int m_size = 0;
+
+  /** The expanded names, one array element for each node. */
+  protected SuballocatedIntVector m_exptype;
+
+  /** First child values, one array element for each node. */
+  protected SuballocatedIntVector m_firstch;
+
+  /** Next sibling values, one array element for each node. */
+  protected SuballocatedIntVector m_nextsib;
+};
+
+void func()
+{
+  /** if it is success */
+  if (isSuccess())
+  {
+    ...
+  }
+  ...
+}
+```
 
 ### TODO 注释
 
-## 其它 C++ 特性
+```c++
+synchronized public DTMIterator createDTMIterator(int node)
+{
+  /** @todo: implement this com.sun.org.apache.xml.internal.dtm.DTMManager abstract method */
+  return null;
+}
+```
 
 ## 参考
 
