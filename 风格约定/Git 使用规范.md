@@ -41,7 +41,7 @@
   - 使用第一人称现在时的动词开头，比如 modify 而不是 modified 或 modifies
   - 首字母小写，并且结尾不加句号
 - subject: 对于该 commit 目的的简短描述。
-- ISSUEE_ID: 假设你的需求或者 bug 修复可能会有对应的 issues 记录，你可以加到你的 commit 信息中如 issue-37938634。
+- ISSUE_ID: 假设你的需求或者 bug 修复可能会有对应的 issues 记录，你可以加到你的 commit 信息中如 issue-37938634。
 - body: 就是 subject 的详细说明。
 - footer: 你可以填写相关的需求管理 issues id
   - 当有非兼容修改(Breaking Change)时必须在这里描述清楚
