@@ -16,11 +16,6 @@
 - `duplicate`：重复的问题。
 - `need-more-information`：问题描述不清。
 - `need-reproduce`：需要重现。
-- ``：
-- ``：
-- ``：
-- ``：
-- ``：
 
 ## commit message 规范
 
@@ -53,7 +48,7 @@
   - 关联相关 issue，如 Closes #1, Closes #2, #3
   - 如果功能点有新增或修改的，还需要关联文档 doc 和 egg-core 的 PR，如 eggjs/egg-core#123
 
-具体参考：<https://github.com/angular/angular/issues>
+具体参考：<https://github.com/angular/angular/commits/master>
 
 ## 参考
 
