@@ -11,11 +11,11 @@
  - `xx-error`：文档有错误，则为`documentation-error`；测试用例有错误，则为`test-error`。
  - `typo`：代码或文档有单词拼写错误。
  - `support`： 提出的问题需要开发者协作排查，咨询，调试，等日常技术支持。
- - `enhancement`：优化相关，如 4 寸屏幕下边框过宽、字过小等等。
+ - `enhancement`：优化相关，如 4 寸屏幕下边框过宽、字过小等等（和`proposal`区别是，`enhancement`的功能已经存在，而`proposal`的功能是目前不存在的）。
  - `usage-guide`：在使用上的指导。
  - `duplicate`：重复的问题。
- - ``：
- - ``：
+ - `need-more-information`：问题描述不清。
+ - `need-reproduce`：需要重现。
  - ``：
  - ``：
  - ``：
