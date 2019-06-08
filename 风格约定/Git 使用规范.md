@@ -23,3 +23,10 @@
  - ``：
 
 ## commit message 规范
+
+
+## 参考
+
+- [egg 代码贡献规范](https://eggjs.org/zh-cn/contributing.html)
+- [Git 协同与提交规范](https://www.yuque.com/fe9/basic/nruxq8#6c228def)
+- [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit)
