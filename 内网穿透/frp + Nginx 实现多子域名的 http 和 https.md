@@ -1,6 +1,6 @@
 下面配置所使用的服务器是 CentOS 6，服务器 IP 对应的域名为 example.com。
 
-## 一：实现 http
+## 实现 http
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/001.png)
 
@@ -39,7 +39,7 @@ frp的启动命令分别为`./frps -c ./frps.ini`和`./frpc -c ./frpc.ini`，后
 
 然后网页端访问`http://$ID.example.com:8080`即可访问内网的 web 服务。
 
-## 二：实现 https
+## 实现 https
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/002.png)
 
@@ -174,7 +174,13 @@ server {
 
 Nginx 重新加载配置文件后，先启动公网上的 frps，再启动位于内网的机器上的 frpc，然后浏览器输入`$ID.example.com`，会自动跳到`https://$ID.example.com`。
 
-## 三：参考链接
+## 域名自动续期
+
+参考脚本：[certbot-letencrypt-wildcardcertificates-alydns-au](https://github.com/ywdblog/certbot-letencrypt-wildcardcertificates-alydns-au)
+
+提供的两个版本，python 和 php，需要安装对应的包，如果是 php 脚本的话，则先`yum install php`。
+
+## 参考链接
 
 - [申请Let's Encrypt通配符HTTPS证书](https://my.oschina.net/kimver/blog/1634575)
 - [Nginx + Frp + Let'sEncrypt 泛域名证书](http://morecoder.com/article/1173275.html)
