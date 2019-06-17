@@ -87,7 +87,7 @@ yum install nginx
 
 启动它`service nginx start`。
 
-**接着进行下面操作之前请先关闭防火墙**，命令是`service iptables stop`（注：这是 centos 6 的命令，centos 7 可以参考 [centos 7 关闭防火墙](https://blog.csdn.net/Post_Yuan/article/details/78603212)和 [centos 7配置防火墙](https://www.jianshu.com/p/f6b87417f98b)），
+**接着进行下面操作之前请先关闭防火墙**，命令是`service iptables stop`（注：这是 centos 6 的命令，centos 7 可以参考 [centos 7 关闭防火墙](https://blog.csdn.net/Post_Yuan/article/details/78603212) 和 [centos 7配置防火墙](https://www.jianshu.com/p/f6b87417f98b)），
 
 然后`cd`到`home`目录下，安装`certbot-auto`，
 
