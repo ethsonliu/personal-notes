@@ -1,4 +1,4 @@
-下面配置所使用的服务器是 CentOS 6，服务器 IP 对应的域名为 example.com。
+下面配置所使用的服务器是 CentOS 7，服务器 IP 对应的域名为 example.com。
 
 ## 实现 http
 
@@ -105,13 +105,15 @@ chmod a+x certbot-auto
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/003.png)
 
-要域名解析那边添加一条 TXT 记录，确认生效的命令是，`dig _acme-challenge.example.com txt`，如果报错没有`dig`命令，运行以下命令进行安装`yum install bind-utils`。如果成功再继续上面的步骤，不成功就再等等，等解析生效。
+要域名解析那边添加一条 TXT 记录，确认生效的命令是，`dig _acme-challenge.example.com txt`，如果报错没有`dig`命令，运行以下命令进行安装`yum install bind-utils`，当然很多网站都可以查询 TXT 记录，比如 <http://chafenba.com/>。
+
+如果成功再继续上面的步骤，不成功就再等等，等解析生效。
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/004.png)
 
 到了这一步就成功了，你的证书文件都放在一个目录下，它上面已经说了。
 
-然后最后一步，修改文件`/etc/nginx/conf.d/default.conf`，可以直接复制进去（这个文件只要被更新，都需要重新加载配置文件，命令是`nginx -s reload`），
+然后最后一步，修改文件`/etc/nginx/nginx.conf`，可以直接复制进去（这个文件只要被更新，都需要重新加载配置文件，命令是`nginx -s reload`），
 
 ```
 server {
