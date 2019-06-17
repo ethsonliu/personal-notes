@@ -174,7 +174,7 @@ server {
 }
 ```
 
-Nginx 重新加载配置文件后，先启动公网上的 frps，再启动位于内网的机器上的 frpc，然后浏览器输入`$ID.example.com`，会自动跳到`https://$ID.example.com`。
+输入`nginx -t -c /etc/nginx/nginx.conf`，查看配置是否正确，Nginx 重新加载配置文件后，先启动公网上的 frps，再启动位于内网的机器上的 frpc，然后浏览器输入`$ID.example.com`，会自动跳到`https://$ID.example.com`。
 
 ## 域名自动续期
 
