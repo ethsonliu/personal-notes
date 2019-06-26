@@ -1,84 +1,29 @@
+## SOURCES 和 HEADERS
+
+指定项目中的所有源文件和头文件。
+
+最简单的用法是这样的，
+
 ```
-# 1. Windows x86 桌面应用程序
-#DEFINES += \
-#    DESKTOP_APPLICATION \
-#    OS_WINDOWS
+SOURCES += main.cpp\
+           mainwindow.cpp \
+    	   serialtab.cpp \
+           connectorsdlg.cpp \
+           serialdataset.cpp \
+           serialotherset.cpp \
 
-# 2. Linux x64 桌面应用程序
-DEFINES += \
-    DESKTOP_APPLICATION \
-    OS_LINUX
-
-# 3. Linux x64 控制台应用程序
-#DEFINES += \
-#    CONSOLE_APPLICATION \
-#    OS_LINUX
-
-TEMPLATE = app
-
-INCLUDEPATH += \
-    $$PWD/third_party
-
-LIBS += \
-    -L$$PWD/third_party/mosquitto/lib -lmosquitto \
-    -L$$PWD/third_party/cJSON/lib -lcJSON
-
-SOURCES += \
-    src/main.cpp \
-    src/storage.cpp \
-    src/user_data.cpp \
-    src/storage_manager.cpp
-
-HEADERS += \
-    src/information_repeater.h \
-    src/config.h \
-    src/storage_manager.h \
-    src/storage.h \
-    src/user_data.h
-
-contains(DEFINES, DESKTOP_APPLICATION) {
-QT += core gui
-TARGET = MQTTClient
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-RC_ICONS = image/haiwell_mqtt.ico
-
-TRANSLATIONS += \
-    translation/zh_CN.ts \
-    translation/en_US.ts
-
-SOURCES += \
-    src/main_window.cpp \
-    src/table_widget.cpp \
-    src/mqtt_server_dialog.cpp \
-    src/setting_dialog.cpp \
-    src/information_repeater.cpp
-
-HEADERS += \
-    src/main_window.h \
-    src/table_widget.h \
-    src/mqtt_server_dialog.h \
-    src/setting_dialog.h
-
-RESOURCES += \
-    translation/translation.qrc
-} # contains(DEFINES, DESKTOP_APPLICATION)
-
-contains(DEFINES, CONSOLE_APPLICATION) {
-CONFIG += console
-CONFIG -= app_bundle
-CONFIG -= qt
-}
-
-contains(DEFINES, OS_WINDOWS) {
-LIBS += \
-    -L$$PWD/third_party/MySQL/lib -llibmysql
-}
-
-contains(DEFINES, OS_LINUX) {
-LIBS += \
-    -L$$PWD/third_party/MySQL/lib -lmysqlclient \
-    -lpthread
-}
+HEADERS += mainwindow.h \
+    	   serialtab.h \
+    	   connectorsdlg.h \
+    	   serialdataset.h \
+    	   serialotherset.h \
 ```
 
+如果你的工程有多个文件夹，每个文件内又有多个子文件夹，下面又有子文件夹，那上面的写法就有点鸡肋了，可以换成这样，
+
+```
+SOURCES += $$files(*.cpp, true)
+HEADERS += $$files(*.h, true)
+```
+
+`files`是一个函数，按第一个参数去匹配，返回文件列表。第二个参数为 true时，表示子文件夹递归搜索。
