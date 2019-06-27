@@ -7,7 +7,7 @@
 如果编译静态库，就得用 cmake ，建一个 build 目录，cd 进去，然后 
 
 ```
-cmake .. -DPAHO_BUILD_STATIC=TRUE -DCMAKE_C_COMPILER=/home/work/project/cbox/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc -DPAHO_WITH_SSL=true
+cmake .. -DPAHO_BUILD_STATIC=TRUE -DCMAKE_C_COMPILER=/home/jalyn/crosschain/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc -DPAHO_WITH_SSL=true
 ```
 
 其中 DPAHO_BUILD_STATIC 指定为静态库，DCMAKE_C_COMPILER 指定编译器，DPAHO_WITH_SSL 指定开启 SSL。
@@ -22,6 +22,8 @@ FIND_LIBRARY(OPENSSL_LIB NAMES ssl libssl ssleay32
 FIND_LIBRARY(OPENSSLCRYPTO_LIB NAMES crypto libcrypto libeay32
       	HINTS /home/work/lib ${OPENSSL_SEARCH_LIB_PATH})
 ```
+
+注意，如果要编译静态库，在这个库的根目录的 CMakeLists.txt 里添加`SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")`。参考：<https://stackoverflow.com/questions/10085945/set-cflags-and-cxxflags-options-using-cmake>
 
 接着 make，然后如果你想 make install 到指定路径，修改 cmake_install.cmake 文件，其中的，
 
