@@ -16,7 +16,7 @@ main.obj:-1: error: LNK2019: 无法解析的外部符号 __imp_ssh_free，该符
 
 但是生成的动态库可以用。
 
-建议勾选 ZLIB，用于传输压缩用的。zlib 的官网：<https://zlib.net/>，下载编译就可以，很简单的这个，然后这个我们也生成动态库。
+建议勾选 ZLIB，用于传输压缩用的。zlib 的官网：<https://zlib.net/>，下载编译就可以，很简单的这个，然后这个我们也生成动态库。还有一点，你生成的目录`build`里会有一个`zconf.h`的文件，请把它复制到库的头文件一起，这也是 libssh 要用的。
 
 如果编译 libssh 说找不到 ZLIB 的位置，那就手动指定，点击 cmake-gui.exe 上的 Advanced，就会出现 ZLIB_INCLUDE_DIR 和 ZLIB_LIBRARY_RELEASE，手动填写即可，
 
