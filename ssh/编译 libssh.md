@@ -22,3 +22,4 @@ main.obj:-1: error: LNK2019: 无法解析的外部符号 __imp_ssh_free，该符
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/011.png)
 
+generate 之后，把`build`目录下的`config.h`拷贝到`include/libssh/`下面。
