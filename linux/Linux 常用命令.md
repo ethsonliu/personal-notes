@@ -1,4 +1,4 @@
-#### 按名字查找进程
+## 按名字查找进程
 
 ```
 # 按名字查找 ssh
@@ -10,7 +10,7 @@ ps -ef
 
 参考：https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/ps.html
 
-#### 查看某个进程的使用情况
+## 查看某个进程的使用情况
 
 ```
 # 按 pid 查看
@@ -28,7 +28,7 @@ cat /proc/2913/status
 # 其中，VmRSS=内存KB
 ```
 
-#### 端口占用
+## 端口占用
 
 查看服务器 8000 端口的占用情况：
 
@@ -76,3 +76,34 @@ Linux查看程序端口占用情况
 ```
 ps -aux | grep tomcat
 ```
+
+## 查看磁盘和文件大小
+
+使用`df -h`命令来查看磁盘信息， -h 选项为根据大小适当显示。
+
+- **df -hl**：查看磁盘剩余空间
+- **df -h**：查看每个根路径的分区大小
+- **du -sh [目录名]**：返回该目录的大小
+- **du -sm [文件夹]**：返回该文件夹总M数
+- **du -h [目录名]**：查看指定文件夹下的所有文件大小（包含子文件夹）
+
+按文件和文件夹大小排序`du -s * | sort -nr`，大小是 KB。
+
+```
+jack@jiaobuchong:~$ du -s * | sort -nr 
+852756	installed-software
+173868	Desktop
+164768	Downloads
+4724	Pictures
+3236	program_pratice
+452		Documents
+284		learngit
+112		session
+12		examples.desktop
+4		Videos
+4		Templates
+4		Public
+```
+
+
+
