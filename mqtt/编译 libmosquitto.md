@@ -36,7 +36,7 @@ make: *** [docs] Error 2
 1. cmake-gui
 2. mosquitto 源码，https://github.com/eclipse/mosquitto （我当前编译的是 1.6.2）
 3. openssl，http://slproweb.com/products/Win32OpenSSL.html （当前的版本需要 1.1.1 以上支持，别下载 Light 的）
-4. POSIX threads for win32，mosquitto 的 threading 支持，<https://sourceware.org/pthreads-win32/>，下载pthreads-w32-2-9-1-release.zip。
+4. POSIX threads for win32，mosquitto 的 threading 支持，<https://sourceware.org/pthreads-win32/>，下载 pthreads-w32-2-9-1-release.zip。
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/008.png)
 
@@ -50,7 +50,7 @@ ctrl + f5，编译，可能会报错：
 C2011	“timespec”:“struct”类型重定义	libmosquitto	C:\pthreads\Pre-built.2\include\pthread.h
 ```
 
-打开`POSIX threads for win32`里边的`pthread.h`，在顶部加入`#define HAVE_STRUCT_TIMESPEC`，重新ctrl+f5 即可（参考：<https://stackoverflow.com/questions/33557506/timespec-redefinition-error>）。
+打开`POSIX threads for win32`里边的`pthread.h`，在顶部加入`#define HAVE_STRUCT_TIMESPEC`，重新 ctrl+f5 即可（参考：<https://stackoverflow.com/questions/33557506/timespec-redefinition-error>）。
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/007.png)
 
