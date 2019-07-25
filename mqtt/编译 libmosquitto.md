@@ -4,7 +4,7 @@ Ubuntu 14.04 + mosquitto 1.6.2
 
 下载地址：https://github.com/eclipse/mosquitto
 
-依赖：openssl 1.1.1，见 https://github.com/Hapoa/personal-notes/blob/master/linux/openssl%20%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85.md
+依赖：openssl 1.1.1，见 <https://github.com/Hapoa/personal-notes/blob/master/linux/openssl%20%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85.md>
 
 ```shell
 sudo apt-get install xsltproc # 这应该是给 doc 用的，装不装无所谓
