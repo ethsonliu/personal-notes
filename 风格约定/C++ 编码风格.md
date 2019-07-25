@@ -314,7 +314,7 @@ enum class EnumType
 
 ### 注释风格
 
-统一以 Javadoc `/**  */`风格，具体参考 jdk，这里只做简单举例和描述。
+统一以 Javadoc `/**  */`风格，具体参考 jdk，这里只做简单举例和描述。以下的例子都是基于上层开发，注释只是为了方便阅读代码，而不是生成文档。
 
 ### 文件注释
 
@@ -335,9 +335,11 @@ class Bits
 
 ### 函数注释
 
+如果有的参数和返回值易于分辨，就不必用`@param`和`@return`加以说明。
+
 ```c++
 /**
- * Retrieves the contents of the SQL <code>ARRAY</code> value designated
+ * Retrieves the contents of the SQL ARRAY value designated
  * by this.
  *
  * @param     checkKind
@@ -349,7 +351,7 @@ class Bits
  *            If the checkKind corresponds a the name of a range check method.
  *
  * @return    an array in the Java programming language that contains
- *            the ordered elements of the SQL <code>ARRAY</code> value.
+ *            the ordered elements of the SQL ARRAY value.
  *
  * @exception SQLException
  *            if an error occurs while attempting to access the array.
