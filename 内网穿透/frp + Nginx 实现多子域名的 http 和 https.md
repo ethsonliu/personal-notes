@@ -156,7 +156,7 @@ server {
 
     location / {
     
-      # DNS解析地址，用的谷歌的，你也可以换成别家的
+      # DNS 解析地址，国外建议谷歌的 8.8.8.8，国内建议阿里的 223.5.5.5
       resolver 8.8.8.8;
 	  
       # 相当于向 frps 请求 http://$ID.example.com:8080
