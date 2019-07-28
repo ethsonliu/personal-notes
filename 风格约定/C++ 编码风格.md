@@ -435,6 +435,19 @@ synchronized public DTMIterator createDTMIterator(int node)
 
 ### 避免隐式转换和比较
 
+比如下面的代码，
+
+```c++
+int n = read(fd, buffer, sizeof(buffer));
+
+if (n < sizeof(buffer))
+    exit(EXIT_FAILURE);
+else
+    do_something();
+```
+
+假如 read 返回 -1，按照预期，代码应该执行 exit(EXIT_FAILURE) 退出程序，但因为 n 是 int 类型， sizeof 返回值是 unsigned int 的，两者比较时，int 类型的数会被自动转换为 unsigned int 类型。也就是说 int 类型的 -1 在进行比较时会被转换成一个非常大的 unsigned int 类型的数，具体数值大小是 (1 << 32) - 1。
+
 ### 智能指针代替原生指针
 
 ### 尽可能地避免产生内存碎片
@@ -448,6 +461,13 @@ synchronized public DTMIterator createDTMIterator(int node)
 ### 尽可能使用无异常的函数
 
 ### 不要用尤达条件式
+
+尤达条件式含义见维基 [尤达条件式](https://zh.wikipedia.org/wiki/%E5%B0%A4%E9%81%94%E6%A2%9D%E4%BB%B6%E5%BC%8F)。
+
+之前我是推荐使用尤达条件式的，因为有好几次都是写错了，明明是判断等于，结果少写了个 =，就变成了赋值。现在之所以不推荐了，主要是因为两点：
+
+1. 可读性
+2. 对于两个左值不再适用
 
 ## 参考
 
