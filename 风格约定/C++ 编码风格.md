@@ -495,6 +495,26 @@ void something_often_to_do()
 
 ### 尽可能地避免产生内存碎片
 
+<https://www.zhihu.com/question/51836333/answer/145693402> 很清楚地讲解了何谓内存碎片。
+
+```c++
+std::string name("Jack");
+std::string word = std::string("I am") + name;
+```
+
+应该替换成下面这样，
+
+```c++
+std::string name("Jack");
+std::string word;
+word += "I am";
+word += name;
+```
+
+当然用 append 代替 += 也可以。
+
+当预知所需字符串长度，可以使用 reserve 指定，以防止扩容所带来的重新构造、复制等操作损耗。
+
 ### 尽量使用前置自增语句
 
 ### 尽可能地使用 assert 语句
