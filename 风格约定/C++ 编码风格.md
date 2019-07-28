@@ -517,7 +517,19 @@ word += name;
 
 ### 尽量使用前置自增语句
 
+前置自增与后置自增的区别主要是效率问题，参考下面的三条链接即知。
+
+参考：
+
+1. https://stackoverflow.com/questions/24886/is-there-a-performance-difference-between-i-and-i-in-c
+2. https://stackoverflow.com/questions/4445706/post-increment-and-pre-increment-concept
+3. https://stackoverflow.com/questions/24853/what-is-the-difference-between-i-and-i
+
 ### 尽可能地使用 assert 语句
+
+参考：https://stackoverflow.com/questions/1571340/what-is-the-assert-function
+
+个人觉得，意思就是 assert 等于 i make sure。
 
 ### 避免操作符的短路问题
 
