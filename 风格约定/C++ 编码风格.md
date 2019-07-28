@@ -431,7 +431,7 @@ synchronized public DTMIterator createDTMIterator(int node)
 ├─my_project.pro
 ```
 
-我的编程习惯是把所有头文件和源文件统一放在 src 目录下（当然你也可以分开来放，头文件放在 include 目录，源文件放在 src 目录，这种做法一般是库采用的，工程应用程序不用考虑这些），那么包含头文件的时候写全路径，比如`#include "src/widget/my_widget.h"`。
+我的编程习惯是把所有头文件和源文件统一放在 src 目录下，那么包含头文件的时候写全路径，比如`#include "src/widget/my_widget.h"`。
 
 ### 避免隐式转换和比较
 
