@@ -417,7 +417,7 @@ synchronized public DTMIterator createDTMIterator(int node)
 
 ### include 头文件的路径
 
-项目内头文件应按照项目源代码目录树结构排列, 避免使用 UNIX 特殊的快捷目录 . (当前目录) 或 .. (上级目录)。
+项目内头文件应按照项目目录树结构排列, 避免使用 UNIX 特殊的快捷目录 . (当前目录) 或 .. (上级目录)。
 
 ```
 ├─src
