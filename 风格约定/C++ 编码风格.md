@@ -533,7 +533,53 @@ word += name;
 
 ### 避免操作符的短路问题
 
+考虑游戏玩家回血回蓝（魔法）刷新给客户端的逻辑。玩家每3秒回一点血，玩家每5秒回一点蓝，回蓝回血共用一个协议通知客户端，也就是说只要有回血或者回蓝就要把新的血量和魔法值通知客户端。
+
+玩家的心跳函数`heartbeat()`在主逻辑线程被循环调用：
+
+```c++
+void  GamePlayer::Heartbeat()
+{
+    if (GenHP() || GenMP())
+    {
+        NotifyClientHPMP();
+    }
+}
+```
+
+如果 GenHP 回血了，就返回 true，否则 false；不一定每次调用 GenHP 都会回血，取决于是否达到 3 秒间隔。
+
+如果 GenMP 回蓝了，就返回 true，否则 false；不一定每次调用 GenMP 都会回血，取决于是否达到 5 秒间隔。
+
+实际运行发现回血回蓝逻辑不对，Word 麻，原来是操作符短路了，如果 GenHP() 返回 true 了，那 GenMP() 就不会被调用，就有可能失去回蓝的机会。OMG，你需要修改程序如下：
+
+```c++
+void GamePlayer::Heartbeat()
+{
+    bool hp = GenHP();
+    bool mp = GenMP();
+    if (hp || mp) 
+    {   
+        NotifyClientHPMP();
+    }   
+}
+```
+逻辑与（&&）跟逻辑或（||）有同样的问题， if (a && b) 如果 a 的表达式求值为 false，b 表达式也不会被计算。
+
+有时候，我们会写出 if (ptr != nullptr && ptr->Do()) 这样的代码，这正是利用了操作符短路的语法特征。
+
+摘自：<https://mp.weixin.qq.com/s?__biz=MjM5MjAwODM4MA==&mid=2650714384&idx=2&sn=a787e0f33a59162f2f121c5fe8b7be11&chksm=bea6c0c389d149d59f47769a0edb3059943e22a6105235a3c7a0039188dcbf33c14a5bb5f068&mpshare=1&scene=23&srcid=#rd>
+
+
 ### 尽可能使用无异常的函数
+
+先说说起因吧。
+
+最近写了个 sql 客户端对接 microsoft sql server，用的 ado，其中有个语句`select * from`，按道理返回的一定是个数字，所以我直接用的`std::stoi`转换，但因为用 ado 返回数据的时候转换错了，导致转换出的是乱数据（也就是非数字），进而导致`std::stoi`抛出异常。
+
+`std::stoi`完全可以用`atoi`代替。
+
+就像这次的不可思议，不作为比异常抛出更好。
 
 ### 不要用尤达条件式
 
