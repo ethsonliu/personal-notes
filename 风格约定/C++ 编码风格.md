@@ -575,7 +575,7 @@ void GamePlayer::Heartbeat()
 
 先说说起因吧。
 
-最近写了个 sql 客户端对接 microsoft sql server，用的 ado，其中有个语句`select count(*) from`，按道理返回的一定是个数字，所以我直接用的`std::stoi`转换，但因为用 ado 返回数据的时候转换错了，导致转换出的是乱数据（也就是非数字），进而导致`std::stoi`抛出异常。
+最近写了个 sql 客户端对接 microsoft sql server，用的 ado，其中有个语句`select count(*) from`，按道理返回的一定是个数字形式的字符串，所以我直接用的`std::stoi`转换，但因为用 ado 返回数据的时候转换错了，导致转换出的是乱数据（也就是非数字），进而导致`std::stoi`抛出异常。
 
 `std::stoi`完全可以用`atoi`代替。
 
