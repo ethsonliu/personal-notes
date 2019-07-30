@@ -62,6 +62,31 @@ void* thread_http(void*)
 }
 ```
 
+```c++
+string headers = "state=";
+    headers += uToString(isSuccess);
+    headers += "&machineCode=";
+    headers += pn;
+    headers += "&domain=";
+    headers += domain;
+
+    string send_buf;
+    send_buf.reserve(1024);
+    send_buf = "POST /api/machine/linkState HTTP/1.1\n";
+    send_buf += "Host: ";
+    send_buf += hostname;
+    send_buf += ":";
+    send_buf += uToString(port);
+    send_buf += "\nContent-Type: application/x-www-form-urlencoded\n";
+    send_buf += "Content-Length: ";
+    send_buf += uToString(headers.size());
+    send_buf += "\n\n";
+    send_buf += headers;
+    send_buf += "\r\n\r\n";
+
+    write(sockfd, send_buf.c_str(), send_buf.size());
+```
+
 ## 参考链接
 
 - CSDN . [基于openssl的https client例子](https://blog.csdn.net/jun2016425/article/details/78827670)
