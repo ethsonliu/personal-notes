@@ -63,7 +63,12 @@ void* thread_http(void*)
 ```
 
 ```c++
-string headers = "state=";
+static void SendFrpcState(int sockfd, int isSuccess, const string& domain, const string& hostname, int port, const string& pn)
+{
+    static int failedInfoSent = 0;
+    static string prevDomain = "";
+
+    string headers = "state=";
     headers += uToString(isSuccess);
     headers += "&machineCode=";
     headers += pn;
@@ -85,6 +90,43 @@ string headers = "state=";
     send_buf += "\r\n\r\n";
 
     write(sockfd, send_buf.c_str(), send_buf.size());
+    printf("[frpc] send the result<%d> of exec-frpc to remote server, remote server will write it into databse\n", isSuccess);
+
+    char recv_buf[2048];
+    memset(recv_buf, 0, sizeof(recv_buf));
+    read(sockfd, recv_buf, sizeof(recv_buf)); // 服务器数据库是否成功存储
+
+    char data[4];
+    memset(data, 0, sizeof(data));
+    char* error = strstr(recv_buf, "error");
+    if (error == NULL) // no error
+    {
+        data[0] = '1';
+        printf("[frpc] the remote server success when writing result<%d> into databse\n", isSuccess);
+    }
+    else
+    {
+        data[0] = '0';
+        printf("[frpc] the remote server failed when writing result<%d> into databse\n", isSuccess);
+    }
+
+    // 防止重复发送信息
+    if (isSuccess == 0 && failedInfoSent == 1 && prevDomain == domain)
+    {
+        printf("[frpc] skip 0x11 send\n");
+        return;
+    }
+    else
+        printf("[frpc] 0x11 send\n");
+
+    UiCommunicationSend(0x11, data, strlen(data));
+
+    if (isSuccess == 0)
+    {
+        failedInfoSent = 1;
+        prevDomain = domain;
+    }
+}
 ```
 
 ## 参考链接
