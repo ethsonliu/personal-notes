@@ -51,9 +51,9 @@
 
 在该目录`MyProject`的同级目录下，打开终端，输入命令`appimagetool ./MyProject`，即可在同级目录看见`*.AppImage`文件，拷贝到其它机器上可以直接运行。
 
-### 附：
+### 附可能遇到的问题：
 
-在 ubuntu 14.04 上编译的，在 ubuntu 16.04 运行报错：段错误（核心已转存）。
+#### 1. 在 ubuntu 14.04 上编译的，在 ubuntu 16.04 运行报错：段错误（核心已转存）
 
 把 lib 目录里的的 glibc 库和 ANSI C 库去掉，重新生成即可。
 
@@ -77,4 +77,20 @@ libstdc++.so        // gcc 编译器的 C++ 标准库
 librt.so            // glibc 的 real-time 库
 libpthread.so       // posix 线程库
 ```
+
+#### 2. centos 7 上报错 dlopen(): error loading libfuse.so.2
+
+报错，
+
+```
+dlopen(): error loading libfuse.so.2
+
+AppImages require FUSE to run. 
+You might still be able to extract the contents of this AppImage 
+if you run it with the --appimage-extract option. 
+See https://github.com/AppImage/AppImageKit/wiki/FUSE 
+for more information
+```
+
+缺少 fuse 库，安装即可，`yum install fuse fuse-devel`。
 
