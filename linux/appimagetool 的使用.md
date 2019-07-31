@@ -51,3 +51,30 @@
 
 在该目录`MyProject`的同级目录下，打开终端，输入命令`appimagetool ./MyProject`，即可在同级目录看见`*.AppImage`文件，拷贝到其它机器上可以直接运行。
 
+### 附：
+
+在 ubuntu 14.04 上编译的，在 ubuntu 16.04 运行报错：段错误（核心已转存）。
+
+把 lib 目录里的的 glibc 库和 ANSI C 库去掉，重新生成即可。
+
+```
+libc.so
+libgcc_s.so
+libstdc++.so
+libm.so
+libpthread.so
+还有其它的 glibc 库
+```
+
+下面是对一些库的介绍：
+
+```
+libm.so             // glibc 的数学库
+libc.so             // Linux 下的 ANSI C 函数库
+libgcc_s.so         // gcc 的底层运行时库，当一些操作在特定平台上不支持时，会自动生成对这些库函数的                       // 调用
+libc++.so           // clang 编译器的 C++ 标准库
+libstdc++.so        // gcc 编译器的 C++ 标准库
+librt.so            // glibc 的 real-time 库
+libpthread.so       // posix 线程库
+```
+
