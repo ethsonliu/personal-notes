@@ -68,7 +68,7 @@ static void SendFrpcState(int sockfd, int isSuccess, const string& domain, const
     static int failedInfoSent = 0;
     static string prevDomain = "";
 
-    string headers = "state=";
+    string body = "state=";
     headers += uToString(isSuccess);
     headers += "&machineCode=";
     headers += pn;
@@ -84,9 +84,9 @@ static void SendFrpcState(int sockfd, int isSuccess, const string& domain, const
     send_buf += uToString(port);
     send_buf += "\nContent-Type: application/x-www-form-urlencoded\n";
     send_buf += "Content-Length: ";
-    send_buf += uToString(headers.size());
+    send_buf += uToString(body.size());
     send_buf += "\n\n";
-    send_buf += headers;
+    send_buf += body;
     send_buf += "\r\n\r\n";
 
     write(sockfd, send_buf.c_str(), send_buf.size());
