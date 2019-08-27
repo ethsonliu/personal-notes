@@ -49,7 +49,7 @@ load(qt_config)
 
 将编译链改为你要使用的编译链路径。
 
-进入源码根目录，即`configure`所在的目录，执行以下命令，
+进入源码根目录，即`configure`所在的目录，执行以下命令（建议再找找其它博客，弄清楚下面各个参数的具体意思），
 
 ```shell
 ./configure -prefix /home/hapoa/crosschain/qt-everywhere-src-5.10.1-a40i/__build -release -opensource -make libs -xplatform linux-arm-gnueabi-g++ -optimized-qmake -pch -qt-libjpeg -qt-zlib -no-opengl -skip qt3d -skip qtcanvas3d -skip qtpurchasing -no-sse2 -no-openssl -no-cups -no-glib -no-iconv -nomake examples -nomake tools -skip qtvirtualkeyboard
