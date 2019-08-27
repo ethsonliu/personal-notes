@@ -1,4 +1,4 @@
-下载：<<https://www.zlib.net/>>
+下载：<https://www.zlib.net/>
 
 ### Linux
 
