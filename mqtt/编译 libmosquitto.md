@@ -10,6 +10,8 @@ Ubuntu 14.04 + mosquitto 1.6.2
 sudo apt-get install xsltproc # 这应该是给 doc 用的，装不装无所谓
 ```
 
+若想指定安装目录，打开`config.mk`修改`prefix`。
+
 虽然也会报错，
 
 ```
