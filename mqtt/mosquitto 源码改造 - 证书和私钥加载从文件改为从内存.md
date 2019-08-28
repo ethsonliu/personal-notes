@@ -52,11 +52,13 @@ libmosq_EXPORT int mosquitto_tls_set(struct mosquitto *mosq,
 		const char *certfile, const char *keyfile,
 		int (*pw_callback)(char *buf, int size, int rwflag, void *userdata))
 {
-    // 查看文件是否能够打开，若能打开
-    mosq->tls_cafile   = mosquitto__strdup(cafile);
-    mosq->tls_capath   = mosquitto__strdup(capath);
-    mosq->tls_certfile = mosquitto__strdup(certfile);
-    mosq->tls_keyfile  = mosquitto__strdup(keyfile);
+    // 查看文件是否能够打开，若能打开，做下面的...
+    
+    mosq->tls_cafile      = mosquitto__strdup(cafile);
+    mosq->tls_capath      = mosquitto__strdup(capath);
+    mosq->tls_certfile    = mosquitto__strdup(certfile);
+    mosq->tls_keyfile     = mosquitto__strdup(keyfile);
+    mosq->tls_pw_callback = pw_callback;
 }
 ```
 
