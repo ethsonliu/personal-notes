@@ -182,6 +182,14 @@ server {
 
 提供的两个版本，python 和 php，需要安装对应的包，如果是 php 脚本的话，则先`yum install php`。
 
+搭配 crontab 来定时执行，centos 7 下为：
+
+```shell
+1 1 1 * * root rm -rf /root/.pip/pip.conf && /home/certbot-auto --no-self-upgrade renew --force-renewal --manual --preferred-challenges dns --manual-auth-hook "/home/au.sh php aly add" --manual-cleanup-hook "/home/au.sh php aly clean" --deploy-hook "systemctl restart nginx"
+```
+
+为什么先删除`/root/.pip/pip.conf`，因为会报错，暂不知道原因，参考：<https://community.letsencrypt.org/t/certbot-auto-installing-python-packages-failed/95847>
+
 ## 参考链接
 
 - [申请Let's Encrypt通配符HTTPS证书](https://my.oschina.net/kimver/blog/1634575)
