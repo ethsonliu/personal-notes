@@ -27,9 +27,32 @@ Makefile:17: recipe for target 'docs' failed
 make: *** [docs] Error 2
 ```
 
-其实库已经编译好了，
+其实库已经编译好了，可以进入`config.mk`，修改不让它编译 doc，
+
+```
+# Build man page documentation by default.
+WITH_DOCS:=no
+```
 
 接着`sudo make install`，你就可以在`/usr/local/lib`找到了。
+
+如果要编译 32 位的（当前机器 Ubuntu 14.04 x64），则指定，
+
+```
+make CCFLAGS="-m32 " CPPFLAGS="-m32 " CXXFLAGS="-m32" CFLAGS="-m32" LDFLAGS="-m32"
+```
+
+如果是交叉编译的话，还得修改`config.mk`里的`STRIP`为，
+
+```
+STRIP?=/home/hapoa/crosschain/am335x/bin/arm-arago-linux-gnueabi-strip
+```
+
+然后，
+
+```
+make CC=/home/hapoa/crosschain/am335x/bin/arm-arago-linux-gnueabi-gcc CXX=/home/hapoa/crosschain/am335x/bin/arm-arago-linux-gnueabi-g++
+```
 
 ## Windows
 
