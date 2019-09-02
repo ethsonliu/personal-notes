@@ -223,15 +223,19 @@ static int net__init_ssl_ctx(struct mosquitto *mosq)
 			if(mosq->tls_certfile)
 			{
 				//ret = SSL_CTX_use_certificate_chain_file(mosq->ssl_ctx, mosq->tls_certfile); // 客户端证书
-				mosq->tls_cert_bio = BIO_new_mem_buf((void*)mosq->tls_certfile, -1);
-				if (mosq->tls_cert_bio == NULL)
+				BIO  *tls_cert_bio = BIO_new_mem_buf((void*)mosq->tls_certfile, -1);
+				if (tls_cert_bio == NULL)
 					printf("[mosquitto] net__init_ssl_ctx - BIO_new_mem_buf(tls_certfile) return NULL\n");
 
-				mosq->tls_cert_x509 = PEM_read_bio_X509(mosq->tls_cert_bio, NULL, 0, NULL);
-				if (mosq->tls_cert_x509 == NULL)
+				X509 *tls_cert_x509 = PEM_read_bio_X509(tls_cert_bio, NULL, 0, NULL);
+				if (tls_cert_x509 == NULL)
 					printf("[mosquitto] net__init_ssl_ctx - PEM_read_bio_X509 return NULL\n");
 
-				ret = SSL_CTX_use_certificate(mosq->ssl_ctx, mosq->tls_cert_x509); // 改为内存加载
+				ret = SSL_CTX_use_certificate(mosq->ssl_ctx, tls_cert_x509);
+
+				X509_free(tls_cert_x509);
+				BIO_set_close(tls_cert_bio, BIO_NOCLOSE);
+				BIO_free(tls_cert_bio);
 
 				if(ret != 1){
 #ifdef WITH_BROKER
@@ -298,15 +302,19 @@ static int net__init_ssl_ctx(struct mosquitto *mosq)
 				else // mosq->tls_keyform == mosq_k_pem
 				{
 					//ret = SSL_CTX_use_PrivateKey_file(mosq->ssl_ctx, mosq->tls_keyfile, SSL_FILETYPE_PEM); // 使用客户端私钥文件
-					mosq->tls_key_bio = BIO_new_mem_buf((void*)mosq->tls_keyfile, -1);
-					if (mosq->tls_key_bio == NULL)
+					BIO  *tls_key_bio = BIO_new_mem_buf((void*)mosq->tls_keyfile, -1);
+					if (tls_key_bio == NULL)
 					printf("[mosquitto] net__init_ssl_ctx - BIO_new_mem_buf(tls_keyfile) return NULL\n");
 
-					mosq->tls_rsa_key = PEM_read_bio_RSAPrivateKey(mosq->tls_key_bio, NULL, 0, NULL);
-					if (mosq->tls_rsa_key == NULL)
+					RSA  *tls_rsa_key = PEM_read_bio_RSAPrivateKey(tls_key_bio, NULL, 0, NULL);
+					if (tls_rsa_key == NULL)
 					printf("[mosquitto] net__init_ssl_ctx - PEM_read_bio_RSAPrivateKey return NULL\n");
 
-					ret = SSL_CTX_use_RSAPrivateKey(mosq->ssl_ctx, mosq->tls_rsa_key); // 改为内存加载
+					ret = SSL_CTX_use_RSAPrivateKey(mosq->ssl_ctx, tls_rsa_key);
+
+					RSA_free(tls_rsa_key);
+					BIO_set_close(tls_key_bio, BIO_NOCLOSE);
+					BIO_free(tls_key_bio);
 
 					if(ret != 1)
 					{
@@ -372,88 +380,5 @@ static int net__init_ssl_ctx(struct mosquitto *mosq)
 #  include <time.h>
 #endif
 #include <stdlib.h>
-```
-
-在这个文件下面的`struct mosquitto`，继续加上几个成员变量，
-
-```c++
-struct mosquitto {
-	......
-	struct mosquitto__packet in_packet;
-	struct mosquitto__packet *current_out_packet;
-	struct mosquitto__packet *out_packet;
-	struct mosquitto_message_all *will;
-	struct mosquitto__alias *aliases;
-	struct will_delay_list *will_delay_entry;
-	uint32_t maximum_packet_size;
-	int alias_count;
-	uint32_t will_delay_interval;
-	time_t will_delay_time;
-#ifdef WITH_TLS
-	SSL *ssl;
-	SSL_CTX *ssl_ctx;
-	char *tls_cafile;
-	char *tls_capath;
-
-	// 证书指针声明
-	X509 *tls_cert_x509;
-	BIO  *tls_cert_bio;
-	char *tls_certfile;
-
-	// 私钥指针声明
-	RSA  *tls_rsa_key;
-	BIO  *tls_key_bio;
-	char *tls_keyfile;
-
-	int (*tls_pw_callback)(char *buf, int size, int rwflag, void *userdata);
-	char *tls_version;
-	char *tls_ciphers;
-	char *tls_psk;
-	char *tls_psk_identity;
-	int tls_cert_reqs;
-	bool tls_insecure;
-	bool ssl_ctx_defaults;
-	bool tls_ocsp_required;
-	char *tls_engine;
-	char *tls_engine_kpass_sha1;
-	......
-};
-```
-
-析构在`lib/mosquitto.c`的`void mosquitto__destroy(struct mosquitto *mosq)`中，
-
-```c++
-void mosquitto__destroy(struct mosquitto *mosq)
-{
-	struct mosquitto__packet *packet;
-	if(!mosq) return;
-    
-    ......
-
-	mosquitto__free(mosq->tls_cafile);
-	mosquitto__free(mosq->tls_capath);
-
-	// 证书指针析构
-	X509_free(mosq->tls_cert_x509);
-	BIO_set_close(mosq->tls_cert_bio, BIO_NOCLOSE);
-	BIO_free(mosq->tls_cert_bio);
-	mosquitto__free(mosq->tls_certfile);
-
-    // 私钥指针析构
-	RSA_free(mosq->tls_rsa_key);
-	BIO_set_close(mosq->tls_key_bio, BIO_NOCLOSE);
-	BIO_free(mosq->tls_key_bio);
-	mosquitto__free(mosq->tls_keyfile);
-
-	if(mosq->tls_pw_callback) mosq->tls_pw_callback = NULL;
-	mosquitto__free(mosq->tls_version);
-	mosquitto__free(mosq->tls_ciphers);
-	mosquitto__free(mosq->tls_psk);
-	mosquitto__free(mosq->tls_psk_identity);
-	mosquitto__free(mosq->tls_alpn);
-#endif
-
-	......
-}
 ```
 
