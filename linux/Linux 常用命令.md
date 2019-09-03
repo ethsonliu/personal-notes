@@ -1,3 +1,25 @@
+## 目录
+
+- [查找](#查找)
+  - [which](#which)
+  - [whereis](#whereis)
+  
+## 查找
+
+### which
+
+查看可执行文件的位置。例如，
+
+```shell
+[root@~]# which openssl
+/usr/bin/openssl
+[root@~]# which make
+/usr/bin/make
+```
+
+### whereis
+
+
 ## 按名字查找进程
 
 ```
