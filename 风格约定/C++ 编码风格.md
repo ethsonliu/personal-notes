@@ -271,10 +271,10 @@ const int DAYS_IN_A_WEEK = 7;
 
 ### 函数命名
 
-常规函数，单词首字母都大写，例如：
+常规函数，除第一个单词首字母小写外，后面的都大写，例如：
 
 ```c++
-void MyExcitingFunction()
+void myExcitingFunction()
 {
 }
 ```
