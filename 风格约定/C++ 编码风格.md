@@ -389,7 +389,10 @@ class Base
   /** First child values, one array element for each node. */
   protected SuballocatedIntVector m_firstch;
 
-  /** Next sibling values, one array element for each node. */
+  /**
+   * Next sibling values, one array element for each node.
+   * This is multi-rows.
+   */
   protected SuballocatedIntVector m_nextsib;
 };
 
