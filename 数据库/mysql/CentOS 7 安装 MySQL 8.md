@@ -2,6 +2,9 @@
 
 ```shell
 wget http://repo.mysql.com/mysql80-community-release-el7.rpm
+
+## 5.7 版本
+## wget http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 ```
 
 完成之后，进行安装：
