@@ -50,10 +50,28 @@ mysql> set global validate_password.length=6;
 Query OK, 0 rows affected (0.00 sec)
 ```
 
+接着可以查看是否生效，
+
+```shell
+mysql> SHOW VARIABLES LIKE 'validate_password%';
++--------------------------------------+--------+
+| Variable_name                        | Value  |
++--------------------------------------+--------+
+| validate_password.check_user_name    | ON     |
+| validate_password.dictionary_file    |        |
+| validate_password.length             | 5      |
+| validate_password.mixed_case_count   | 1      |
+| validate_password.number_count       | 1      |
+| validate_password.policy             | MEDIUM |
+| validate_password.special_char_count | 1      |
++--------------------------------------+--------+
+7 rows in set (0.00 sec)
+```
+
 然后就可以设置一个简单点的密码了，
 
 ```shell
-mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'simple';
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '你的密码';
 ```
 
 ## 参考：
