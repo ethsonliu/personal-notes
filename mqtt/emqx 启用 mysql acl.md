@@ -7,7 +7,7 @@
 ## Notice: Disable the option in production deployment!
 ##
 ## Value: true | false
-allow_anonymous = true
+allow_anonymous = false
 
 ## Allow or deny if no ACL rules matched.
 ##
@@ -118,7 +118,13 @@ auth.mysql.acl_query = select allow, ipaddr, username, clientid, access, topic f
 $ emqx_ctl plugins reload emqx_auth_mysql
 ```
 
-接下来可以测试一下这个插件，插入一条规则，
+接下来可以测试一下这个插件，数据表`mqtt_user`插入一条，
+
+|  id  |   username    |   password    | salt | is_superuser | created |
+| :--: | :-----------: | :-----------: | :--: | :----------: | :-----: |
+|  1   | your_username | your_password |      |      0       |         |
+
+数据表`mqtt_acl`插入一条规则，
 
 |  id  | allow | ipaddr | username | clientid | access | topic |
 | :--: | :---: | :----: | :------: | :------: | :----: | :---: |
@@ -132,3 +138,4 @@ $ emqx_ctl plugins reload emqx_auth_mysql
 - 可动态生效，修改数据库后，不需要重新加载插件或重新开启 emqx。
 - 数据库内容被修改后的生效需要秒量级的时间。
 
+然后用 mqtt.fx 模拟，User Credentials 加入你的用户名和密码（如果不加是登录不上的）。
