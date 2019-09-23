@@ -597,7 +597,7 @@ void GamePlayer::Heartbeat()
 ### 函数命名的建议
 
 ```c++
-std::string getName();
+std::string name();
 void setName(const std::string &name);
 bool isEmpty();
 ...
