@@ -67,7 +67,7 @@ make CC=/home/hapoa/crosschain/am335x/bin/arm-arago-linux-gnueabi-gcc CXX=/home/
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/006.png)
 
-打开 libmosquitto，右键，【属性】-【C/C++】-【常规】-【附加包含目录】-【编辑】进去，可以看到这样的一行，`C:\pthreads\Pre-built.2\include`，把下载的`POSIX threads for win32`放在这个路径下，注意大小写和标点。
+打开 libmosquitto，右键，【属性】-【C/C++】-【常规】-【附加包含目录】-【编辑】进去，可以看到这样的一行，`C:\pthreads\Pre-built.2\include`，把下载的 pthreads-win32 放在这个路径下（它默认就是在这个目录的，下面还要链接库，省事点，按它默认的来比较方便），注意大小写和标点。
 
 ctrl + f5，编译，可能会报错：
 
@@ -75,7 +75,7 @@ ctrl + f5，编译，可能会报错：
 C2011	“timespec”:“struct”类型重定义	libmosquitto	C:\pthreads\Pre-built.2\include\pthread.h
 ```
 
-打开`POSIX threads for win32`里边的`pthread.h`，在顶部加入`#define HAVE_STRUCT_TIMESPEC`，重新 ctrl+f5 即可（参考：<https://stackoverflow.com/questions/33557506/timespec-redefinition-error>）。
+打开 pthreads-win32 里边的`pthread.h`，在顶部加入`#define HAVE_STRUCT_TIMESPEC`，重新 ctrl+f5 即可（参考：<https://stackoverflow.com/questions/33557506/timespec-redefinition-error>）。
 
 ![](https://raw.githubusercontent.com/Hapoa/personal-notes/master/_image/007.png)
 
