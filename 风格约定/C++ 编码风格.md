@@ -46,6 +46,7 @@
   - [不要用尤达条件式](#不要用尤达条件式)
   - [函数命名的建议](#函数命名的建议)
   - [一行代码不超过 80 列](#一行代码不超过-80-列)
+  - [尽量使用 cpp 库](#尽量使用-cpp-库)
 - [参考](#参考)
 
 
@@ -633,6 +634,40 @@ bool isEmpty();
 ### 一行代码不超过 80 列
 
 这个约定在左右分栏的时候很有用。
+
+### 尽量使用 cpp 库
+
+C++ 项目尽量也使用 C++ 库，因为 RAII。例如，
+
+```c++
+void func()
+{
+    cJSON* root = cJSON_Parse(str);
+    if (root == nullptr)
+    {
+        return;
+    }
+    
+    cJSON* resultItem = cJSON_GetObjectItem(root, "result");
+    if (resultItem == nullptr)
+    {
+        cJSON_Delete(root);
+	return;
+    }
+    
+    cJSON* hostItem = cJSON_GetObjectItem(resultItem, "host");
+    cJSON* portItem = cJSON_GetObjectItem(resultItem, "port");
+    if (hostItem == nullptr || portItem == nullptr)
+    {
+        cJSON_Delete(root);
+        return;
+    }
+    
+    cJSON_Delete(root);
+}
+```
+
+`cJSON_Delete(root);`出现了三次，冗余。如果没用 C 库，那写的代码就很优雅。当然也可以用 goto，但是在 C++ 中很多都是非 POD 类型的，不可避免地会在 goto 中用了非 POD 变量，导致一些报错。实践得知，gcc 比 visual C++ 检查更严格，在 windows 编译通过的，在 linux 通不过，也就是说代码的兼容性不好。 
 
 ## 参考
 
