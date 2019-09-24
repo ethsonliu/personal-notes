@@ -1,14 +1,15 @@
 ## 目录
 
 - [查找](#查找)
-  - [which](#which)
-  - [whereis](#whereis)
+  - [可执行文件](#可执行文件)
+  - [进程](#进程)
+  - [文件](#文件)
   
 ## 查找
 
-### which
+### 可执行文件
 
-查看可执行文件的位置。例如，
+`which xxx`，例如，
 
 ```shell
 [root@~]# which openssl
@@ -17,20 +18,23 @@
 /usr/bin/make
 ```
 
-### whereis
+### 进程
 
+是指查找当前运行的程序。
 
-## 按名字查找进程
-
-```
-# 按名字查找 ssh
-ps -ef|grep ssh
-
-# 显示所有进程，带执行它的命令行
+```shell
+## 显示所有进程，带执行它的命令行
 ps -ef
+
+## 按名字查找 ssh
+ps -ef|grep ssh
 ```
 
-参考：https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/ps.html
+## 文件
+
+```shell
+
+```
 
 ## 查看某个进程的使用情况
 
