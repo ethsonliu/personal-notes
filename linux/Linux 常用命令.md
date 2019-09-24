@@ -47,7 +47,7 @@ whereis 命令只能用于程序名的搜索，而且只搜索二进制文件（
 
 ### 普通文件
 
-`find` 有点暴力，遍历磁盘的查找。
+find 有点暴力，遍历磁盘的查找。
 
 ```shell
 find / -name openssl*
@@ -77,9 +77,55 @@ cat /proc/2913/status
 ```
 显示如下，
 ```
-
+Name:	frps ## 进程名
+Umask:	0022
+State:	S (sleeping)
+Tgid:	4029
+Ngid:	0
+Pid:	4029 ## 进程 pid
+PPid:	1 ## 父进程 pid
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	256 ## 文件描述符的最大个数，具体参见下面的链接
+Groups:	0 
+VmPeak:	  114008 kB
+VmSize:	  114008 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   29040 kB
+VmRSS:	   24428 kB ## 物理内存的大小
+RssAnon:	   17268 kB
+RssFile:	    7160 kB
+RssShmem:	       0 kB
+VmData:	  102996 kB
+VmStk:	     132 kB
+VmExe:	    4268 kB
+VmLib:	       0 kB
+VmPTE:	      88 kB
+VmSwap:	       0 kB
+Threads:	5
+SigQ:	1/15076
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000000001
+SigCgt:	fffffffe7fc1fefe
+CapInh:	0000000000000000
+CapPrm:	0000001fffffffff
+CapEff:	0000001fffffffff
+CapBnd:	0000001fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	1
+Cpus_allowed_list:	0
+Mems_allowed:	00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	28791781
+nonvoluntary_ctxt_switches:	89475
 ```
-
+详情参见：<https://www.cnblogs.com/youxin/p/5976194.html>
 
 ## 端口占用
 
