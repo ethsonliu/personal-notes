@@ -3,18 +3,23 @@
 - [查找](#查找)
   - [可执行文件](#可执行文件)
   - [进程](#进程)
-  - [文件](#文件)
-  
+  - [已安装程序](#已安装程序)
+  - [普通文件](#普通文件)
+
+- [查看某个进程的使用情况]
+
 ## 查找
 
 ### 可执行文件
 
-`which xxx`，例如，
+which 命令查找 PATH 变量指定的路径中，搜索某个系统命令的位置，默认返回第一个搜索结果，例如，
 
 ```shell
 [root@~]# which openssl
 /usr/bin/openssl
 [root@~]# which make
+/usr/bin/make
+[root@~]# which make -a ## 返回所有结果，可用 man which 查看语法
 /usr/bin/make
 ```
 
@@ -25,22 +30,35 @@
 ```shell
 ## 显示所有进程，带执行它的命令行
 ps -ef
-
+```
+```shell
 ## 按名字查找 ssh
 ps -ef|grep ssh
 ```
 
-## 文件
+### 已安装程序
+
+whereis 命令只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man 说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。
+
+和 find 相比，whereis 查找的速度非常快，这是因为 linux 系统会将 系统内的所有文件都记录在一个数据库文件中，当使用 whereis 和 locate 时，会从数据库中查找数据，而不是像 find 命令那样，通过遍历硬盘来查找，效率自然会很高。 
+
+但是该数据库文件并不是实时更新，默认情况下时一星期更新一次，因此，我们在用 whereis 和 locate 查找文件时，有时会找到已经被删除的数据，或者刚刚建立文件，却无法查找到，原因就是因为数据库文件没有被更新。 
+
+具体使用参考：<https://www.runoob.com/linux/linux-comm-whereis.html>
+
+### 普通文件
+
+`find` 有点暴力，遍历磁盘的查找。
 
 ```shell
-
+find / -name openssl*
 ```
 
 ## 查看某个进程的使用情况
 
 ```
-# 按 pid 查看
-top -p 2913
+## 查看所有进程（同时显示执行时的命令）
+top -c
 
 # ps 指令
 ps -aux | grep frps
