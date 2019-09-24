@@ -207,8 +207,7 @@ tmpfs           379M     0  379M   0% /run/user/0
 
 
 
-```
-## 
+```shell
 [root@EMQ home]# ls -l -AF ## 先查看这个目录
 total 52100
 -rwxrwxrwx 1 root    root        2013 Jun 14 13:28 au.sh*
