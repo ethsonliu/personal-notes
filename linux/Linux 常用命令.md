@@ -64,21 +64,15 @@ top -c
 
 ```shell
 ## 显示进程 CPU 占比、内存占比、内存大小
-ps -aux | grep frps
-```
-显示如下，
-```
-root      4340  0.0  1.1 113744 11984 pts/0    Sl   18:11   0:00 ./frps -c ./frps.ini
-root      4375  0.0  0.0 112708   980 pts/0    R+   18:38   0:00 grep --color=auto frps
+[root@EMQ /]# ps -aux | grep frps
+root      4029  0.4  0.6 114008 24124 ?        Sl   Sep12  74:11 ./frps -c ./frps.ini
+root      8081  0.0  0.0 112708   980 pts/0    R+   20:05   0:00 grep --color=auto frps
 ```
 其中 【0.0=CPU %，【1.1】=内存 %，【11984】=内存KB
 
 ```shell
-# 查看进程
-cat /proc/2913/status
-```
-显示如下，
-```
+## 查看进程详细状态
+[root@EMQ /]# cat /proc/2913/status
 Name:	frps ## 进程名
 Umask:	0022
 State:	S (sleeping)
@@ -133,10 +127,7 @@ nonvoluntary_ctxt_switches:	89475
 
 显示所有 tcp，udp 的端口和进程等相关情况，
 ```shell
-netstat -tunlp
-```
-显示如下，
-```
+[root@EMQ /]# netstat -tunlp
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
 tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      943/php-fpm: master
@@ -158,6 +149,8 @@ udp6       0      0 :::123                  :::*                                
 ```
 
 ## 查看磁盘和文件大小
+
+
 
 使用`df -h`命令来查看磁盘信息， -h 选项为根据大小适当显示。
 
