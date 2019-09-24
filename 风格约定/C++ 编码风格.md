@@ -261,7 +261,30 @@ struct UrlTableProperties
 };
 ```
 
-静态变量，不管位于哪个作用域，即类（或者结构体）的静态变量，函数内静态变量等等，命名规则一律和普通变量命名一致。
+静态变量，若位于结构体中，就和结构体变量命名保持一致；若位于类中，如是私有的，就和类成员变量保持一致，若是共有的，就和普通变量保持一致；若位于函数体内，就和普通变量保持一致。例如，
+
+```c++
+struct Student
+{
+    static int age;
+    static int id;
+};
+
+class Student
+{
+public:
+    static int age;
+private:
+    static int m_id;
+};
+
+void func()
+{
+    static int count = 0;
+    ...
+    ...
+}
+```
 
 常量，一律大写，例如：
 
