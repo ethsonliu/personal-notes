@@ -667,7 +667,19 @@ void func()
 }
 ```
 
-`cJSON_Delete(root);`出现了三次，冗余。如果没用 C 库，那写的代码就很优雅。当然也可以用 goto，但是在 C++ 中很多都是非 POD 类型的，不可避免地会在 goto 中用了非 POD 变量，导致一些报错。实践得知，gcc 比 visual C++ 检查更严格，在 windows 编译通过的，在 linux 通不过，也就是说代码的兼容性不好。 
+`cJSON_Delete(root);`出现了三次，冗余。如果没用 C 库，那写的代码就很优雅。
+
+当然也可以用 goto（只有在找不到合适的 C++ 库，或者封装成 C++ 库耗时耗精力不划算的情况下），但是在 C++ 中很多都是非 POD 类型的，如果用 goto 的话，不要在 goto 语句中定义非 POD 变量，例如，
+
+```c++
+    ...
+    goto exit;
+    std::string str; /** error */
+    ...
+
+exit:
+    ...
+```
 
 ## 参考
 
