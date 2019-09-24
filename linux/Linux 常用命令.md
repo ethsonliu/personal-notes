@@ -167,31 +167,81 @@ udp6       0      0 :::123                  :::*                                
 
 ## 查看磁盘和文件大小
 
-
-
-使用`df -h`命令来查看磁盘信息， -h 选项为根据大小适当显示。
-
-- **df -hl**：查看磁盘剩余空间
-- **du -sh [目录名]**：返回该目录的大小
-- **du -h --max-depth=1 [路径]**：查看该路径下所有第一层的文件夹的大小
-
-按文件和文件夹大小排序`du -s * | sort -nr`，大小是 KB。
-
-```
-jack@jiaobuchong:~$ du -s * | sort -nr 
-852756	installed-software
-173868	Desktop
-164768	Downloads
-4724	Pictures
-3236	program_pratice
-452		Documents
-284		learngit
-112		session
-12		examples.desktop
-4		Videos
-4		Templates
-4		Public
+```shell
+## 查看磁盘整体使用情况
+[root@EMQ /]# df -hl
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda1        40G  6.4G   31G  17% /
+devtmpfs        1.9G     0  1.9G   0% /dev
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           1.9G  464K  1.9G   1% /run
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+tmpfs           379M     0  379M   0% /run/user/0
 ```
 
+```shell
+## 一个目录的大小
+[root@EMQ /]# du -sh /usr/local/
+292M	/usr/local/
+[root@EMQ /]# du -sh /usr/
+2.4G	/usr/
+```
+
+```shell
+## 该路径下所有第一层的文件夹的大小（-d1）
+[root@EMQ /]# du -h -d1 /usr/local/
+8.3M	/usr/local/openresty
+38M	/usr/local/share
+48K	/usr/local/include
+4.0K	/usr/local/libexec
+2.2M	/usr/local/bin
+4.0K	/usr/local/etc
+4.0K	/usr/local/games
+4.0K	/usr/local/sbin
+1.5M	/usr/local/lib
+4.0K	/usr/local/lib64
+4.0K	/usr/local/src
+231M	/usr/local/aegis
+292M	/usr/local/
+```
 
 
+
+```
+## 
+[root@EMQ home]# ls -l -AF ## 先查看这个目录
+total 52100
+-rwxrwxrwx 1 root    root        2013 Jun 14 13:28 au.sh*
+-rwxrwxrwx 1 root    root       68689 Aug 24 10:04 certbot-auto*
+drwxr-xr-x 2 root    root        4096 Sep 17 18:36 certs/
+-rwxrwxrwx 1 root    root     3125224 Jul 31 15:42 data_interconnection-x86_64.AppImage*
+-rwxrwxrwx 1 root    root    18692288 Jun 11 09:44 emqx-centos7-v3.0-beta.3.x86_64.rpm*
+-rwxrwxrwx 1 root    root    20242888 Jun 10 16:44 emqx-centos7-v3.2-beta.2.x86_64.rpm*
+-rwxrwxrwx 1 root    root    11137472 Jun  5 09:05 frps*
+-rwxrwxrwx 1 root    root         156 Jun 14 14:55 frps.ini*
+-rw-r--r-- 1 root    root        1742 Sep 20 17:00 log.txt
+-rw-r--r-- 1 root    root       25680 Apr 27  2017 mysql57-community-release-el7-11.noarch.rpm
+-rw-r--r-- 1 root    root       10923 Sep 17 18:07 openssl.cnf
+drwxrwxrwx 2 root    root        4096 Jun 14 13:28 php-version/
+-rwxrwxrwx 1 root    root          79 Aug 24 10:58 restart_frps.sh*
+-rw-r--r-- 1 root    root         746 Sep 20 17:00 setting.json
+drwxrwxrwx 2 shawvyu shawvyu     4096 Jul 26 15:05 shawvyu/
+
+## 列出文件和文件夹（按大小排序 du -s * | sort -nr），大小是 KB。
+[root@EMQ home]# du -s *
+4	au.sh
+68	certbot-auto
+36	certs
+3052	data_interconnection-x86_64.AppImage
+18256	emqx-centos7-v3.0-beta.3.x86_64.rpm
+19772	emqx-centos7-v3.2-beta.2.x86_64.rpm
+10880	frps
+4	frps.ini
+4	log.txt
+28	mysql57-community-release-el7-11.noarch.rpm
+12	openssl.cnf
+32	php-version
+4	restart_frps.sh
+4	setting.json
+16	shawvyu
+```
