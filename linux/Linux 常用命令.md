@@ -6,6 +6,8 @@
   - [已安装程序](#已安装程序)
   - [普通文件](#普通文件)
 - [查看某个进程的使用情况](#查看某个进程的使用情况)
+- [端口占用](#端口占用)
+- [查看磁盘和文件大小](#查看磁盘和文件大小)
 
 ## 查找
 
@@ -129,18 +131,12 @@ nonvoluntary_ctxt_switches:	89475
 
 ## 端口占用
 
-查看服务器 8000 端口的占用情况：
-
+显示所有 tcp，udp 的端口和进程等相关情况，
+```shell
+netstat -tunlp
 ```
-# lsof -i:8000
-COMMAND   PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
-nodejs  26993 root   10u  IPv4 37999514      0t0  TCP *:8000 (LISTEN)
+显示如下，
 ```
-
-netstat -tunlp 用于显示 tcp，udp 的端口和进程等相关情况。
-
-```
-[root@iZ94xyihsxsZ home]# netstat -tunlp
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
 tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      943/php-fpm: master
@@ -159,21 +155,6 @@ udp        0      0 10.25.139.78:123        0.0.0.0:*                           
 udp        0      0 127.0.0.1:123           0.0.0.0:*                           425/ntpd
 udp        0      0 0.0.0.0:123             0.0.0.0:*                           425/ntpd
 udp6       0      0 :::123                  :::*                                425/ntpd
-
-```
-
-例如查看 8000 端口的情况，使用以下命令：
-
-```
-# netstat -tunlp | grep 8000
-tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      26993/nodejs   
-```
-
-Linux查看程序端口占用情况
-使用命令：
-
-```
-ps -aux | grep tomcat
 ```
 
 ## 查看磁盘和文件大小
