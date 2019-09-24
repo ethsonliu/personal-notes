@@ -30,11 +30,28 @@ which 命令查找 PATH 变量指定的路径中，搜索某个系统命令的�
 
 ```shell
 ## 显示所有进程，带执行它的命令行
-ps -ef
+[root@EMQ /]# ps -ef
+root      2612     1  0 Sep12 ttyS0    00:00:00 /sbin/agetty --keep-baud 115200 38400 9600 ttyS0 vt220
+root      2613     1  0 Sep12 tty1     00:00:00 /sbin/agetty --noclear tty1 linux
+root      2820     1  0 Sep12 ?        00:00:00 /sbin/dhclient -1 -q -lf /var/lib/dhclient/dhclient--eth0.leas
+root      2900     1  0 Sep12 ?        00:00:51 /usr/sbin/rsyslogd -n
+root      2907     1  0 Sep12 ?        00:02:06 /usr/bin/python2 -Es /usr/sbin/tuned -l -P
+root      2966     1  0 Sep12 ?        00:06:55 /usr/local/aegis/aegis_update/AliYunDunUpdate
+root      3089     1  0 Sep12 ?        00:00:00 nginx: master process /usr/sbin/nginx
+nginx     3090  3089  0 Sep12 ?        00:03:38 nginx: worker process
+root      3392     1  0 Sep12 ?        00:00:00 /usr/sbin/sshd -D
+root      3501     1  0 Sep12 ?        00:07:35 /usr/sbin/aliyun-service
+root      3905     1  1 Sep12 ?        05:32:12 /usr/local/aegis/aegis_client/aegis_10_73/AliYunDun
+root      4029     1  0 Sep12 ?        01:14:12 ./frps -c ./frps.ini
+mysql     7402     1  0 Sep21 ?        00:02:17 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld
+...
 ```
 ```shell
 ## 按名字查找 ssh
-ps -ef|grep ssh
+[root@EMQ /]# ps -ef|grep ssh
+root      3392     1  0 Sep12 ?        00:00:00 /usr/sbin/sshd -D
+root      8218 18317  0 20:07 pts/0    00:00:00 grep --color=auto ssh
+root     18315  3392  0 Sep20 ?        00:00:01 sshd: root@pts/0
 ```
 
 ### 已安装程序
