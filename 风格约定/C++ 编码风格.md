@@ -48,6 +48,7 @@
   - [一行代码不超过 80 列](#一行代码不超过-80-列)
   - [尽量使用 cpp 库](#尽量使用-cpp-库)
   - [禁止使用 goto](#禁止使用-goto)
+  - [class 内成员访问权限顺序](#class 内成员访问权限顺序)
 - [参考](#参考)
 
 
@@ -683,6 +684,72 @@ void func()
 3. ...
 
 本来是很好的一个工具，但是代码一旦引入，可能花的时间（或者是前期学习使用的时间）都挺大，直接禁止掉比较好。
+
+### class 内成员访问权限顺序
+
+对于 C++ 代码，
+
+```c++
+class Sample
+{
+public:
+
+    Sample();
+    void publicFunc();
+
+    int m_publicMem; /** public 成员变量，不建议这么用 */
+
+protected:
+
+    void protedtedFunc();
+
+    int m_protectedMem;
+
+private:
+
+    void privateFunc();
+
+    int m_privateMem;
+};
+```
+
+Qt 中多了 slots 和 signals，
+
+```c++
+class Sample : public QObject
+{
+public:
+
+    Sample();
+    void publicFunc();
+
+    int m_publicMem; /** public 成员变量，不建议这么用 */
+
+public slots:
+
+    void publicSlot();
+
+signals: /** Qt5 以上 signals 都是 public */
+
+    void publicSignal();
+
+protected:
+
+    void protedtedFunc();
+
+    int m_protectedMem;
+
+private:
+
+    void privateFunc();
+
+private slots:
+
+    void privateSlot();
+
+    int m_privateMem;
+};
+```
 
 ## 参考
 
