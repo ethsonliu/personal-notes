@@ -43,4 +43,4 @@ Terminal=true
 └── translations/
 ```
 
-`ata_Interconnection-068c258-x86_64.AppImage`就是你想要的。（如果你在MyProject的父级目录运行打包命令，则AppImage就生成在父级目录中）
+`Data_Interconnection-068c258-x86_64.AppImage`就是你想要的。（如果你在MyProject的父级目录运行打包命令，则AppImage就生成在父级目录中）
