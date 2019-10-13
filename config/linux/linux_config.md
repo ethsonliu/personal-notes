@@ -58,6 +58,8 @@ github 地址：https://github.com/vinceliuice/Sierra-gtk-theme
 
 解压将里边的文件夹 mv 到 /usr/share/icons，重启电脑。
 
+![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/012.png)
+
 ## 字体
 
 下载 Consolas 字体：https://github.com/EthsonLiu/personal-notes/blob/master/config/linux/YaHeiConsolas.tar.gz
