@@ -1,4 +1,13 @@
-以下操作均在 Ubuntu 18.04 上。
+目录
+
+- [安装 VMware Tools](#安装-VMware-Tools)
+- [改变下载源](#改变下载源)
+- [安装 Gnome Tweak Tool](#安装-Gnome-Tweak-Tool)
+- [安装 dash-to-panel 或者 dash-to-dock](#安装-dash-to-panel-或者-dash-to-dock)
+- [桌面主题](#桌面主题)
+- [图标主题](#图标主题)
+- [字体](#字体)
+- [安装 Qt](#安装-Qt)
 
 ## 安装 VMware Tools
 
@@ -7,18 +16,12 @@ tar -xzvf  VMwareTools-10.0.6-3595377.tar.gz
 sudo ./wmware-install.pl
 ```
 
-## 改变源
+## 改变下载源
 
 【设置】-【软件更新】，选择阿里云镜像站点
 
 或者直接可以搜索到【软件更新器】
 
-## 右键当前目录打开终端（如果没有的话）
-
-```
-sudo apt-get install nautilus-open-terminal
-nautilus -q # 使插件生效，如果还是不行的重启
-```
 
 ## 安装 Gnome Tweak Tool
 
