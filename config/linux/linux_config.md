@@ -54,7 +54,9 @@ github 地址：https://github.com/vinceliuice/Sierra-gtk-theme
 
 ## 图标主题
 
+下载地址：https://www.opendesktop.org/p/1305429/
 
+解压将里边的文件夹 mv 到 /usr/share/icons，重启电脑。
 
 ## 字体
 
