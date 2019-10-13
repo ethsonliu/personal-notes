@@ -41,23 +41,21 @@ dash-to-panel 像 windows 底部栏一样，dash-to-dock 像 mac 底部栏一样
 # 重启电脑，打开 gnome-tweak-tool 查看 扩展就可以发现 Dash to panel 或者 Dash to dock
 ```
 
-## 图标主题
-
-开源地址：[https://github.com/PapirusDevelopmentTeam/papirus-icon-theme](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
-
-下载下来解压，将 `Papirus` 几个目录，复制到`/usr/share/icons/`下。
-
-再到第 2 步安装的 unity-tweak-tool 中启用。
-
 ## 桌面主题
 
- - [arc-theme](https://github.com/NicoHood/arc-theme)
- - [materia-theme](https://github.com/nana-4/materia-theme)
- - [adapta-gtk-theme](https://github.com/adapta-project/adapta-gtk-theme)
+github 地址：https://github.com/vinceliuice/Sierra-gtk-theme
+
+下载地址：https://www.opendesktop.org/s/Gnome/p/1013714/
+
+解压将里边的文件夹 mv 到 /usr/share/themes，重启电脑。
+
+## 图标主题
+
+
 
 ## 字体
 
-下载 Consolas 字体：https://github.com/Hapoa/personal-notes/blob/master/config/linux/YaHeiConsolas.tar.gz
+下载 Consolas 字体：https://github.com/EthsonLiu/personal-notes/blob/master/config/linux/YaHeiConsolas.tar.gz
 
 ```
 tar -zxvf YaHeiConsolas.tar.gz
