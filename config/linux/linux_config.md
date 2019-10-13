@@ -29,7 +29,7 @@ sudo ./wmware-install.pl
 sudo apt-get install gnome-tweak-tool gnome-shell-extensions
 ```
 
-安装完成查看版本：`gnome-shell --version`，下面的安装尽量基于版本去下载，否则可能有问题。
+安装完成查看版本：`gnome-shell --version`，下面 extensions 的安装尽量基于版本去下载，否则可能有问题。
 
 ## 安装 dash-to-panel 或者 dash-to-dock
 
