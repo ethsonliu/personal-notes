@@ -26,14 +26,19 @@ nautilus -q # 使插件生效，如果还是不行的重启
 sudo apt-get install gnome-tweak-tool gnome-shell-extensions
 ```
 
-### 
+安装完成查看版本：`gnome-shell --version`，下面的安装尽量基于版本去下载，否则可能有问题。
+
+### 安装 dash-to-panel 或者 dash-to-dock
+
+dash-to-panel 像 windows 底部栏一样，dash-to-dock 像 mac 底部栏一样，
 
 ```
-# 安装 dash-to-panel
-# 1: https://extensions.gnome.org/extension/1160/dash-to-panel/
-# 2: 解压至 home
-# 3: CTRL + H, 打开隐藏文件，放至 .local/share/gnome-shell/extensions/
-# 4: 重启
+# https://extensions.gnome.org/extension/1160/dash-to-panel/
+# https://extensions.gnome.org/extension/307/dash-to-dock/
+# 解压，目录命名为：dash-to-panel@jderose9.github.com
+# 解压，目录命名为：dash-to-dock@micxgx.gmail.com
+# CTRL + H, 打开隐藏文件，放至 .local/share/gnome-shell/extensions/
+# 重启电脑，打开 gnome-tweak-tool 查看 扩展就可以发现 Dash to panel 或者 Dash to dock
 ```
 
 ### 图标主题
