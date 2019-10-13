@@ -1,26 +1,26 @@
 以下操作均在 Ubuntu 18.04 上。
 
-### 安装 VMware Tools
+## 安装 VMware Tools
 
 ```
 tar -xzvf  VMwareTools-10.0.6-3595377.tar.gz
 sudo ./wmware-install.pl
 ```
 
-### 改变源
+## 改变源
 
 【设置】-【软件更新】，选择阿里云镜像站点
 
 或者直接可以搜索到【软件更新器】
 
-### 右键当前目录打开终端（如果没有的话）
+## 右键当前目录打开终端（如果没有的话）
 
 ```
 sudo apt-get install nautilus-open-terminal
 nautilus -q # 使插件生效，如果还是不行的重启
 ```
 
-### 安装 Gnome Tweak Tool
+## 安装 Gnome Tweak Tool
 
 ```
 sudo apt-get install gnome-tweak-tool gnome-shell-extensions
@@ -28,7 +28,7 @@ sudo apt-get install gnome-tweak-tool gnome-shell-extensions
 
 安装完成查看版本：`gnome-shell --version`，下面的安装尽量基于版本去下载，否则可能有问题。
 
-### 安装 dash-to-panel 或者 dash-to-dock
+## 安装 dash-to-panel 或者 dash-to-dock
 
 dash-to-panel 像 windows 底部栏一样，dash-to-dock 像 mac 底部栏一样，
 
@@ -41,7 +41,7 @@ dash-to-panel 像 windows 底部栏一样，dash-to-dock 像 mac 底部栏一样
 # 重启电脑，打开 gnome-tweak-tool 查看 扩展就可以发现 Dash to panel 或者 Dash to dock
 ```
 
-### 图标主题
+## 图标主题
 
 开源地址：[https://github.com/PapirusDevelopmentTeam/papirus-icon-theme](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
 
@@ -49,13 +49,13 @@ dash-to-panel 像 windows 底部栏一样，dash-to-dock 像 mac 底部栏一样
 
 再到第 2 步安装的 unity-tweak-tool 中启用。
 
-### 桌面主题
+## 桌面主题
 
  - [arc-theme](https://github.com/NicoHood/arc-theme)
  - [materia-theme](https://github.com/nana-4/materia-theme)
  - [adapta-gtk-theme](https://github.com/adapta-project/adapta-gtk-theme)
 
-### 字体
+## 字体
 
 下载 Consolas 字体：https://github.com/Hapoa/personal-notes/blob/master/config/linux/YaHeiConsolas.tar.gz
 
@@ -68,7 +68,7 @@ cd /usr/share/fonts/vista/
 sudo mkfontscale && sudo mkfontdir && sudo fc-cache -fv
 ```
 
-### 安装 Qt
+## 安装 Qt
 
 原文链接：https://wiki.qt.io/Install_Qt_5_on_Ubuntu
 
