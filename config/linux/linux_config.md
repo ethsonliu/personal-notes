@@ -38,7 +38,7 @@ dash-to-panel 像 windows 底部栏一样，dash-to-dock 像 mac 底部栏一样
 # 解压，目录命名为：dash-to-panel@jderose9.github.com
 # 解压，目录命名为：dash-to-dock@micxgx.gmail.com
 # CTRL + H, 打开隐藏文件，放至 .local/share/gnome-shell/extensions/
-# 重启电脑，打开 gnome-tweak-tool 查看 扩展就可以发现 Dash to panel 或者 Dash to dock
+# 重启电脑，打开 gnome-tweak-tool 查看扩展就可以发现 Dash to panel 或者 Dash to dock
 ```
 
 ## 桌面主题
