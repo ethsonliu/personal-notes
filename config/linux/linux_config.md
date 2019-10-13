@@ -7,6 +7,7 @@
 - [桌面主题](#桌面主题)
 - [图标主题](#图标主题)
 - [字体](#字体)
+- [安装 vscode](#安装-vscode)
 - [安装 Qt](#安装-Qt)
 
 ## 安装 VMware Tools
@@ -72,6 +73,10 @@ sudo chmod 644 /usr/share/fonts/vista/*.ttf
 cd /usr/share/fonts/vista/
 sudo mkfontscale && sudo mkfontdir && sudo fc-cache -fv
 ```
+
+## 安装 vscode
+
+参考：https://code.visualstudio.com/docs/setup/linux#_debian-and-ubuntu-based-distributions
 
 ## 安装 Qt
 
