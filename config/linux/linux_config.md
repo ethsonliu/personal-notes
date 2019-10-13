@@ -1,4 +1,4 @@
-以下操作均在 Ubuntu 14.04 上。
+以下操作均在 Ubuntu 18.04 上。
 
 ### 安装 VMware Tools
 
@@ -11,7 +11,9 @@ sudo ./wmware-install.pl
 
 【设置】-【软件更新】，选择阿里云镜像站点
 
-### 右键当前目录打开终端
+或者直接可以搜索到【软件更新器】
+
+### 右键当前目录打开终端（如果没有的话）
 
 ```
 sudo apt-get install nautilus-open-terminal
