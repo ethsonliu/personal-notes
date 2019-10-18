@@ -54,6 +54,40 @@ STRIP?=/home/hapoa/crosschain/am335x/bin/arm-arago-linux-gnueabi-strip
 make CC=/home/hapoa/crosschain/am335x/bin/arm-arago-linux-gnueabi-gcc CXX=/home/hapoa/crosschain/am335x/bin/arm-arago-linux-gnueabi-g++
 ```
 
+如果遇到错误：
+
+```shell
+cc -L../lib pub_client.o pub_shared.o client_shared.o client_props.o -o mosquitto_pub ../lib/libmosquitto.so.1
+../lib/libmosquitto.so.1: undefined reference to OPENSSL_sk_num' ../lib/libmosquitto.so.1: undefined reference to SSL_CTX_up_ref'
+../lib/libmosquitto.so.1: undefined reference to OPENSSL_sk_pop_free' ../lib/libmosquitto.so.1: undefined reference to SSL_CTX_set_alpn_protos'
+../lib/libmosquitto.so.1: undefined reference to OPENSSL_sk_value' ../lib/libmosquitto.so.1: undefined reference to OPENSSL_init_crypto'
+../lib/libmosquitto.so.1: undefined reference to SSL_CTX_set_options' ../lib/libmosquitto.so.1: undefined reference to TLS_client_method'
+../lib/libmosquitto.so.1: undefined reference to `ASN1_STRING_get0_data'
+```
+
+在 `config.mk` 中加入一行，
+
+```
+ifeq ($(WITH_TLS),yes)
+	BROKER_LDADD:=$(BROKER_LDADD) -lssl -lcrypto
+	LIB_LIBADD:=$(LIB_LIBADD) -lssl -lcrypto
+	BROKER_CPPFLAGS:=$(BROKER_CPPFLAGS) -DWITH_TLS
+	LIB_CPPFLAGS:=$(LIB_CPPFLAGS) -DWITH_TLS
+	PASSWD_LDADD:=$(PASSWD_LDADD) -lcrypto
+	CLIENT_CPPFLAGS:=$(CLIENT_CPPFLAGS) -DWITH_TLS
+	STATIC_LIB_DEPS:=$(STATIC_LIB_DEPS) -lssl -lcrypto
+  
+  # 加入这一行
+  CLIENT_LDADD:=$(CLIENT_LDADD) -lssl -lcrypto
+
+	ifeq ($(WITH_TLS_PSK),yes)
+		BROKER_CPPFLAGS:=$(BROKER_CPPFLAGS) -DWITH_TLS_PSK
+		LIB_CPPFLAGS:=$(LIB_CPPFLAGS) -DWITH_TLS_PSK
+		CLIENT_CPPFLAGS:=$(CLIENT_CPPFLAGS) -DWITH_TLS_PSK
+	endif
+endif
+```
+
 ## Windows
 
 需要准备的东西：
