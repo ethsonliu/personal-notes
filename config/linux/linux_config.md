@@ -74,6 +74,8 @@ cd /usr/share/fonts/vista/
 sudo mkfontscale && sudo mkfontdir && sudo fc-cache -fv
 ```
 
+在 vscode 中填写`YaHei Consolas Hybrid`即可。
+
 ## 安装 vscode
 
 参考：https://code.visualstudio.com/docs/setup/linux#_debian-and-ubuntu-based-distributions
