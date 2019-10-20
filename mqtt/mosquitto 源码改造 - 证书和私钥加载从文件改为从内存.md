@@ -357,9 +357,7 @@ static int net__init_ssl_ctx(struct mosquitto *mosq)
 
 从注释就可以看出来了，改的地方就两处：在注释 “改为内存加载” 那里。参考：<https://stackoverflow.com/questions/3810058/read-certificate-files-from-memory-instead-of-a-file-using-openssl>
 
-还有其他一些小地方需要加的，具体如下：
-
-头文件在`lib/mosquitto_internal.h`开头部分，
+还有其他一些小地方需要加的，添加一些需要 include 的头文件，在`lib/mosquitto_internal.h`开头部分，
 
 ```c++
 #ifndef MOSQUITTO_INTERNAL_H
