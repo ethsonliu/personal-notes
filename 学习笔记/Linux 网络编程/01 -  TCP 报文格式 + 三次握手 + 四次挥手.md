@@ -1,10 +1,36 @@
 ## 目录
 
+- [IP 报文格式](#IP-报文格式)
 - [TCP 报文格式](#TCP-报文格式)
 - [三次握手](#三次握手)
 - [四次挥手](#四次挥手)
 
+## IP 报文格式
+
+
+
 ## TCP 报文格式
+
+![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/013.png)
+
+参考：<http://www.networksorcery.com/enp/protocol/tcp.htm#Sequence%20Number>
+
+**源端口（Source Port）**
+
+16位，数据发送方的端口号。
+
+**目的端口（Destination Port）**
+
+16位，数据接受方的端口号。
+
+**序号（Sequence Number）**
+
+32 位，
+
+
+
+
+
 
 ## 三次握手
 
