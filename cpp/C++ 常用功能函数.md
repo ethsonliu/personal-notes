@@ -18,10 +18,14 @@ std::string readAllContent(const std::string &file)
     std::ifstream in;
     in.open(file);
     
-    std::stringstream stream;
-    stream << in.rdbuf();
+    if (in.is_open())
+    {
+        std::stringstream stream;
+        stream << in.rdbuf();
+        return stream.str();
+    }
     
-    return stream.str();
+    return std::string();
 }
 ```
 
