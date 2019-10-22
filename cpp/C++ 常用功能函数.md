@@ -1,12 +1,16 @@
 ## 目录
 
-- [读取文件所有内容](#读取文件所有内容)
+- [读取文件内容](#读取文件内容)
+  - [读取所有内容](#读取所有内容)
+  - [一行一行读取](#一行一行读取)
 - [写入文件内容](#写入文件内容)
   - [覆盖写入](#覆盖写入)
   - [尾部追加](#尾部追加)
   - [头部插入](#头部插入)
 
-## 读取文件所有内容
+## 读取文件内容
+
+### 读取所有内容
 
 ```c++
 #include <fstream>
@@ -26,6 +30,28 @@ std::string readAllContent(const std::string &file)
     }
     
     return std::string();
+}
+```
+
+### 一行一行读取
+
+```c++
+#include <fstream>
+#include <string>
+
+void readLineByLine(const std::string &file)
+{
+    std::ifstream in;
+    in.open(file);
+    
+    if (in.is_open())
+    {
+        std::string line;
+        while (std::getline(in, line))
+        {
+            std::cout << line;
+        }
+    }
 }
 ```
 
