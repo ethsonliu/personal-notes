@@ -9,12 +9,12 @@
 #include <sstream>
 #include <string>
 
-string readAllContent(string file)
+std::string readAllContent(const std::string &file)
 {
-    ifstream in;
+    std::ifstream in;
     in.open(file);
     
-    stringstream stream;
+    std::stringstream stream;
     stream << in.rdbuf();
     
     return stream.str();
