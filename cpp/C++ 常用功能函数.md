@@ -33,6 +33,8 @@ std::string readAllContent(const std::string &file)
 }
 ```
 
+参考：<https://stackoverflow.com/questions/116038/what-is-the-best-way-to-read-an-entire-file-into-a-stdstring-in-c>
+
 ### 一行一行读取
 
 ```c++
@@ -54,6 +56,8 @@ void readLineByLine(const std::string &file)
     }
 }
 ```
+
+参考：<https://stackoverflow.com/questions/7868936/read-file-line-by-line-using-ifstream-in-c>
 
 ## 写入文件内容
 
