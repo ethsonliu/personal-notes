@@ -51,7 +51,7 @@ void readLineByLine(const std::string &file)
         std::string line;
         while (std::getline(in, line))
         {
-            std::cout << line;
+            std::cout << line << std::endl;
         }
     }
 }
