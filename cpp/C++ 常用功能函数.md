@@ -8,6 +8,7 @@
   - [尾部追加](#尾部追加)
   - [头部插入](#头部插入)
 - [分割字符串](#分割字符串)
+- [清空文件数据](#清空文件数据)
 
 ## 读取文件内容
 
@@ -120,7 +121,9 @@ std::vector<std::string> SplitByChar(const std::string& str, char separator, boo
 
 参考：<https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c>
 
+## 清空文件数据
 
+参考：<https://stackoverflow.com/questions/17032970/clear-data-inside-text-file-in-c>
 
 
 
