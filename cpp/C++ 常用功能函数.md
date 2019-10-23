@@ -7,6 +7,7 @@
   - [覆盖写入](#覆盖写入)
   - [尾部追加](#尾部追加)
   - [头部插入](#头部插入)
+- [分割字符串](#分割字符串)
 
 ## 读取文件内容
 
@@ -78,3 +79,44 @@ void readLineByLine(const std::string &file)
 ```c++
 
 ```
+
+## 分割字符串
+
+```c++
+#include <string>
+#include <vector>
+
+/**
+ * 字符串分割
+ *
+ * @param  str
+ *         待分割的字符串
+ *
+ * @param  separator
+ *         分隔符
+ *
+ * @param  skipEmpty
+ *         保存时是否跳过空的字符串
+ *
+ * @return 分割好的字符串数组
+ */
+std::vector<std::string> SplitByChar(const std::string& str, char separator, bool skipEmpty = true)
+{
+    std::vector<std::string> strVector;
+
+    std::istringstream stream(str);
+    std::string temp;
+    while (std::getline(stream, temp, separator))
+    {
+        if (skipEmpty && temp.empty())
+            continue;
+
+        strVector.push_back(temp);
+    }
+
+    return strVector;
+}
+```
+
+
+
