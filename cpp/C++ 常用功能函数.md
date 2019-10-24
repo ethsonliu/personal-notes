@@ -10,6 +10,7 @@
 - [分割字符串](#分割字符串)
 - [清空文件数据](#清空文件数据)
 - [获取程序所在绝对路径](#获取程序所在绝对路径)
+- [预处理器指令检查操作系统](#预处理器指令检查操作系统)
 
 ## 读取文件内容
 
@@ -135,6 +136,8 @@ ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
 
 ## 获取程序所在绝对路径
 
+不管于何处调用，返回的都是该程序的绝对路径，而不是调用处的路径。
+
 ```c++
 #include <unistd.h>
 
@@ -172,9 +175,29 @@ std::string getCurrentExePath()
 - <https://stackoverflow.com/questions/143174/how-do-i-get-the-directory-that-a-program-is-running-from>
 - [C++ 17 std::filesystem::current_path](https://en.cppreference.com/w/cpp/filesystem/current_path)
 
+## 预处理器指令检查操作系统
 
+只适用 PC 类系统。
 
+```c++
+#if defined(_WIN32) || defined(__CYGWIN__)
+    // Windows (x86 or x64)
+    // ...
+#elif defined(__linux__)
+    // Linux
+    // ...
+#elif defined(__APPLE__) && defined(__MACH__)
+    // Mac OS
+    // ...
+#elif defined(unix) || defined(__unix__) || defined(__unix)
+    // Unix like OS
+    // ...
+#else
+    #error Unknown environment!
+#endif
+```
 
+参考：<https://stackoverflow.com/questions/142508/how-do-i-check-os-with-a-preprocessor-directive>
 
 
 
