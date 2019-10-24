@@ -167,6 +167,10 @@ std::string getCurrentExePath()
 }
 ```
 
+参考：
+
+- <https://stackoverflow.com/questions/143174/how-do-i-get-the-directory-that-a-program-is-running-from>
+- [C++ 17 std::filesystem::current_path](https://en.cppreference.com/w/cpp/filesystem/current_path)
 
 
 
