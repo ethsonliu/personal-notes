@@ -124,6 +124,8 @@ std::vector<std::string> SplitByChar(const std::string& str, char separator, boo
 ## 清空文件数据
 
 ```c++
+#include <fstream>
+
 std::ofstream ofs;
 ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
 ```
