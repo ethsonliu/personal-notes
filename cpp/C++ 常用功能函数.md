@@ -9,6 +9,7 @@
   - [头部插入](#头部插入)
 - [分割字符串](#分割字符串)
 - [清空文件数据](#清空文件数据)
+- [获取程序所在绝对路径](#获取程序所在绝对路径)
 
 ## 读取文件内容
 
@@ -132,9 +133,39 @@ ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
 
 参考：<https://stackoverflow.com/questions/17032970/clear-data-inside-text-file-in-c>
 
+## 获取程序所在绝对路径
 
+```c++
+#include <unistd.h>
 
+std::string getCurrentExePath()
+{
+    std::string currentPath;
 
+    char path[1024] = {0};
+    int count;
+    count = readlink("/proc/self/exe", path, sizeof(path));
+    if (count < 0 || count >= sizeof(path))
+    {
+        path[sizeof(path) - 1] = '\0';
+        currentPath = path;
+        return currentPath;
+    }
+
+    for (int i = count - 1; i >= 0; --i) // 只保留路径,去掉程序名
+    {
+        if (path[i] == '/')
+        {
+            path[i] = '\0';
+            break;
+        }
+    }
+
+    currentPath = path;
+
+    return currentPath;
+}
+```
 
 
 
