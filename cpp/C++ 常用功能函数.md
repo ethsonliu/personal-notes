@@ -123,6 +123,11 @@ std::vector<std::string> SplitByChar(const std::string& str, char separator, boo
 
 ## 清空文件数据
 
+```c++
+std::ofstream ofs;
+ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
+```
+
 参考：<https://stackoverflow.com/questions/17032970/clear-data-inside-text-file-in-c>
 
 
