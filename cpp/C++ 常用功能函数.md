@@ -11,6 +11,7 @@
 - [清空文件数据](#清空文件数据)
 - [获取程序所在绝对路径](#获取程序所在绝对路径)
 - [预处理器指令检查操作系统](#预处理器指令检查操作系统)
+- [查看进程是否存在](#查看进程是否存在)
 
 ## 读取文件内容
 
@@ -199,7 +200,38 @@ std::string getCurrentExePath()
 
 参考：<https://stackoverflow.com/questions/142508/how-do-i-check-os-with-a-preprocessor-directive>
 
+## 查看进程是否存在
 
+```c++
+#include <stdio.h>
+#include <stdlib.h>
+
+bool isProcessExisted(const std::string processName)
+{
+#if defined(__CYGWIN__)
+    string cmd = "ps -W|grep " + processName + "|grep -v \"grep\"|wc -l";
+#else
+    string cmd = "ps |grep " + processName + "|grep -v \"grep\"|wc -l";
+#endif
+
+    FILE *fp = popen(cmd.c_str(), "r");
+    if (fp)
+    {
+        char buf[16] = {0};
+        fgets(buf, sizeof(buf), fp);
+        pclose(fp);
+
+        int ret = atoi(buf); // 存在的进程数
+        if (ret >= 1)
+            return true;
+    }
+    else
+    {
+    }
+
+    return false;
+}
+```
 
 
 
