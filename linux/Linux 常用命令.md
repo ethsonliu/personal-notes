@@ -328,7 +328,7 @@ public
   rich rules: 
 ```
 
-
+其余更多 firewall-cmd 命令可以参考：<https://wangchujiang.com/linux-command/c/firewall-cmd.html>
 
 
 
