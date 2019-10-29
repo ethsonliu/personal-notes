@@ -13,6 +13,8 @@
 - [查看某个进程的使用情况](#查看某个进程的使用情况)
 - [端口占用](#端口占用)
 - [查看磁盘和文件大小](#查看磁盘和文件大小)
+- [防火墙](#防火墙)
+  - [firewall](#firewall)
 
 ## vi
 
@@ -278,3 +280,56 @@ drwxrwxrwx 2 shawvyu shawvyu     4096 Jul 26 15:05 shawvyu/
 4	setting.json
 16	shawvyu
 ```
+
+## 防火墙
+
+### firewall
+
+开启/关闭/查看防火墙/...
+
+```shell
+service start firewalld   # 开启
+service stop firewalld    # 停止
+service restart firewalld # 重启
+service status firewalld  # 查看状态
+service disable firewalld # 禁止开机启动
+```
+
+配置文件
+
+```shell
+# 系统配置目录
+/usr/lib/firewalld/
+/usr/lib/firewalld/services
+/usr/lib/firewalld/zones
+
+# 用户配置目录
+/etc/firewalld/
+/etc/firewalld/services
+/etc/firewalld/zones
+```
+
+查看所有开放的端口、服务...
+
+```shell
+[root@cloud-q00zxm-bn25 ~]# firewall-cmd --list-all
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces: 
+  sources: 
+  services: ssh dhcpv6-client https
+  ports: 
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+```
+
+
+
+
+
+
