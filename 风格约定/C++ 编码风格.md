@@ -385,21 +385,21 @@ class Bits
  * by this.
  *
  * @param     checkKind
- *            the kind of bounds check, whose name may correspond
+ *            The kind of bounds check, whose name may correspond
  *            to the name of one of the range check methods, checkIndex.
  *
  * @param     args
- *            the out-of-bounds arguments that failed the range check.
+ *            The out-of-bounds arguments that failed the range check.
  *            If the checkKind corresponds a the name of a range check method.
  *
- * @return    an array in the Java programming language that contains
+ * @return    An array in the Java programming language that contains
  *            the ordered elements of the SQL ARRAY value.
  *
  * @exception SQLException
- *            if an error occurs while attempting to access the array.
+ *            If an error occurs while attempting to access the array.
  *
  * @exception SQLFeatureNotSupportedException
- *            if the JDBC driver does not support this method.
+ *            If the JDBC driver does not support this method.
  */
 Object getArray(int checkKind, String args);
 {
@@ -429,7 +429,7 @@ class Base
 
 void func()
 {
-  /** if it is success */
+  /** If it is success */
   if (isSuccess())
   {
     ...
@@ -443,7 +443,7 @@ void func()
 ```c++
 synchronized public DTMIterator createDTMIterator(int node)
 {
-  /** @todo: implement this com.sun.org.apache.xml.internal.dtm.DTMManager abstract method */
+  /** @todo Implement this com.sun.org.apache.xml.internal.dtm.DTMManager abstract method. */
   return null;
 }
 ```
