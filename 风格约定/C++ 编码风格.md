@@ -631,8 +631,8 @@ void GamePlayer::Heartbeat()
 inline std::string getName() const;
 void setName(const std::string &name);
 inline bool isEmpty() const;
-...
-...
+bool isBackgroundEnabled() const
+void setBackgroundEnabled(bool enabled)
 ```
 
 可以参考 Qt 的命名，很值得借鉴。
