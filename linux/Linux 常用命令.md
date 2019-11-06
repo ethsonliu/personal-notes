@@ -11,6 +11,7 @@
   - [已安装程序](#已安装程序)
   - [普通文件](#普通文件)
 - [查看某个进程的使用情况](#查看某个进程的使用情况)
+- [查看某个进程启动的个数](#查看某个进程启动的个数)
 - [端口占用](#端口占用)
 - [查看磁盘和文件大小](#查看磁盘和文件大小)
 - [防火墙](#防火墙)
@@ -175,6 +176,13 @@ voluntary_ctxt_switches:	28791781
 nonvoluntary_ctxt_switches:	89475
 ```
 详情参见：<https://www.cnblogs.com/youxin/p/5976194.html>
+
+# 查看某个进程启动的个数
+
+```shell
+[root@iZ94xyihsxsZ home]# ps -ef|grep php-fpm|grep -v "grep"|wc -l
+6
+```
 
 ## 端口占用
 
