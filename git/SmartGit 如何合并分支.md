@@ -9,3 +9,4 @@
 
 ## dev-master
 
+把 dev 合并到 master，步骤：checkout 到 master，右键 dev 选择 merge，再选择 create-meerge-commit，如果没有冲突就会直接合并进去；如果有冲突就解决。
