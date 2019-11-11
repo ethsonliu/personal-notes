@@ -6,6 +6,7 @@ outlook.com
 outlook.live.com
 news.ycombinator.com
 virtualbox.org
+cn.reuters.com
 ```
 
 ## SS 4.1.7.1
@@ -16,4 +17,5 @@ virtualbox.org
 "||outlook.live.com",
 "||news.ycombinator.com",
 "||virtualbox.org",
+"||cn.reuters.com",
 ```
