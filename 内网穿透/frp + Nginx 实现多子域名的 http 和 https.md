@@ -169,7 +169,8 @@ server {
       proxy_set_header REMOTE-HOST $remote_addr;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
-      add_header X-Cache $upstream_cache_status;expires 12h;
+      add_header X-Cache $upstream_cache_status;
+      expires 12h; # 设置缓存 12 小时
     }
 }
 ```
