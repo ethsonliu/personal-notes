@@ -4,7 +4,7 @@
 - [getsockname 和 getpeername](#getsockname-和-getpeername)
 - [gethostname 和 gethostbyname 和 gethostbyaddr](#gethostname-和-gethostbyname-和-gethostbyaddr)
 - [gethostbyaddr](#gethostbyaddr)
-
+- [getaddrinfo](#getaddrinfo)
 
 # read&write 与 recv&send 区别
 
@@ -45,11 +45,12 @@ int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);
 参考：<https://blog.csdn.net/workformywork/article/details/24554813>
 
 # gethostname 和 gethostbyname
+
 ```c
 // 返回本地主机的标准主机名。
 
 #include <unistd.h>
-int gethostname(char *name, size_t len);
+int gethostname(char *name, size_t len); // 不适用于多线程同时调用，建议使用下面讲解的 getaddrinfo
 ```
 
 接收缓冲区 name，其长度必须为 len 字节或是更，存获得的主机名。
@@ -213,10 +214,94 @@ int main(int argc, char **argv)
 }
 ```
 
+# getaddrinfo
 
+getaddrinfo() + addrinfo 是一对更现代、方便的组合，用于取代 gethostbyname() + sockaddr_in。
 
+不仅可以做 DNS lookups，也可以做 services name lookups。二合一。
 
+思路为，传入服务器的地址和端口，外加一个 addrinfo（用于描述服务器），就可以得到一个更具体的 addrinfo，这个结果可以在创建 socket 时使用。
 
+```c
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+int getaddrinfo(const char *node,     // e.g. "www.example.com" or IP
+                const char *service,  // e.g. "http" or port number
+                const struct addrinfo *hints, //指定一些基本值
+                struct addrinfo **res);//得到链表
+```
+
+```c
+#include <netdb.h>
+
+struct addrinfo {
+    int              ai_flags; // 常用的值是 AIPASSIVE。与 node 为 NULL 作为组合，用来做服务端。（passive 就是被动、被动接入的意思）
+    int              ai_family; // 常用的值是 AFUNSPEC，表示 ipv4，ipv6 皆可
+    int              ai_socktype; //SOCK_STREAM SOCK_DGRAM
+    int              ai_protocol; //TCP UDP...
+    socklen_t        ai_addrlen;
+    struct sockaddr *ai_addr;
+    char            *ai_canonname;
+    struct addrinfo *ai_next;
+};
+```
+
+例子，
+
+```c
+#define PORT "3490"
+struct addrinfo hints;
+
+//Step1. 指定选项
+memset(&hints, 0, sizeof hints);
+hints.ai_family = AF_UNSPEC;
+hints.ai_socktype = SOCK_STREAM;
+hints.ai_flags = AI_PASSIVE; // use my IP
+
+//Step2. 调用getaddrinfo
+if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0) {
+    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+    return 1;
+}
+
+//Step3. Use the result
+// loop through all the results and bind to the first we can
+for(p = servinfo; p != NULL; p = p->ai_next) {
+    if ((sockfd = socket(p->ai_family, p->ai_socktype,
+            p->ai_protocol)) == -1) {
+        perror("server: socket");
+        continue;
+    }
+
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
+            sizeof(int)) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
+
+    if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+        close(sockfd);
+        perror("server: bind");
+        continue;
+    }
+
+    break;
+}
+
+if (p == NULL)  {
+    fprintf(stderr, "server: failed to bind\n");
+    return 2;//不需要freeaddrinfo()
+}
+
+//Step4. Be tidy。释放得到的serverinfo。
+//注意该语句位置在return 之后
+//说明，只有成功时，才会分配内存（需要释放）
+freeaddrinfo(servinfo); // all done with this structure
+```
+可以参考 MSDN 上的完整例子[server](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-server-code?redirectedfrom=MSDN)
+ 和 [client](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-client-code?redirectedfrom=MSDN)。
 
 
 
