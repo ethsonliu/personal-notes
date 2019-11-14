@@ -300,7 +300,7 @@ if (p == NULL)  {
 //说明，只有成功时，才会分配内存（需要释放）
 freeaddrinfo(servinfo); // all done with this structure
 ```
-可以参考 MSDN 上的完整例子[server](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-server-code?redirectedfrom=MSDN)
+可以参考 MSDN 上的完整例子 [server](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-server-code?redirectedfrom=MSDN)
  和 [client](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-client-code?redirectedfrom=MSDN)。
 
 
