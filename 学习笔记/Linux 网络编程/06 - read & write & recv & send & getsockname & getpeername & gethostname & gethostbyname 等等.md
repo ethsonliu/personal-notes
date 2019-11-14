@@ -16,7 +16,6 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 
 1. read 也可以用于文件 io，recv 只能用于 socket io。
 2. recv 多了一个 flag 参数。MSG_DONTROUTE，MSG_PEEK，MSG_WAITALL 等等，参考 <http://man7.org/linux/man-pages/man2/recv.2.html>。
-等待所有数据。
 
     MSG_DONTROUTE，是 send 函数使用的标志。这个标志告诉 IP 目的主机在本地网络上面,没有必要查找表，这个标志一般用网络诊断和路由程序里面。
 
