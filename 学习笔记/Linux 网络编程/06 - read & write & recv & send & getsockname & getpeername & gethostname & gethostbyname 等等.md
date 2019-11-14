@@ -81,9 +81,9 @@ struct hostent
 #define h_addr h_addr_list[0] /* for backward compatibility */
 ```
 
-hostent->h_name，表示的是主机的规范名。例如 www.google.com 的规范名其实是 www.l.google.com。
+hostent->h_name，表示的是主机的规范名。
     
-hostent->h_aliases，表示的是主机的别名.www.google.com 就是 google 他自己的别名。有的时候，有的主机可能有好几个别名，这些，其实都是为了易于用户记忆而为自己的网站多取的名字。
+hostent->h_aliases，表示的是主机的别名，有的时候，有的主机可能有好几个别名，这些，其实都是为了易于用户记忆而为自己的网站多取的名字。
 
 hostent->h_addrtype，表示的是主机 ip 地址的类型，到底是 ipv4(AF_INET)，还是 pv6(AF_INET6)。
 
