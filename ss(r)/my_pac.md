@@ -7,6 +7,7 @@ outlook.live.com
 news.ycombinator.com
 virtualbox.org
 cn.reuters.com
+leetcode.com
 ```
 
 ## SS 4.1.7.1
@@ -18,4 +19,5 @@ cn.reuters.com
 "||news.ycombinator.com",
 "||virtualbox.org",
 "||cn.reuters.com",
+"||leetcode.com",
 ```
