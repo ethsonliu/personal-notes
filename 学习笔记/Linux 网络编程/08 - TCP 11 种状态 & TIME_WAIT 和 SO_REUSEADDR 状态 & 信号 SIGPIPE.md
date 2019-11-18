@@ -23,3 +23,35 @@
 ## TIME_WAIT 和 SO_REUSEADDR 状态
 
 ## 信号 SIGPIPE
+
+当服务器 close 一个连接时，若 client 端接着发数据。根据 TCP 协议的规定，会收到一个 RST 响应，client 再往这个服务器发送数据时，系统会发出一个 SIGPIPE 信号给进程，告诉进程这个连接已经断开了，不要再写了。
+
+我写了一个服务器程序,在 Linux 下测试，然后用 C++ 写了客户端用千万级别数量的短链接进行压力测试.  但是服务器总是莫名退出，没有 core 文件.
+
+最后问题确定为, 对一个对端已经关闭的 socket 调用两次 write, 第二次将会生成 SIGPIPE 信号, 该信号默认结束进程.
+
+具体的分析可以结合 TCP 的"四次握手"关闭. TCP 是全双工的信道, 可以看作两条单工信道, TCP连 接两端的两个端点各负责一条. 当对端调用 close 时, 虽然本意是关闭整个两条信道, 但本端只是收到 FIN 包. 按照 TCP 协议的语义, 表示对端只是关闭了其所负责的那一条单工信道, 仍然可以继续接收数据. 也就是说, 因为 TCP 协议的限制, 一个端点无法获知对端的 socket 是调用了 close 还是 shutdown。
+
+对一个已经收到 FIN 包的 socket 调用 read 方法, 如果接收缓冲已空, 则返回 0, 这就是常说的表示连接关闭. 但第一次对其调用 write 方法时, 如果发送缓冲没问题, 会返回正确写入(发送). 但发送的报文会导致对端发送 RST 报文, 因为对端的 socket 已经调用了 close, 完全关闭, 既不发送, 也不接收数据. 所以, 第二次调用 write 方法(假设在收到RST之后), 会生成 SIGPIPE 信号, 导致进程退出.
+
+为了避免进程退出, 可以捕获 SIGPIPE 信号, 或者忽略它, 给它设置 SIG_IGN 信号处理函数:
+
+```
+signal(SIGPIPE, SIG_IGN);
+```
+
+这样, 第二次调用 write 方法时, 会返回 -1, 同时 errno 置为 SIGPIPE. 程序便能知道对端已经关闭.
+
+在 linux 下写 socket 的程序的时候，如果尝试 send 到一个 disconnected socket 上，就会让底层抛出一个 SIGPIPE 信号。这个信号的缺省处理方法是退出进程，大多数时候这都不是我们期望的。因此我们需要重载这个信号的处理方法。调用以下代码，即可安全的屏蔽 SIGPIPE：
+
+```
+signal(SIGPIPE, SIG_IGN);
+```
+
+我的程序产生这个信号的原因是: client 端通过 pipe 发送信息到 server 端后，就关闭 client 端, 这时 server 端,返回信息给 client 端时就产生 Broken pipe 信号了，服务器就会被系统结束了。
+
+对于产生信号，我们可以在产生信号前利用方法 signal(int signum, sighandler_t handler) 设置信号的处理。如果没有调用此方法，系统就会调用默认处理方法：中止程序，显示提示信息(就是我们经常遇到的问题)。我们可以调用系统的处理方法，也可以自定义处理方法。 
+
+项目中我调用了 signal(SIGPIPE, SIG_IGN), 这样产生 SIGPIPE 信号时就不会中止程序，直接把这个信号忽略掉。
+
+转载自：[SIGPIPE信号详解](https://blog.csdn.net/lmh12506/article/details/8457772)
