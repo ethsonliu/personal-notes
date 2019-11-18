@@ -80,6 +80,7 @@ int l_linger // linger time(延迟时间)
 2. 关闭的时候使用 RST 方式（set SO_LINGER）
 3. 对处于 TIME_WAIT 状态的 TCP 允许重用（set SO_REUSEADDR）
 
+转载自：[TCP/IP中TIME_WAIT状态详解](https://blog.yangx.site/2018/07/03/tcp-ip-time-wait/)
 
 ## 信号 SIGPIPE
 
