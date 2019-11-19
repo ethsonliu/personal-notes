@@ -4,7 +4,7 @@
 
 ## 使用 select 改写回射客户端程序
 
-```
+```c++
 // server
 #include <stdio.h>
 #include <stdlib.h>
