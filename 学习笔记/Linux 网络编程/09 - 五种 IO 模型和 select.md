@@ -226,14 +226,14 @@ int main(void)
         }
         if (nready == 0)
             continue;
-        if (FD_ISSET(listenfd, &rset))
+        if (FD_ISSET(listenfd, &rset)) // 如果是监听套接字，说明有新的客户端进来
         {
             peerlen = sizeof(peeraddr);
             // 监听套接口产生事件
             conn = accept(listenfd, (struct sockaddr*)&peeraddr, &peerlen);
             if (conn == -1)
                 ERR_EXIT("accept error");
-            for (i = 0; i < FD_SETSIZE; ++i)
+            for (i = 0; i < FD_SETSIZE; ++i) // 把新的客户端放进去
             {
                 if (client[i] < 0)
                 {
@@ -244,18 +244,18 @@ int main(void)
                     break;
                 }
             }
-            if (i == FD_SETSIZE)
+            if (i == FD_SETSIZE) // 如果不够放了，就得退出来了
             {
                 fprintf(stderr, "too many clients\n");
                 exit(EXIT_FAILURE);
             }
             printf("ip = %s, port = %d\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
 
-            FD_SET(conn, &allset);
+            FD_SET(conn, &allset); // 将新加入的客户端放进 allset
             if (conn > maxfd)
                 maxfd = conn;
 
-            if (--nready <= 0)
+            if (nready == 1) // 如果就只有监听套接字，那就继续循环 select
                 continue;
         }
 
@@ -265,6 +265,7 @@ int main(void)
             conn = client[i];
             if (conn == -1)
                 continue;
+                
             if (FD_ISSET(conn, &rset))
             {
                 // 意味着产生了可读事件
