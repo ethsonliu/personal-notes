@@ -1,4 +1,4 @@
- ```c
+```c
 #include <unistd.h>
 int close(int fd);
 ```
