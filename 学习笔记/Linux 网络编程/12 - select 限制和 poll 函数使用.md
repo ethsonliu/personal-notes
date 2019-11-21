@@ -104,7 +104,75 @@ POLLNVAL  指定的文件描述符非法
 
 timeout 参数指定等待的毫秒数，无论 I/O 是否准备好，poll 都会返回。timeout 指定为负数值表示无限超时，使 poll() 一直挂起直到一个指定事件发生。timeout 为 0 表示 poll 调用立即返回并列出准备好 I/O 的文件描述符，但并不等待其它的事件。这种情况下，poll() 就像它的名字那样，一旦选举出来，立即返回。
 
+poll 函数的返回值，
 
+成功时，poll() 返回结构体中 revents 域不为 0 的文件描述符个数。如果在超时前没有任何事件发生，poll() 返回 0。失败时，poll() 返回 -1，并设置 errno 为下列值之一：
+　　
+```
+EBADF       一个或多个结构体中指定的文件描述符无效
+EFAULT      fd 指针指向的地址超出进程的地址空间
+EINTR       请求的事件之前产生一个信号，调用可以重新发起
+EINVAL      nfds 参数超出 PLIMIT_NOFILE 值
+ENOMEM      可用内存不足，无法完成请求
+```
+
+使用案例，
+
+```c
+int startup(char *ip,int port)
+{
+    int listen_sock = socket(AF_INET,SOCK_STREAM,0);
+    struct sockaddr_in local;
+    local.sin_family = AF_INET;
+    local.sin_addr.s_addr = inet_addr(ip);
+    local.sin_port = port;
+    bind(&listen_sock,(struct sockaddr*)&local,sizeof(local));
+    if(listen(listen_sock,5) < 0)
+    {
+        perror("listen");
+    }
+    return listen_sock;
+}
+
+int main(int argc,char* argv[])
+{
+    struct pollfd pfd[1];
+    int len = 1;
+
+    .....
+    pfd[0].fd = startup(ip, port);
+    pfd[0].events = POLLIN;
+    pfd[0].revents = 0;
+
+    int done = 0;
+    while(!done)
+    {
+        switch(poll(pfd,1,-1))
+        {
+            case 0:
+                printf("timeout\n");
+                break;
+            case -1:
+                perror("poll");
+                break;
+            default:
+            {
+                char buf[1024];
+                if(pfd[0].revents & POLLIN)
+                {
+                    ssize_t _s = read(pfd[0].fd, buf, sizeof(buf) - 1);
+                    if(_s > 0)
+                    {
+                        buf[_s] = '\0';
+                        printf("echo:%s\n", buf);
+                    }
+                }
+            }
+            break;
+        }
+    }
+}
+```
 
 ## 参考
 
