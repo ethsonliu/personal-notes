@@ -63,6 +63,49 @@ setrlimit(RLIMIT_NOFILE, &rl);
 添加新描述符到集合中时被抵消）。
 - 你的应用程序没有被设计成在改变事件时而其他线程正在等待事件。
 
+接口说明，
+
+```c
+struct pollfd
+{
+  int fd；      // 文件描述符
+　short event； // 请求的事件
+　short revent；// 返回的事件
+};
+
+#include <poll.h>
+int poll(struct pollfd fd[], nfds_t nfds, int timeout);
+```
+
+revents 域是文件描述符的操作结果事件掩码，内核在调用返回时设置这个域。events 域中请求的任何事件都可能在 revents 域中返回。
+
+```
+POLLIN          有数据可读
+POLLRDNORM      有普通数据可读
+POLLRDBAND      有优先数据可读
+POLLPRI         有紧迫数据可读
+POLLOUT         写数据不会导致阻塞
+POLLWRNORM      写普通数据不会导致阻塞
+POLLWRBAND      写优先数据不会导致阻塞
+POLLMSGSIGPOLL  消息可用
+```
+
+此外，revents 域中还可能返回下列事件：
+
+```
+POLLER    指定的文件描述符发生错误
+POLLHUP   指定的文件描述符挂起事件
+POLLNVAL  指定的文件描述符非法
+```
+
+这些事件在 events 域中无意义，因为它们在合适的时候总是会从 revents 中返回。
+
+例如，要同时监视一个文件描述符是否可读和可写，我们可以设置 events 为 POLLIN |POLLOUT。在 poll 返回时，我们可以检查 revents 中的标志，对应于文件描述符请求的 events 结构体。如果 POLLIN 事件被设置，则文件描述符可以被读取而不阻塞。如果 POLLOUT 被设置，则文件描述符可以写入而不导致阻塞。这些标志并不是互斥的：它们可能被同时设置，表示这个文件描述符的读取和写入操作都会正常返回而不阻塞。
+
+timeout 参数指定等待的毫秒数，无论 I/O 是否准备好，poll 都会返回。timeout 指定为负数值表示无限超时，使 poll() 一直挂起直到一个指定事件发生。timeout 为 0 表示 poll 调用立即返回并列出准备好 I/O 的文件描述符，但并不等待其它的事件。这种情况下，poll() 就像它的名字那样，一旦选举出来，立即返回。
+
+
+
 ## 参考
 
 - <http://cxd2014.github.io/2018/01/10/epoll/>
