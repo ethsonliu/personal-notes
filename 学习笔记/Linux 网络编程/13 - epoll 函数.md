@@ -20,7 +20,7 @@ int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
 int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);
 ```
 
-#### int epoll_create(int size)
+### int epoll_create(int size)
 
 man 参考：http://man7.org/linux/man-pages/man2/epoll_create.2.html
 
@@ -28,7 +28,9 @@ epoll_create 建立一个 epoll 对象。参数 size 是内核保证能够正确
 
 当创建好 epoll 句柄后，它就是会占用一个 fd 值，在 linux 下如果查看 /proc/id/fd/，是能够看到这个 fd 的，所以在使用完 epoll 后，必须调用 close() 关闭，否则可能导致 fd 被耗尽。
 
-#### int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)
+### int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)
+
+man 参考：http://man7.org/linux/man-pages/man2/epoll_ctl.2.html
 
 epoll 的事件注册函数，它不同于 select() 是在监听事件时告诉内核要监听什么类型的事件， epoll 是在这里先注册要监听的事件类型。
 
@@ -70,7 +72,9 @@ EPOLLET      // 将 EPOLL 设为边缘触发(Edge Triggered)模式，这是相�
 EPOLLONESHOT // 只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个 socket 的话，需要再次把这个 socket 加入到 EPOLL 队列里
 ```
 
-#### int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout)
+### int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout)
+
+man 参考：http://man7.org/linux/man-pages/man2/epoll_wait.2.html
 
 等待事件的产生，类似于 select() 调用。
 
