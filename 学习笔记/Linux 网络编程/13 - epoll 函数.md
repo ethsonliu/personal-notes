@@ -2,6 +2,7 @@
 
 - [epoll 介绍](#epoll-介绍)
 - [示例代码](#示例代码)
+- [水平触发和边沿触发](#水平触发和边沿触发)
 - [select & poll & epoll 比较](#select-&-poll-&-epoll-比较)
 
 ## epoll 介绍
@@ -85,5 +86,7 @@ man 参考：http://man7.org/linux/man-pages/man2/epoll_wait.2.html
 epoll_wait 范围之后应该是一个循环，遍历所有的事件。
 
 ## 示例代码
+
+## 水平触发和边沿触发
 
 ## select & poll & epoll 比较
