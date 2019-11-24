@@ -441,6 +441,11 @@ epoll 工作在 ET 模式的时候，必须使用非阻塞套接口，以避免�
 
 ## select & poll & epoll 比较
 
+![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/019.png)
+![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/020.png)
+![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/021.png)
+![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/022.png)
+
 ## 参考
 
 - <http://roux.top/2017/11/20/epoll%E5%87%BD%E6%95%B0/>
