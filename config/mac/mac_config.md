@@ -1,6 +1,7 @@
 ## 目录
 
 - [homebrew](#homebrew)
+- [consolas](#consolas)
 
 ## homebrew
 
@@ -51,4 +52,22 @@ git remote set-url origin https://mirrors.aliyun.com/homebrew/brew.git
 
 ```shell
 brew update
+```
+
+## consolas
+
+参考：<https://gist.github.com/avalonalex/8125197>
+
+```shell
+# Thanks to this post:
+# http://blog.ikato.com/post/15675823000/how-to-install-consolas-font-on-mac-os-x
+
+brew install cabextract
+cd ~/Downloads
+mkdir consolas
+cd consolas
+curl -O https://sourceforge.net/projects/mscorefonts2/files/cabs/PowerPointViewer.exe
+cabextract PowerPointViewer.exe
+cabextract ppviewer.cab
+open CONSOLA*.TTF
 ```
