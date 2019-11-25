@@ -2,6 +2,7 @@
 
 - [homebrew](#homebrew)
 - [consolas](#consolas)
+- [终端](#终端)
 
 ## homebrew
 
@@ -71,3 +72,7 @@ cabextract PowerPointViewer.exe
 cabextract ppviewer.cab
 open CONSOLA*.TTF
 ```
+
+## 终端
+
+
