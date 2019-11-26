@@ -76,5 +76,16 @@ open CONSOLA*.TTF
 ## 终端
 
 ```shell
+chsh -s /bin/bash
+cd ~
+touch .bashrc
+vi .bashrc
+```
+
+输入以下内容：
+
+```
 PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 ```
+
+保存退出 vi，执行 `source .bashrc` 。
