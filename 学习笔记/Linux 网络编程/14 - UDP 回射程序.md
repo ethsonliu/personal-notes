@@ -19,92 +19,157 @@
 
 ```c
 // server
+#include <iostream>
 #include <unistd.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <error.h>
+#include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
+#include <cstring>
 #include <netinet/in.h>
-#include <sys/select.h>
-#include <string.h>
-#include <strings.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
-#define SERV_PORT 8888
-#define MAXLINE 1024
+#define ERR_EXIT(m) \
+        do \
+        {   \
+            perror(m);  \
+            exit(EXIT_FAILURE); \
+        } while (0);
 
-int main()
+void test(int sock, struct sockaddr_in* peeraddr, char* recvbuf, int n)
 {
-    int sockfd;
-    struct sockaddr_in servaddr, cliaddr;
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0); //创建套接字
-    bzero(&servaddr, sizeof(servaddr)); //初始化地址结构
-    
-    //向servaddr结构写入地址
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(SERV_PORT);
-    
-    //将socket与地址绑定
-    bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-
+    //sendto(sock, "server", sizeof("server"), 0, (struct sockaddr *)&peeraddr, sizeof peeraddr);
+    sendto(sock, recvbuf, n, 0, (struct sockaddr *)&peeraddr, sizeof peeraddr);
+}
+void echo_srv(int sock)
+{
+    char recvbuf[1024] = {0};
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen;
     int n;
-    char mesg[MAXLINE];
-    socklen_t len;
-    
-    //消息处理循环
-    while(1)
+    while (1)
     {
-        len = sizeof(cliaddr);
-        
-        //接收数据包
-        n = recvfrom(sockfd, mesg, MAXLINE, 0, (struct sockaddr*)&cliaddr, &len);
-        
-        //将数据包发回给源地址
-        sendto(sockfd, mesg, n, 0, (struct sockaddr*)&cliaddr, len);
+        peerlen = sizeof peeraddr;
+        memset(recvbuf, 0, sizeof recvbuf);
+        n = recvfrom(sock, recvbuf, sizeof(recvbuf), 0, (struct sockaddr *)&peeraddr, &peerlen);
+        printf("id = %s, ", inet_ntoa(peeraddr.sin_addr));
+        printf("port = %d\n", ntohs(peeraddr.sin_port));
+        if (n == -1)
+        {
+            if (errno == EINTR)
+            {
+                continue;
+            }
+            ERR_EXIT("recvfrom")
+        }
+        else if (n > 0)
+        {
+            fputs(recvbuf, stdout);
+            //sendto(sock, recvbuf, n, 0, (struct sockaddr *)&peeraddr, peerlen);
+            //sendto(sock, "h", sizeof("h"), 0, (struct sockaddr *)&peeraddr, sizeof peeraddr);
+            test(sock, &peeraddr, recvbuf, n);
+        }
     }
+    close(sock);
+};
+
+int main(void)
+{
+    int sock;
+    if ((sock = socket(PF_INET, SOCK_DGRAM, 0)) < 0)
+    {
+        ERR_EXIT("socket");
+    }
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof servaddr);
+    servaddr.sin_family = PF_INET;
+    servaddr.sin_port = htons(6666);
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(sock, (struct sockaddr *)&servaddr, sizeof servaddr) < 0)
+    {
+        ERR_EXIT("bind");
+    }
+
+    echo_srv(sock);
+
+    return 0;
 }
 ```
 
 ```c
 // client
+#include <iostream>
 #include <unistd.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <error.h>
+#include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
+#include <cstring>
 #include <netinet/in.h>
-#include <sys/select.h>
-#include <string.h>
-#include <strings.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
-#define SERV_PORT 8888
-#define MAXLINE 1024
+using namespace std;
 
-int main(int argc, char **argv)
+#define ERR_EXIT(m) \
+        do \
+        {   \
+            perror(m);  \
+            exit(EXIT_FAILURE); \
+        } while (0);
+
+int main(void)
 {
-    int sockfd;
-    struct sockaddr_in servaddr;
-
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0); //创建套接字
-    
-    //写入服务器地址，IP地址由程序的输入获取
-    bzero(&servaddr, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(SERV_PORT);
-    inet_pton(AF_INET, argv[1], &servaddr.sin_addr);
-
-    int n;
-    char recvline[MAXLINE+1], sendline[MAXLINE];
-    
-    //发送消息循环
-    while(fgets(sendline, MAXLINE, stdin) != NULL)
+    int sock;
+    if ((sock = socket(PF_INET, SOCK_DGRAM, 0)) < 0)
     {
-        sendto(sockfd, sendline, strlen(sendline), 0, (struct sockaddr*)&servaddr, sizeof(servaddr));
-        n = recvfrom(sockfd, recvline, MAXLINE, 0, NULL, NULL);
-        recvline[n] = '\0';
-        fputs(recvline, stdout);
+        ERR_EXIT("socket");
     }
+
+    struct sockaddr_in server_addr;
+    int srvlen;
+    memset(&server_addr, 0, sizeof server_addr);
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(6666);
+    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    struct sockaddr_in localaddr;
+    socklen_t addrlen = sizeof localaddr;
+    if (getsockname(sock, (struct sockaddr*)&localaddr, &addrlen) < 0)
+    {
+        ERR_EXIT("getsockname");
+    }
+    printf("id = %s, ", inet_ntoa(localaddr.sin_addr));
+    printf("port = %d\n", ntohs(localaddr.sin_port));
+
+    char sendbuf[1024];
+    int ret;
+    char recvbuf[1024];
+    while (fgets(sendbuf, sizeof sendbuf, stdin) != NULL)
+    {
+        srvlen = sizeof server_addr;
+        sendto(sock, sendbuf, sizeof(sendbuf), 0, (struct sockaddr *)&server_addr, srvlen);
+        // cout << sendbuf << endl;
+        ret = recvfrom(sock, recvbuf, sizeof(recvbuf), 0, NULL, NULL);
+        if (ret == -1)
+        {
+            if (errno == EINTR)
+            {
+                continue;
+            }
+            ERR_EXIT("recvfrom")
+        }
+        else if (ret > 0)
+        {
+            fputs(recvbuf, stdout);
+            // sendto(sock, recvbuf, n, 0, (struct sockaddr *)&peeraddr, peerlen);
+        }
+        memset(sendbuf, 0, sizeof sendbuf);
+        memset(recvbuf, 0, sizeof recvbuf);
+    }
+
+    return 0;
 }
 ```
