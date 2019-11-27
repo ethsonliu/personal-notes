@@ -185,7 +185,10 @@ int main(int argc, char** argv)
 
 ## UNIX 域套接字编程注意点
 
-
+1. bind 成功将会创建一个文件，权限为 0777 & ~umask
+2. sun_path 最好用一个 /tmp 目录下的文件的绝对路径, 而且 server 端在指定该文件之前首先要 unlink 一下
+3. UNIX 域协议支持流式套接口(需要处理粘包问题)与报式套接口(基于数据报)
+4. UNIX 域流式套接字 connect 发现监听队列满时，会立刻返回一个 ECONNREFUSED，这和 TCP 不同，如果监听队列满，会忽略到来的 SYN，这导致对方重传 SYN
 
 
 
