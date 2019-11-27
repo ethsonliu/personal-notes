@@ -2,7 +2,7 @@
 
 - [UNIX 域协议特点](#UNIX-域协议特点)
 - [UNIX 域地址结构](#UNIX-域地址结构)
-- [UNIX 域字节流回射服务客户端程序](# UNIX-域字节流回射服务客户端程序)
+- [UNIX 域字节流回射服务客户端程序](#UNIX-域字节流回射服务客户端程序)
 - [UNIX 域套接字编程注意点](#UNIX-域套接字编程注意点)
 
 ## UNIX 域协议特点
@@ -30,7 +30,159 @@ struct sockaddr_un
 
 ##  UNIX 域字节流回射服务客户端程序
 
+```c++
+// server
+#include <iostream>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdio.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <stdlib.h>
 
+using namespace std;
+
+#define ERR_EXIT(m) \
+        do \
+        { \
+            perror(m); \
+            exit(EXIT_FAILURE); \
+        } while(0);
+
+
+void echosrv(int clientfd)
+{
+    char recvbuf[1024];
+    while (1) {
+        memset(recvbuf, 0, sizeof recvbuf);
+        int ret;
+        if ((ret = read(clientfd, recvbuf, sizeof(recvbuf))) < 0) {
+            ERR_EXIT("read");
+        }
+        if (ret == 0) {
+            printf("client close\n");
+            break;
+        }
+        fputs(recvbuf, stdout);
+        write(clientfd, &recvbuf, strlen(recvbuf));
+    }
+    close(clientfd);
+}
+
+int main(int argc, char** argv)
+{
+    int listenfd;
+
+    unlink("/home/jxq/CLionProjects/NetworkProgramming/text_unix");    // 解除原有text_unix对象链接
+    if ((listenfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
+    {
+        ERR_EXIT("socket");
+    }
+
+    struct sockaddr_un servaddr;
+    servaddr.sun_family = AF_UNIX;
+    strcpy(servaddr.sun_path, "/home/jxq/CLionProjects/NetworkProgramming/text_unix");
+
+    if (bind(listenfd, (struct sockaddr*)&servaddr, sizeof servaddr) < 0)
+    {
+        ERR_EXIT("bind");
+    }
+
+    if (listen(listenfd, SOMAXCONN) < 0)
+    {
+        ERR_EXIT("listen");
+    }
+
+    struct sockaddr_un cliaddr;
+    socklen_t clilen;
+    int clientfd;
+    while (1)
+    {
+        if ((clientfd = accept(listenfd, (struct sockaddr*)&cliaddr, &clilen)) < 0)
+        {
+            ERR_EXIT("accept");
+        }
+        echosrv(clientfd);
+    }
+    close(listenfd);
+
+    return 0;
+}
+```
+
+```c++
+// client
+#include <iostream>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdio.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+using namespace std;
+
+#define ERR_EXIT(m) \
+        do \
+        { \
+            perror(m); \
+            exit(EXIT_FAILURE); \
+        } while(0);
+
+
+void clisrv(int sock)
+{
+    char sendbuf[1024];
+    char recvbuf[1024];
+    memset(recvbuf, 0, sizeof(recvbuf));
+    memset(sendbuf, 0, sizeof(sendbuf));
+    while (fgets(sendbuf, sizeof sendbuf, stdin) != NULL)
+    {
+        if (write(sock, sendbuf, sizeof(sendbuf)) < 0)
+        {
+            ERR_EXIT("write");
+        }
+        int ret;
+        if ((ret = read(sock, &recvbuf, sizeof recvbuf)) < 0)
+        {
+            ERR_EXIT("read");
+        }
+        if (ret == 0)
+        {
+            printf("server close\n");
+            break;
+        }
+        fputs(recvbuf, stdout);
+        memset(recvbuf, 0, sizeof(recvbuf));
+        memset(sendbuf, 0, sizeof(sendbuf));
+    }
+}
+
+
+int main(int argc, char** argv)
+{
+    int clientfd;
+    if ((clientfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
+    {
+        ERR_EXIT("sokcet");
+    }
+
+    struct sockaddr_un cliaddr;
+    cliaddr.sun_family = AF_UNIX;
+    strcpy(cliaddr.sun_path, "/home/jxq/CLionProjects/NetworkProgramming/text_unix");
+
+    int conn;
+    if ((conn = connect(clientfd, (struct sockaddr*)&cliaddr, sizeof(cliaddr))) < 0)
+    {
+        ERR_EXIT("connect");
+    }
+
+    clisrv(clientfd);
+
+
+    return 0;
+}
+```
 
 ## UNIX 域套接字编程注意点
 
