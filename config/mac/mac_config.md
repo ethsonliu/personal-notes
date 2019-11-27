@@ -75,7 +75,7 @@ open CONSOLA*.TTF
 
 ## 终端
 
-普通用户有效，
+以下是普通用户的高亮，
 
 ```shell
 chsh -s /bin/bash
@@ -101,5 +101,5 @@ vi /root/.bashrc # 不存在就 touch 创建
 末尾加入以下内容：
 
 ```
-PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]\$ '
 ```
