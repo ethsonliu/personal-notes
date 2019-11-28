@@ -27,7 +27,7 @@ HOMEBREW_OLD_CACHE = "/Library/Caches/Homebrew".freeze
 BREW_REPO = "https://mirrors.aliyun.com/homebrew/brew.git".freeze # 这里
 #CORE_TAP_REPO = "https://github.com/Homebrew/homebrew-core".freeze
 CORE_TAP_REPO = "https://mirrors.aliyun.com/homebrew/homebrew-core.git".freeze # 这里可能已经没有了
-``
+```
 
 修改好之后，按 ESC，输入 :wq 保存退出，执行 brew_install，
 
