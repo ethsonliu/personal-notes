@@ -75,7 +75,6 @@ open CONSOLA*.TTF
 
 ## 终端
 
-以下是普通用户的高亮，
 
 ```shell
 chsh -s /bin/bash
@@ -86,20 +85,17 @@ vi /etc/profile
 末尾加入以下内容：
 
 ```shell
-PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+if [[ $UID == 0 ]]; then
+   export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]\$ '
+else
+   export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+fi
 ```
 
 保存退出 vi，执行 `source /etc/profile`，电脑重启也生效。
 
-当进入 root 用户时，你会发现颜色都没了，为了区分普通用户和 root 用户，需要在颜色上该变一下，以醒目提醒操作者当前是以 root 执行命令，
+$UID == 0 说明是 root。
 
-```shell
-sudo su
-vi /root/.bashrc # 不存在就 touch 创建
-```
+当进入 root 用户时，你会发现颜色都没了（红色），为了区分普通用户（蓝色）和 root 用户，需要在颜色上该变一下，以醒目提醒操作者当前是以 root 执行命令。
 
-末尾加入以下内容：
-
-```
-PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]\$ '
-```
+注意在切换到 root 的时候要以登录的方式，不能 `sudo su`，要 `sudo -i` 。
