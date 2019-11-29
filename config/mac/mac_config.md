@@ -85,6 +85,10 @@ vi /etc/profile
 末尾加入以下内容：
 
 ```shell
+export LS_OPTIONS='--color=auto'
+export CLICOLOR='Yes'
+export LSCOLORS='CxfxcxdxbxegedabagGxGx'
+
 if [[ $UID == 0 ]]; then
    export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]\$ '
 else
