@@ -3,6 +3,7 @@
 - [homebrew](#homebrew)
 - [consolas](#consolas)
 - [终端](#终端)
+- [vim 高亮](#vim-高亮)
 
 ## homebrew
 
@@ -103,3 +104,17 @@ $UID == 0 说明是 root。
 当进入 root 用户时，你会发现颜色都变了（红色），为了区分普通用户（绿色）和 root 用户，需要在颜色上该变一下，以醒目提醒操作者当前是以 root 执行命令。
 
 注意在切换到 root 的时候要以登录的方式，不能 `sudo su`，要 `sudo -i`，以 `sudo su` 的颜色依旧不会生效。
+
+## vim 高亮
+
+```shell
+cp /usr/share/vim/vimrc ~/.vimrc
+vi ~/.vimrc
+```
+
+加入以下几句，保存退出即可。
+
+```
+syntax on
+set autoindent
+```
