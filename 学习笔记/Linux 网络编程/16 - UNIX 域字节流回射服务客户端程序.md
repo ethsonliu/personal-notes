@@ -323,3 +323,106 @@ unsigned char *CMSG_DATA(struct cmsghdr *cmsg);
 ![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/024.png)
 
 ## UNIX 域套接字传递描述符字
+
+以下示例封装了两个函数 send_fd/recv_fd 用于在进程间传递文件描述符。
+
+```c++
+int send_fd(int sockfd, int sendfd)
+{
+    // 填充 name 字段
+    struct msghdr msg;
+    msg.msg_name = NULL;
+    msg.msg_namelen = 0;
+ 
+    // 填充 iov 字段
+    struct iovec iov;
+    char sendchar = '\0';
+    iov.iov_base = &sendchar;
+    iov.iov_len = 1;
+    msg.msg_iov = &iov;
+    msg.msg_iovlen = 1;
+ 
+    // 填充 cmsg 字段
+    struct cmsghdr cmsg;
+    cmsg.cmsg_len = CMSG_LEN(sizeof(int));
+    cmsg.cmsg_level = SOL_SOCKET;
+    cmsg.cmsg_type = SCM_RIGHTS;
+    *(int *)CMSG_DATA(&cmsg) = sendfd;
+    msg.msg_control = &cmsg;
+    msg.msg_controllen = CMSG_LEN(sizeof(int));
+ 
+    // 发送
+    if (sendmsg(sockfd, &msg, 0) == -1)
+        return -1;
+    return 0;
+}
+
+int recv_fd(int sockfd)
+{
+    // 填充 name 字段
+    struct msghdr msg;
+    msg.msg_name = NULL;
+    msg.msg_namelen = 0;
+ 
+    // 填充 iov 字段
+    struct iovec iov;
+    char recvchar;
+    iov.iov_base = &recvchar;
+    iov.iov_len = 1;
+    msg.msg_iov = &iov;
+    msg.msg_iovlen = 1;
+ 
+    // 填充 cmsg 字段
+    struct cmsghdr cmsg;
+    msg.msg_control = &cmsg;
+    msg.msg_controllen = CMSG_LEN(sizeof(int));
+ 
+    // 接收
+    if (recvmsg(sockfd, &msg, 0) == -1)
+        return -1;
+    return *(int *)CMSG_DATA(&cmsg);
+}
+
+int main()
+{
+    int sockfds[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockfds) == -1)
+        err_exit("socketpair error");
+ 
+    pid_t pid = fork();
+    if (pid == -1)
+        err_exit("fork error");
+    // 子进程以只读方式打开文件, 将文件描述符发送给子进程
+    else if (pid ==  0)
+    {
+        close(sockfds[1]);
+        int fd = open("read.txt", O_RDONLY);
+        if (fd == -1)
+            err_exit("open error");
+        cout << "In child,  fd = " << fd << endl;
+        send_fd(sockfds[0], fd);
+    }
+    // 父进程从文件描述符中读取数据
+    else if (pid > 0)
+    {
+        close(sockfds[0]);
+        int fd = recv_fd(sockfds[1]);
+        if (fd == -1)
+            err_exit("recv_fd error");
+        cout << "In parent, fd = " << fd << endl;
+ 
+        char buf[BUFSIZ] = {0};
+        int readBytes = read(fd, buf, sizeof(buf));
+        if (readBytes == -1)
+            err_exit("read fd error");
+        cout << buf;
+    }
+}
+```
+
+我们知道，父进程在 fork 之前打开的文件描述符，子进程是可以共享的，但是子进程打开的文件描述符，父进程是不能共享的，上述程序就是举例在子进程中打开了一个文件描述符，然后通过 send_fd 函数将文件描述符传递给父进程，父进程可以通过 recv_fd 函数接收到这个文件描述符。先建立一个文件 read.txt 后输入几个字符，然后运行程序。
+
+注意:
+
+- 只有 UNIX 域协议才能在本机进程间传递文件描述符。
+- 进程间传递文件描述符并不是传递文件描述符的值(其实 send_fd/recv_fd 的两个值也是不同的), 而是要在接收进程中创建一个新的文件描述符, 并且该文件描述符和发送进程中被传递的文件描述符指向内核中相同的文件表项。
