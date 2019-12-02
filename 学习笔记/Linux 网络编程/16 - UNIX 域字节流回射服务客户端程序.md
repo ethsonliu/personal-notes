@@ -4,6 +4,9 @@
 - [UNIX 域地址结构](#UNIX-域地址结构)
 - [UNIX 域字节流回射服务客户端程序](#UNIX-域字节流回射服务客户端程序)
 - [UNIX 域套接字编程注意点](#UNIX-域套接字编程注意点)
+- [socketpair](#socketpair)
+- [sendmsg & recvmsg](#sendmsg-&-recvmsg)
+- [UNIX 域套接字传递描述符字](#UNIX-域套接字传递描述符字)
 
 ## UNIX 域协议特点
 
@@ -190,12 +193,66 @@ int main(int argc, char** argv)
 3. UNIX 域协议支持流式套接口(需要处理粘包问题)与报式套接口(基于数据报)
 4. UNIX 域流式套接字 connect 发现监听队列满时，会立刻返回一个 ECONNREFUSED，这和 TCP 不同，如果监听队列满，会忽略到来的 SYN，这导致对方重传 SYN
 
+## socketpair
+
+```c
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int socketpair(int domain, int type, int protocol, int sv[2]);
+```
+
+创建一个全双工的流管道
+
+- domain: 协议家族, 可以使用 AF_UNIX(AF_LOCAL)UNIX 域协议, 而且在 Linux 上, 该函数也就只支持这一种协议
+- type: 套接字类型, 可以使用 SOCK_STREAM
+- protocol: 协议类型, 一般填充为 0
+- sv: 返回的套接字对
+- 返回值：成功返回 0，失败返回 -1
+
+socketpair 函数跟 pipe 函数是类似: 只能在具有亲缘关系的进程间通信，但 pipe 创建的匿名管道是半双工的，而 socketpair ：可以认为是创建一个全双工的管道。
+
+可以使用 socketpair 创建返回的套接字对进行父子进程通信, 如下例:
+
+```c
+int main()
+{
+    int sockfds[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockfds) == -1)
+        err_exit("socketpair error");
+ 
+    pid_t pid = fork();
+    if (pid == -1)
+        err_exit("fork error");
+    // 父进程, 只负责数据的打印
+    else if (pid > 0)
+    {
+        close(sockfds[1]);
+        int iVal = 0;
+        while (true)
+        {
+            cout << "value = " << iVal << endl;
+            write(sockfds[0], &iVal, sizeof(iVal));
+            read(sockfds[0], &iVal, sizeof(iVal));
+            sleep(1);
+        }
+    }
+    // 子进程, 只负责数据的更改(+1)
+    else if (pid == 0)
+    {
+        close(sockfds[0]);
+        int iVal = 0;
+        while (read(sockfds[1], &iVal, sizeof(iVal)) > 0)
+        {
+            ++ iVal;
+            write(sockfds[1], &iVal, sizeof(iVal));
+        }
+    }
+}
+```
+
+## sendmsg & recvmsg
 
 
 
-
-
-
-
-
-
+## UNIX 域套接字传递描述符字
