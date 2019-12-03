@@ -16,6 +16,7 @@
 - [查看磁盘和文件大小](#查看磁盘和文件大小)
 - [防火墙](#防火墙)
   - [firewall](#firewall)
+  - [iptables](#iptables)
 
 ## vi
 
@@ -338,6 +339,11 @@ public
 
 其余更多 firewall-cmd 命令可以参考：<https://wangchujiang.com/linux-command/c/firewall-cmd.html>
 
+### iptables
 
+参考：
+
+- <https://wangchujiang.com/linux-command/c/iptables.html>
+- <https://man.linuxde.net/iptables>
 
 
