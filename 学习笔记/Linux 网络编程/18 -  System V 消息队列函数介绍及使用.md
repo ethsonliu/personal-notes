@@ -1,8 +1,8 @@
 ## 目录
 
 - [消息队列](#消息队列)
-- [](#)
-- [](#)
+- [IPC 对象数据结构](#IPC-对象数据结构)
+- [消息队列数据结构](#消息队列数据结构)
 - [](#)
 - [](#)
 
@@ -23,13 +23,41 @@ cjl@S405:~$ cat /proc/sys/kernel/msgmni  # 系统中创建消息队列的最大�
 1663
 ```
 
+## IPC 对象数据结构
 
+内核为每个 IPC 对象维护一个数据结构，位于 `<sys/ipc.h>`。
 
+```c
+struct ipc_perm
+{
+    key_t           key;   /* 调用 shmget() 时给出的关键字 */
+    uid_t           uid;   /* 共享内存所有者的有效用户 ID */
+    gid_t           gid;   /* 共享内存所有者所属组的有效组 ID */
+    uid_t           cuid;  /* 共享内存创建者的有效用户 ID */
+    gid_t           cgid;  /* 共享内存创建者所属组的有效组 ID */
+    unsigned short  mode;  /* Permissions + SHM_DEST 和 SHM_LOCKED 标志 */
+    unsignedshort   seq;   /* 序列号 */
+};
+```
 
+## 消息队列数据结构
 
+定义在`<sys/msg.h>`。
 
-
-
+```c
+struct msqid_ds
+{
+    struct ipc_perm msg_perm;     /* Ownership and permissions */
+    time_t          msg_stime;    /* Time of last msgsnd(2) */
+    time_t          msg_rtime;    /* Time of last msgrcv(2) */
+    time_t          msg_ctime;    /* Time of last change */
+    unsigned long   __msg_cbytes; /* Current number of bytes in queue (nonstandard) */
+    msgqnum_t       msg_qnum;     /* Current number of messages in queue */
+    msglen_t        msg_qbytes;   /* Maximum number of bytes allowed in queue */
+    pid_t           msg_lspid;    /* PID of last msgsnd(2) */
+    pid_t           msg_lrpid;    /* PID of last msgrcv(2) */
+};
+```
 
 
 
