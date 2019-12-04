@@ -59,7 +59,7 @@ struct msqid_ds
 };
 ```
 
-消息队列是用链表实现的，这里需要提出的是 MSGMAX 指的是一条消息的纯数据大小的上限，下图是一个消息队列，则其纯数据总和不能超过 MSGMNB，像这样一条消息队列，系统含有的总数不能超过 MSGMNI 个。
+消息队列是用链表实现的，这里需要提出的是 MSGMAX 指的是一条消息的数据大小的上限，所有消息数据总和不能超过 MSGMNB。像下面这幅图是一条消息队列，系统含有这样的条数总数不能超过 MSGMNI 个。
 
 ![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/025.png)
 
