@@ -68,7 +68,7 @@ struct msqid_ds
 **（1）创建和访问一个消息队列**
 
 ```c
-int msgget(key_t key,   // 某个休息队列的名字
+int msgget(key_t key,   // 消息队列的名字
            int msgflg); // 由个权限标志组成,它们的用法和创建文件时使用的 mode 模式标志时一样的
 ```
 
