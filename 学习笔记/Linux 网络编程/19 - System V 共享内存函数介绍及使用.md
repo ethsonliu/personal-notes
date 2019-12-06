@@ -133,6 +133,10 @@ fd：有效的文件描述词。如果 MAP_ANONYMOUS 被设定，为了兼容问
 
 offset：被映射对象内容的起点
 
+下图为内存映射文件示意图，
+
+![](https://github.com/EthsonLiu/personal-notes/blob/master/_image/026.png)
+
 其它需要使用的函数，
 
 ```c
@@ -149,9 +153,11 @@ int msync(void *addr, size_t len, int flags);
 
 一般说来，进程在映射空间的对共享内容的改变并不直接写回到磁盘文件中，往往在调用 munmap() 后才执行该操作。可以通过调用 msync() 实现磁盘上文件内容与共享内存区的内容一致。
 
+flags 的值可以为，MS_ASYNC 执行异步写；MS_SYNC 执行同步写；MS_INVALIDATE 使高速缓存的数据失效
+
 参考：<https://www.cnblogs.com/huxiao-tee/p/4660352.html>
 
-下边是读取文件的操作：
+下边是读取文件的示例：
 
 ```c++
 
@@ -232,4 +238,20 @@ int main()
   close(fd);    
 }
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
