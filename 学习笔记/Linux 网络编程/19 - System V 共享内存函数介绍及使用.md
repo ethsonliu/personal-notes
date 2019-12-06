@@ -53,7 +53,7 @@
 4. 需要应用程序自己做互斥( 若一个进程正在向共享内存区写数据，则在它做完这一步操作前，别的进程不应当去读、写这些数据。) 有如下三种互斥方案：
     1. 只适用两个进程共享，在内存中放一个标志位，一定要声明为 volatile，大家基于标志位来互斥，例如为0时第一个可以写，第二个就等待，为 1 时第一个等待，第二个可以写/读
     2. 也只适用两个进程，是用信号。
-    3. 采用信号量或者msgctl自己的加锁、解锁功能，不过后者只适用于 linux
+    3. 采用信号量或者 msgctl 自己的加锁、解锁功能，不过后者只适用于 linux
 
 消息队列，FIFO，管道的消息传递方式一般为，
 
@@ -71,30 +71,165 @@
 
 上述过程不涉及到内核的拷贝，所以花的时间较少。
 
+## 相关函数
 
+**将文件或者设备空间映射到共享内存区**
 
+```c
+void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
+```
 
+成功执行时，mmap() 返回被映射区的指针。失败时，mmap() 返回 MAP_FAILED ，其值为`(void*)-1`， error 被设为以下的某个值：
 
+```
+EACCES： 访问出错
+EAGAIN： 文件已被锁定，或者太多的内存已被锁定
+EBADF：  fd 不是有效的文件描述词
+EINVAL： 一个或者多个参数无效
+ENFILE： 已达到系统对打开文件的限制
+ENODEV： 指定文件所在的文件系统不支持内存映射
+ENOMEM： 内存不足，或者进程已超出最大内存映射数量
+EPERM：  权能不足，操作不允许
+ETXTBSY：已写的方式打开文件，同时指定 MAP_DENYWRITE 标志
+SIGSEGV：试着向只读区写入
+SIGBUS： 试着访问不属于进程的内存区
+```
 
+参数解释如下，
 
+start：映射区的开始地址
 
+length：映射区的长度
 
+prot：期望的内存保护标志，不能与文件的打开模式冲突。是以下的某个值，可以通过 or 运算合理地组合在一起
 
+```
+PROT_EXEC： 页内容可以被执行
+PROT_READ： 页内容可以被读取
+PROT_WRITE：页可以被写入
+PROT_NONE： 页不可访问
+```
 
+flags：指定映射对象的类型，映射选项和映射页是否可以共享。它的值可以是一个或者多个以下位的组合体
 
+```
+MAP_FIXED      // 使用指定的映射起始地址，如果由start和 len 参数指定的内存区重叠于现存的映射空间，重叠部分将会被丢弃。如果指定的起始地址不可用，操作将会失败。并且起始地址必须落在页的边界上。
+MAP_SHARED     // 与其它所有映射这个对象的进程共享映射空间。对共享区的写入，相当于输出到文件。直到 msync() 或者 munmap() 被调用，文件实际上不会被更新。
+MAP_PRIVATE    // 建立一个写入时拷贝的私有映射。内存区域的写入不会影响到原文件。这个标志和以上标志是互斥的，只能使用其中一个。
+MAP_DENYWRITE  // 这个标志被忽略。
+MAP_EXECUTABLE // 同上
+MAP_NORESERVE  // 不要为这个映射保留交换空间。当交换空间被保留，对映射区修改的可能会得到保证。当交换空间不被保留，同时内存不足，对映射区的修改会引起段违例信号。
+MAP_LOCKED     // 锁定映射区的页面，从而防止页面被交换出内存。
+MAP_GROWSDOWN  // 用于堆栈，告诉内核VM系统，映射区可以向下扩展。
+MAP_ANONYMOUS  // 匿名映射，映射区不与任何文件关联。
+MAP_ANON       // MAP_ANONYMOUS 的别称，不再被使用。
+MAP_FILE       // 兼容标志，被忽略。
+MAP_32BIT      // 将映射区放在进程地址空间的低 2GB，MAP_FIXED 指定时会被忽略。当前这个标志只在 x86-64 平台上得到支持。
+MAP_POPULATE   // 为文件映射通过预读的方式准备好页表。随后对映射区的访问不会被页违例阻塞。
+MAP_NONBLOCK   // 仅和 MAP_POPULATE 一起使用时才有意义。不执行预读，只为已存在于内存中的页面建立页表入口。
+```
 
+fd：有效的文件描述词。如果 MAP_ANONYMOUS 被设定，为了兼容问题，其值应为 -1
 
+offset：被映射对象内容的起点
 
+其它需要使用的函数，
 
+```c
+int munmap(void *addr, size_t len);
+```
 
+成功执行时，munmap() 返回 0。失败时，munmap 返回-1，error 返回标志和 mmap 一致；
 
+该调用在进程地址空间中解除一个映射关系，addr 是调用 mmap() 时返回的地址，len 是映射区的大小；当映射关系解除后，对原来映射地址的访问将导致段错误发生。 
 
+```c
+int msync(void *addr, size_t len, int flags);
+```
 
+一般说来，进程在映射空间的对共享内容的改变并不直接写回到磁盘文件中，往往在调用 munmap() 后才执行该操作。可以通过调用 msync() 实现磁盘上文件内容与共享内存区的内容一致。
 
+参考：<https://www.cnblogs.com/huxiao-tee/p/4660352.html>
 
+下边是读取文件的操作：
 
+```c++
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 
+typedef struct{
+  char name[20];
+  short age;
+  float score;
+  char sex;
+}student;
 
-
+int main()
+{
+  student *p,*pend;  
+  
+  //打开文件描述符号
+  int fd;
+  
+   /*打开文件*/
+    fd=open("user.dat",O_RDWR);
+    if(fd==-1) //文件不存在
+    {
+        fd=open("user.dat",O_RDWR|O_CREAT,0666);
+        if(fd==-1){
+            printf("打开或创建文件失败:%m\n");
+            exit(-1);
+        }
+    }
+    
+  //打开文件ok，可以进行下一步操作
+  printf("open ok!\n");  
+  
+  //获取文件的大小，映射一块和文件大小一样的内存空间，如果文件比较大，可以分多次，一边处理一边映射；
+  struct stat st; //定义文件信息结构体
+  
+  /*取得文件大小*/
+  int r=fstat(fd,&st);
+  if(r==-1){
+      printf("获取文件大小失败:%m\n");
+      close(fd);
+      exit(-1);
+  }
+  int len=st.st_size;    
+  
+  /*把文件映射成虚拟内存地址*/
+  p=mmap(NULL,len,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);    
+  if(p==NULL || p==(void*)-1){
+      printf("映射失败:%m\n");
+      close(fd);
+      exit(-1);
+  }
+  
+  /*定位到文件开始*/
+  pend=p; 
+  
+  /*通过内存读取记录*/
+  int i=0;
+  while(i<(len/sizeof(student)))
+  {
+    printf("第%d个条\n",i);
+    printf("name=%s\n",p[i].name);
+    printf("age=%d\n",p[i].age);
+    printf("score=%f\n",p[i].score);
+    printf("sex=%c\n",p[i].sex);
+    i++;
+  }  
+  
+  /*卸载映射*/
+  munmap(p,len);
+  
+  /*关闭文件*/    
+  close(fd);    
+}
+```
 
