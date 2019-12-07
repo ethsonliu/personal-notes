@@ -2,9 +2,10 @@
 
 - [共享内存](#共享内存)
 - [管道-消息队列-共享内存传递数据对比](#管道-消息队列-共享内存传递数据对比)
-- [相关函数](#相关函数)
-- [](#)
-- [](#)
+- [mmap 函数](#mmap-函数)
+- [共享内存数据结构](#共享内存数据结构)
+- [共享内存 API](#共享内存-API)
+- [示例](#示例)
 
 ## 共享内存
 
@@ -71,7 +72,7 @@
 
 上述过程不涉及到内核的拷贝，所以花的时间较少。
 
-## 相关函数
+## mmap 函数
 
 **将文件或者设备空间映射到共享内存区**
 
@@ -245,19 +246,351 @@ int main()
 }
 ```
 
+## 共享内存数据结构
 
+```c
+struct shmid_ds {
+    struct ipc_perm shm_perm;    /* Ownership and permissions */
+    size_t          shm_segsz;   /* Size of segment (bytes) */
+    time_t          shm_atime;   /* Last attach time */
+    time_t          shm_dtime;   /* Last detach time */
+    time_t          shm_ctime;   /* Last change time */
+    pid_t           shm_cpid;    /* PID of creator */
+    pid_t           shm_lpid;    /* PID of last shmat(2)/shmdt(2) */
+    shmatt_t        shm_nattch;  /* No. of current attaches */
+    ...
+};
+```
 
+## 共享内存 API
 
+```c
+#include <sys/ipc.h>  
+#include <sys/shm.h>  
+  
+int shmget(key_t key, size_t size, int shmflg);
+void *shmat(int shmid, const void *shmaddr, int shmflg);
+int shmdt(const void *shmaddr);
+int shmctl(int shmid, int cmd, struct shmid_ds *buf);
+```
 
+**创建共享内存,并将该内存的内容初始化为 0**
 
+```c
+int shmget(key_t key, size_t size, int shmflg);
+```
 
+打开一个已经存在共享内存, 如果打开时不知道共享内存的大小, 可以将 size 指定为0, shmflg 可以指定为 0(按照默认的权限打开);    
 
+- key: 这个共享内存段名字;
+- size: 共享内存大小(bytes);
+- shmflg: 用法类似 msgget 中的 msgflg 参数;
 
+返回值: 成功返回一个非负整数，即该共享内存段的标识码；失败返回 -1。
 
+```c++
+/**示例: 创建并打开一个共享内存 **/  
+int main(int argc,char **argv)  
+{  
+    const int SHM_SIZE = 1024;  
+    int shmid = shmget(0x1234, SHM_SIZE, 0666|IPC_CREAT);  
+    if (shmid == -1)  
+        err_exit("shmget error");  
+    cout << "share memory get success" << endl;  
+}  
+```
 
+**连接到本进程地址空间**
 
+```c
+void *shmat(int shmid, const void *shmaddr, int shmflg);  
+```
 
+at = attach，连接到本进程地址空间, 成功连接之后, 对该内存的操作就与 malloc 来的一块内存非常类似了, 而且如果这块内存中有数据, 则就可以直接将其中的数据取出来。
 
+- shmaddr: 指定连接的地址(推荐使用 NULL)
+- shmflg: 一般指定为 0, 表示可读,可写; 而它的另外两个可能取值是 SHM_RND 和 SHM_RDONLY(见下)
 
+返回值： 成功返回一个指针，指向共享内存起始地址；失败返回`(void*)-1`。
 
+| | |
+|  :----  | :----  |
+| shmaddr 为 NULL | Linux内核自动为进程连接到进程的内存(推荐使用) |
+| shmaddr 不为 NULL且 shmflg 无 SHM_RND 标记  | 以 shmaddr 为连接地址 |
+| shmflg = SHM_RDONLY  | 只读共享内存, 不然的话就是可读,可写的, 注意: 此处没有可读,可写这个概念 |
 
+**将共享内存从当前进程中分离**
+
+```c
+int shmdt(const void *shmaddr);
+```
+
+dt = detach，注意，将共享内存分离并不是删除它，只是使该共享内存对当前进程不再可用。
+
+- shmaddr: 由 shmat 所返回的指针
+
+调用成功时返回 0，失败时返回 -1。
+
+```c++
+/** 示例: 将数据写入/读出共享内存 
+程序write: 将数据写入共享内存 
+程序read: 将数据读出共享内存(当然, 可以读取N多次) 
+**/  
+//write程序  
+struct Student  
+{  
+    char name[26];  
+    int age;  
+};  
+int main(int argc,char **argv)  
+{  
+    int shmid = shmget(0x1234, sizeof(Student), 0666|IPC_CREAT);  
+    if (shmid == -1)  
+        err_exit("shmget error");  
+  
+    // 以可读, 可写的方式连接该共享内存  
+    Student *p = (Student *)shmat(shmid, NULL, 0);  
+    if (p == (void *)-1)  
+        err_exit("shmat error");  
+    strcpy(p->name, "xiaofang");  
+    p->age = 22;  
+    shmdt(p);  
+}  
+```
+
+```c++
+//read程序  
+int main(int argc,char **argv)  
+{  
+    int shmid = shmget(0x1234, 0, 0);  
+    if (shmid == -1)  
+        err_exit("shmget error");  
+  
+    // 以只读方式连接该共享内存  
+    Student *p = (Student *)shmat(shmid, NULL, 0);  
+    if (p == (void *)-1)  
+        err_exit("shmat error");  
+  
+    // 直接将其中的内容打印输出  
+    cout << "name: " << p->name << ", age: " << p->age << endl;  
+    shmdt(p);  
+}  
+```
+
+**设置/获取共享内存属性**
+
+```c
+int shmctl(int shm_id, int command, struct shmid_ds *buf);
+```
+
+- cmd: 将要采取的动作(三个取值见下)
+- buf: 指向一个保存着共享内存的模式状态和访问权限的数据结构
+
+```
+IPC_STAT：把 shmid_ds 结构中的数据设置为共享内存的当前关联值，即用共享内存的当前关联值覆盖 shmid_ds 的值。
+IPC_SET： 如果进程有足够的权限，就把共享内存的当前关联值设置为 shmid_ds 结构中给出的值
+IPC_RMID：删除共享内存段
+```
+
+第三个参数，buf 是一个结构指针，它指向共享内存模式和访问权限的结构。
+
+shmid_ds 结构至少包括以下成员：
+
+```c
+struct shmid_ds
+{
+    uid_t shm_perm.uid;
+    uid_t shm_perm.gid;
+    mode_t shm_perm.mode;
+};
+```
+
+注意点，
+
+1. 共享内存被别的程序占用,则删除该共享内存时,不会马上删除(引用计数计数);
+2. 此时会出现一个现象:该共享内存的 key 变为 0x00000000,变为私有;
+3. 此时还可以读,但必须还有办法获取该共享内存的 ID(shmid),因为此时试图通过该共享内存的 key 获取该共享内存,是白费的!
+
+## 示例
+
+```c++
+// shmdata.h
+#ifndef _SHMDATA_H_HEADER
+#define _SHMDATA_H_HEADER
+ 
+#define TEXT_SZ 2048
+ 
+struct shared_use_st
+{
+    int written; // 作为一个标志，非0：表示可读，0：表示可写
+    char text[TEXT_SZ]; // 记录写入 和 读取 的文本
+};
+ 
+#endif
+```
+
+```c++
+// shmread.c
+#include <stddef.h>
+#include <sys/shm.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include "shmdata.h"
+ 
+int main(int argc, char **argv)
+{
+    void *shm = NULL;
+    struct shared_use_st *shared; // 指向shm
+    int shmid; // 共享内存标识符
+ 
+    // 创建共享内存
+    shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666|IPC_CREAT);
+    if (shmid == -1)
+    {
+        fprintf(stderr, "shmat failed\n");
+        exit(EXIT_FAILURE);
+    }
+ 
+    // 将共享内存连接到当前进程的地址空间
+    shm = shmat(shmid, 0, 0);
+    if (shm == (void *)-1)
+    {
+        fprintf(stderr, "shmat failed\n");
+        exit(EXIT_FAILURE);
+    }
+ 
+    printf("\nMemory attached at %X\n", (int)shm);
+ 
+    // 设置共享内存
+    shared = (struct shared_use_st*)shm; // 注意：shm有点类似通过 malloc() 获取到的内存，所以这里需要做个 类型强制转换
+    shared->written = 0;
+    while (1) // 读取共享内存中的数据
+    {
+        // 没有进程向内存写数据，有数据可读取
+        if (shared->written == 1)
+        {
+            printf("You wrote: %s", shared->text);
+            sleep(1);
+ 
+            // 读取完数据，设置written使共享内存段可写
+            shared->written = 0;
+ 
+            // 输入了 end，退出循环（程序）
+            if (strncmp(shared->text, "end", 3) == 0)
+            {
+                break;
+            }
+        }
+        else // 有其他进程在写数据，不能读取数据
+        {
+            sleep(1);
+        }
+    }
+ 
+    // 把共享内存从当前进程中分离
+    if (shmdt(shm) == -1)
+    {
+        fprintf(stderr, "shmdt failed\n");
+        exit(EXIT_FAILURE);
+    }
+ 
+    // 删除共享内存
+    if (shmctl(shmid, IPC_RMID, 0) == -1)
+    {
+        fprintf(stderr, "shmctl(IPC_RMID) failed\n");
+        exit(EXIT_FAILURE);
+    }
+ 
+    exit(EXIT_SUCCESS);
+}
+```
+
+```c++
+// shmwrite.c
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/shm.h>
+#include "shmdata.h"
+ 
+int main(int argc, char **argv)
+{
+    void *shm = NULL;
+    struct shared_use_st *shared = NULL;
+    char buffer[BUFSIZ + 1]; // 用于保存输入的文本
+    int shmid;
+ 
+    // 创建共享内存
+    shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666|IPC_CREAT);
+    if (shmid == -1)
+    {
+        fprintf(stderr, "shmget failed\n");
+        exit(EXIT_FAILURE);
+    }
+ 
+    // 将共享内存连接到当前的进程地址空间
+    shm = shmat(shmid, (void *)0, 0);
+    if (shm == (void *)-1)
+    {
+        fprintf(stderr, "shmat failed\n");
+        exit(EXIT_FAILURE);
+    }
+ 
+    printf("Memory attched at %X\n", (int)shm);
+ 
+    // 设置共享内存
+    shared = (struct shared_use_st *)shm;
+    while (1) // 向共享内存中写数据
+    {
+        // 数据还没有被读取，则等待数据被读取，不能向共享内存中写入文本
+        while (shared->written == 1)
+        {
+            sleep(1);
+            printf("Waiting...\n");
+        }
+ 
+        // 向共享内存中写入数据
+        printf("Enter some text: ");
+        fgets(buffer, BUFSIZ, stdin);
+        strncpy(shared->text, buffer, TEXT_SZ);
+ 
+        // 写完数据，设置written使共享内存段可读
+        shared->written = 1;
+ 
+        // 输入了end，退出循环（程序）
+        if (strncmp(buffer, "end", 3) == 0)
+        {
+            break;
+        }
+    }
+ 
+    // 把共享内存从当前进程中分离
+    if (shmdt(shm) == -1)
+    {
+        fprintf(stderr, "shmdt failed\n");
+        exit(EXIT_FAILURE);
+    }
+ 
+    sleep(2);
+    exit(EXIT_SUCCESS);
+}
+```
+
+分析：
+
+1. 程序 shmread 创建共享内存，然后将它连接到自己的地址空间。在共享内存的开始处使用了一个结构 struct_use_st。该结构中有个标志 written，当共享内存中有其他进程向它写入数据时，共享内存中的 written 被设置为 0，程序等待。当它不为 0 时，表示没有进程对共享内存写入数据，程序就从共享内存中读取数据并输出，然后重置设置共享内存中的 written 为 0，即让其可被 shmwrite 进程写入数据。
+2. 程序 shmwrite 取得共享内存并连接到自己的地址空间中。检查共享内存中的 written，是否为 0，若不是，表示共享内存中的数据还没有被完，则等待其他进程读取完成，并提示用户等待。若共享内存的 written 为 0，表示没有其他进程对共享内存进行读取，则提示用户输入文本，并再次设置共享内存中的 written 为 1，表示写完成，其他进程可对共享内存进行读操作。
+
+关于前面的例子的安全性讨论:
+
+这个程序是不安全的，当有多个程序同时向共享内存中读写数据时，问题就会出现。可能你会认为，可以改变一下 written 的使用方式，例如，只有当 written 为 0 时进程才可以向共享内存写入数据，而当一个进程只有在 written 不为 0 时才能对其进行读取，同时把 written 进行加 1 操作，读取完后进行减 1 操作。这就有点像文件锁中的读写锁的功能。咋看之下，它似乎能行得通。但是这都不是原子操作，所以这种做法是行不能的。试想当 written 为 0 时，如果有两个进程同时访问共享内存，它们就会发现 written 为 0，于是两个进程都对其进行写操作，显然不行。当 written 为 1 时，有两个进程同时对共享内存进行读操作时也是如些，当这两个进程都读取完是，written 就变成了 -1。
+
+要想让程序安全地执行，就要有一种进程同步的进制，保证在进入临界区的操作是原子操作。例如，可以使用前面所讲的信号量来进行进程的同步。因为信号量的操作都是原子性的。
+
+使用共享内存的优缺点：
+
+1. 优点：我们可以看到使用共享内存进行进程间的通信真的是非常方便，而且函数的接口也简单，数据的共享还使进程间的数据不用传送，而是直接访问内存，也加快了程序的效率。同时，它也不像匿名管道那样要求通信的进程有一定的父子关系。
+2. 缺点：共享内存没有提供同步的机制，这使得我们在使用共享内存进行进程间通信时，往往要借助其他的手段来进行进程间的同步工作。
