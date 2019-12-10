@@ -3,6 +3,7 @@
 - [信号量简介](#信号量简介)
 - [相关函数](#相关函数)
 - [示例](#示例)
+- [信号量实现进程互斥](#信号量实现进程互斥)
 
 ## 信号量简介
 
@@ -465,3 +466,74 @@ int main(int argc,char *argv[])
     return 0;  
 }  
 ```
+
+## 信号量实现进程互斥
+
+O 和 X 的输出总是成对出现。
+
+```c++
+/**P,V原语实现父子进程互斥使用终端**/  
+// 程序代码  
+int main(int argc,char *argv[])  
+{  
+    int semid = sem_create(IPC_PRIVATE);  
+    sem_setval(semid, 1);  
+    int count = 10;  
+  
+    pid_t pid = fork();  
+    if (pid == -1)  
+        err_exit("fork error");  
+    else if (pid > 0)   //子进程  
+    {  
+        srand(getpid());  
+        while (count --)  
+        {  
+            sem_P(semid);  
+            //临界区开始  
+            cout << 'X';  
+            fflush(stdout); //一定要加上ffflush, 因为中断是行缓冲的  
+            sleep(rand()%3);  
+            cout << 'X';  
+            fflush(stdout);  
+            //临界区结束  
+            sem_V(semid);  
+            sleep(rand()%3);  
+        }  
+    }  
+    else                //父进程  
+    {  
+        srand(getpid());  
+        while (count --)  
+        {  
+            sem_P(semid);  
+            //临界区开始  
+            cout << 'O';  
+            fflush(stdout);  
+            sleep(rand()%3);  
+            cout << 'O';  
+            fflush(stdout);  
+            //临界区结束  
+            sem_V(semid);  
+            sleep(rand()%3);  
+        }  
+        wait(NULL);  
+        sem_delete(semid);  
+    }  
+  
+    return 0;  
+}  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
