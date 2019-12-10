@@ -4,6 +4,7 @@
 - [相关函数](#相关函数)
 - [示例](#示例)
 - [信号量实现进程互斥](#信号量实现进程互斥)
+- [信号量集解决哲学家进餐问题](#信号量集解决哲学家进餐问题)
 
 ## 信号量简介
 
@@ -524,9 +525,106 @@ int main(int argc,char *argv[])
 }  
 ```
 
+## 信号量集解决哲学家进餐问题
 
+假设有五位哲学家围坐在一张圆形餐桌旁，做以下两件事情之一：吃饭，或者思考。吃东西的时候，他们就停止思考，思考的时候也停止吃东西。每两个哲学家之间有一只餐叉。因为用一只餐叉很难吃饭，所以假设哲学家必须用两只餐叉吃东西, 而且他们只能使用自己左右手边的那两只餐叉。
 
+```c++
+/**  
+解决的方法采用的是: 只有左右两个刀叉都能够使用时,才拿起两个刀叉 
+实现了有死锁和无死锁的两种形式的wait_2fork(见下) 
+**/  
+  
+int semid;  
+//没有死锁的wait  
+void wait_2fork(unsigned short no)  
+{  
+    unsigned short left = no;  
+    unsigned short right = (no+1)%5;  
+    struct sembuf sops[2] = {{left, -1, 0}, {right, -1, 0}};  
+    //同时获取左右两把刀叉  
+    if (semop(semid, sops, 2) == -1)  
+        err_exit("wait_2fork error");  
+}  
+/* 
+//有死锁的wait 
+void wait_2fork(unsigned short no) 
+{ 
+    unsigned short left = no; 
+    unsigned short right = (no+1)%5; 
+    struct sembuf sops = {left, -1, 0}; 
+    //获取左边的刀叉 
+    if (semop(semid, &sops, 1) == -1) 
+        err_exit("wait_2fork error"); 
+    sleep(4);   //沉睡几秒, 加速死锁的产生 
+    sops.sem_num = right; 
+    //获取右边的刀叉 
+    if (semop(semid, &sops, 1) == -1) 
+        err_exit("wait_2fork error"); 
+} 
+*/  
+//释放两把刀叉  
+void signal_2fork(unsigned short no)  
+{  
+    unsigned short left = no;  
+    unsigned short right = (no+1)%5;  
+    struct sembuf sops[2] = {{left, 1, 0}, {right, 1, 0}};  
+    if (semop(semid, sops, 2) == -1)  
+        err_exit("signal_2fork error");  
+}  
+//哲学家  
+void philosopher(unsigned short no)  
+{  
+    srand(time(NULL));  
+    while (true)  
+    {  
+        cout << no << " is thinking" << endl;  
+        sleep(rand()%5+1);  
+        cout << no << " is hunger" << endl;  
+        wait_2fork(no); //获取两把刀叉  
+        //进餐  
+        cout << "++ " << no << " is eating" << endl;  
+        sleep(rand()%5+1);  
+        signal_2fork(no);//释放两把刀叉  
+    }  
+}  
 
+int main()  
+{  
+    // 创建一个信号量集: 里面包含5个信号量  
+    semid = semget(IPC_PRIVATE, 5, IPC_CREAT|0666);  
+    if (semid == -1)  
+        err_exit("semget error");  
+  
+    //将每个信号量都设初值为1  
+    union semun su;  
+    su.val = 1;  
+    for (int i = 0; i < 5; ++i)  
+        if (semctl(semid, i, SETVAL, su) == -1)  
+            err_exit("semctl SETVAL error");  
+  
+    //创建四个子进程, 将每个进程的编号设定为no  
+    pid_t pid;  
+    unsigned short no = 0;  
+    for (unsigned short i = 0; i < 4; ++i)  
+    {  
+        pid = fork();  
+        if (pid == -1)  
+            err_exit("fork error");  
+        else if (pid == 0)  
+        {  
+            no = i+1;  
+            break;  
+        }  
+    }  
+  
+    // 最后五个进程(4个子进程+1个父进程)都会汇集到此处,  
+    // 每个进程代表着一个哲学家,编号no: 0~4  
+    philosopher(no);  
+  
+    return 0;  
+}  
+```
 
 
 
