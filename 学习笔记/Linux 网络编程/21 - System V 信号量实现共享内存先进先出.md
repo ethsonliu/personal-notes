@@ -36,8 +36,8 @@ struct shmfifo
 
     int shmid;          // 共享内存ID
     int sem_mutex;      // 用来互斥用的信号量
-    int sem_full;       // 用来控制共享内参是否满的信号量
-    int sem_empty;       // 用来控制共享内参是否空的信号量
+    int sem_full;       // 用来控制共享内存是否满的信号量
+    int sem_empty;      // 用来控制共享内存是否空的信号量
 };
 
 shmfifo* shmfifo_init(int key, int blocksize, int blocks);
