@@ -249,7 +249,7 @@ receive message 5: yuki
 mqd_t mq_notify(mqd_t mqdes, const struct sigevent *notification);
 ```
 
-建立或删除消息到达通知时间。
+通知进程可以接收一条消息。
 
 mqdes：消息队列描述符
 
