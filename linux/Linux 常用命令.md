@@ -356,12 +356,28 @@ public
 
 ### IO
 
+**查看整体 IO 状况**
+
+**查看单个进程 IO 使用状况**
 
 ### CPU
 
+**查看整体 CPU 状况**
+**查看单个进程 CPU 使用状况**
 
 ### 内存
 
+**查看整体内存状况**
+
+```shell
+[root@vultr ~]# free -h
+             total       used       free     shared    buffers     cached
+Mem:          995M       364M       631M       472K        21M       270M
+-/+ buffers/cache:        72M       923M
+Swap:           0B         0B         0B
+```
+
+**查看单个进程内存使用状况**
 
 ### 网络
 
