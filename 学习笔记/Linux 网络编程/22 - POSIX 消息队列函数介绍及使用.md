@@ -3,6 +3,7 @@
 - [打开，创建，关闭，销毁一个消息队列](#打开，创建，关闭，销毁一个消息队列)
 - [POSIX 消息队列的属性](#POSIX-消息队列的属性)
 - [发送消息和接收消息](#发送消息和接收消息)
+- [mq_notify 函数](#mq_notify-函数)
 - [POSIX 消息队列的限制](#POSIX-消息队列的限制)
 
 ## 打开，创建，关闭，销毁一个消息队列
@@ -241,6 +242,145 @@ receive message 4: yuki
 send message 5 success. 
 receive message 5: yuki
 ```
+
+## mq_notify 函数
+
+```c
+mqd_t mq_notify(mqd_t mqdes, const struct sigevent *notification);
+```
+
+建立或删除消息到达通知时间。
+
+mqdes：消息队列描述符
+
+notification：非空表示当消息到达且消息队列先前为空，那么将得到通知。NULL 表示撤销已注册的通知。
+
+返回值：成功返回 0；失败返回 -1
+
+通知方式：
+
+- 产生一个信号
+- 创建一个线程执行一个指定的函数
+
+```c
+/* Data passed with notification */
+union sigval {          
+    int     sival_int; /* Integer value */
+    void   *sival_ptr; /* Pointer value */
+};
+ 
+struct sigevent {
+    int          sigev_notify;                            /* Notification method */
+    int          sigev_signo;                             /* Notification signal */
+    union sigval sigev_value;                             /* Data passed with notification */
+    void         (*sigev_notify_function) (union sigval); /* Function used for thread notification (SIGEV_THREAD) */
+    void         *sigev_notify_attributes;                /* Attributes for notification thread (SIGEV_THREAD) */
+    pid_t        sigev_notify_thread_id;                  /* ID of thread to signal (SIGEV_THREAD_ID) */
+};
+```
+
+sigev_notify 有三个取值：
+
+- SIGEV_NONE：表示不会又通知；
+- SIGEV_SIGNAL：表示以信号的方式来通知；需要指定 sigev_signo 和 sigev_value
+- SIGEV_THREAD：表示以线程的方式来通知。需要指定结构体中最后两个参数
+
+```c++
+#include <unistd.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+ 
+#include <fcntl.h>           /* For O_* constants */
+#include <sys/stat.h>        /* For mode constants */
+#include <mqueue.h>
+#include <string.h>
+#include <signal.h>
+ 
+#define ERR_EXIT(m)\
+        do \
+        { \
+                perror(m);\
+                exit(EXIT_FAILURE);\
+        }while(0)
+ 
+typedef struct stu
+{
+        char name[32];
+        int age;
+}STU;
+size_t size;
+ 
+mqd_t mqid;
+ 
+struct sigevent sigev;
+ 
+void handle_sigusr1(int sig)
+{
+        mq_notify(mqid, &sigev);
+        STU stu;
+        unsigned int prio;
+        if (mq_receive(mqid, (char*)&stu, size, &prio) == (mqd_t)-1)
+                ERR_EXIT("mq_receive");
+ 
+        printf("name=%s age=%d prio=%u\n", stu.name, stu.age, prio);
+ 
+}
+ 
+int main(int argc, char *argv[])
+{
+        mqid = mq_open("/abc", O_RDONLY);
+        if (mqid == (mqd_t)-1)
+                ERR_EXIT("mq_open");
+        struct mq_attr attr;
+        mq_getattr(mqid, &attr);
+        size = attr.mq_msgsize;
+ 
+        signal(SIGUSR1, handle_sigusr1);
+ 
+        sigev.sigev_notify = SIGEV_SIGNAL;
+        sigev.sigev_signo = SIGUSR1;
+ 
+        mq_notify(mqid, &sigev);
+ 
+        for(;;)
+                pause();
+ 
+        mq_close(mqid);
+        return 0;
+}
+```
+
+在消息队列中没有消息的情况下，运行该程序，将阻塞。而当另一个程序通过向消息队列中发送消息之后，notify 程序将会得到通知，并将结果打印输出：
+
+```shell
+[root@VM_198_209_centos 34_demon_posix]# ./06mq_notify 
+name=test age=25 prio=0
+name=test age=25 prio=1
+1
+2
+3
+[root@VM_198_209_centos 34_demon_posix]# ./06mq_notify 
+name=test age=25 prio=0
+name=test age=25 prio=1
+[root@VM_198_209_centos 34_demon_posix]# ./04mq_send 0
+[root@VM_198_209_centos 34_demon_posix]# ./04mq_send 1
+1
+2
+[root@VM_198_209_centos 34_demon_posix]# ./04mq_send 0
+[root@VM_198_209_centos 34_demon_posix]# ./04mq_send 1
+```
+
+mq_notify 使用注意：
+
+任何时刻只能有一个进程可以被注册为接收某个给定队列的通知。
+
+当有一个消息到达某个先前为空的队列，而且已有一个进程被注册为接收该队列的通知时，只有没有任何线程阻塞在该队列的 mq_receive 调用的前提下，通知才会发出。
+
+当通知被发送给它的注册进程时，其注册被撤销。进程必须再次调用 mq_notify 以重新注册(如果需要的话）,重新注册要放在从消息队列读出消息之前而不是之后。
 
 ## POSIX 消息队列的限制
 
