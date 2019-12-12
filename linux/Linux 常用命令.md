@@ -364,3 +364,56 @@ public
 
 
 ### 网络
+
+**查看整体网络状况**
+
+nload 安装：`sudo yum install nload` 或者 `sudo apt install nload`。（参考：<https://linux.cn/article-2871-1.html>）
+
+```shell
+[root@vultr ~]# ifconfig
+eth0      Link encap:Ethernet  HWaddr 56:00:02:75:20:7B  
+          inet addr:66.42.61.217  Bcast:66.42.61.255  Mask:255.255.254.0
+          inet6 addr: fe80::5400:2ff:fe75:207b/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:71577 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:71248 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:67493280 (64.3 MiB)  TX bytes:9361011 (8.9 MiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:6 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:6 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:828 (828.0 b)  TX bytes:828 (828.0 b)
+
+[root@vultr ~]# nload eth0
+
+Device eth0 [66.42.61.217] (1/1):
+===================================================================================================================================
+Incoming:
+
+
+
+
+
+                                                                                         Curr: 5.37 kBit/s
+                                                                                         Avg: 5.16 kBit/s
+                                                                                         Min: 328.00 Bit/s
+                                                                                         Max: 9.91 kBit/s
+                                                                                         Ttl: 64.37 MByte
+Outgoing:
+
+
+
+
+
+
+                                                                                         Curr: 14.03 kBit/s
+                                                                                         Avg: 13.38 kBit/s
+                                                                                         Min: 3.48 kBit/s
+                                                                                         Max: 27.23 kBit/s
+                                                                                         Ttl: 8.95 MByte
+```
