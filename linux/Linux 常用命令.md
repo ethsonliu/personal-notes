@@ -17,6 +17,11 @@
 - [防火墙](#防火墙)
   - [firewall](#firewall)
   - [iptables](#iptables)
+- [IO CPU 内存 网络](#IO-CPU-内存-网络)
+  - [IO](#IO)
+  - [CPU](#CPU)
+  - [内存](#内存)
+  - [网络](#网络)
 
 ## vi
 
@@ -346,4 +351,16 @@ public
 - <https://wangchujiang.com/linux-command/c/iptables.html>
 - <https://man.linuxde.net/iptables>
 
+## IO CPU 内存 网络
 
+
+### IO
+
+
+### CPU
+
+
+### 内存
+
+
+### 网络
