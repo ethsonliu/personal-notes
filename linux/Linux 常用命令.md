@@ -420,3 +420,17 @@ Outgoing:
 
 **查看单个进程网络使用状况**
 
+nethogs 安装：`sudo yum install nethogs` 或者 `sudo apt install nethogs`。（参考：<https://linux.cn/article-2808-1.html>）
+
+```shell
+[root@vultr ~]# nethogs
+
+NetHogs version 0.8.5
+
+    PID USER     PROGRAM                                                                         DEV        SENT      RECEIVED       
+   5885 root     sshd: root@pts/0,pts/1                                                          eth0        1.436       0.757 KB/sec
+      ? root     unknown TCP                                                                                 0.000       0.000 KB/sec
+
+  TOTAL                                                                                                      1.436       0.757 KB/sec
+ 
+```
