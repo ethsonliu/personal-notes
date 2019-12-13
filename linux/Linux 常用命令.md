@@ -481,7 +481,13 @@ nginx     5325  0.2  0.2 125680  8252 ?        S    Dec02  44:27 nginx: worker p
 Mem:          995M       364M       631M       472K        21M       270M
 -/+ buffers/cache:        72M       923M
 Swap:           0B         0B         0B
+# 995M = 72M + 923M
 
+[root@iZ94xyihsxsZ ~]# free -h
+              total        used        free      shared  buff/cache   available
+Mem:           3.7G        1.4G        684M         48M        1.6G        2.0G
+Swap:            0B          0B          0B
+# 3.7G = 1.6G + 2.0G
 ```
 
 **查看单个进程内存使用状况**
