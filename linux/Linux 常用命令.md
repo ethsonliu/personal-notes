@@ -379,6 +379,110 @@ Swap:           0B         0B         0B
 
 **查看单个进程内存使用状况**
 
+
+
+如果想确定一个进程内部具体的内存使用情况，可以用下面的命令：
+
+```shell
+[root@vultr ~]# cat /proc/1214/status
+Name:   crond
+State:  S (sleeping)
+Tgid:   1214
+Pid:    1214
+PPid:   1
+TracerPid:      0
+Uid:    0       0       0       0
+Gid:    0       0       0       0
+Utrace: 0
+FDSize: 64
+Groups: 
+VmPeak:   116896 kB
+VmSize:   116876 kB
+VmLck:         0 kB
+VmHWM:      1292 kB
+VmRSS:      1288 kB
+VmData:      880 kB
+VmStk:       520 kB
+VmExe:        60 kB
+VmLib:      2064 kB
+VmPTE:        64 kB
+VmSwap:        0 kB
+Threads:        1
+SigQ:   1/3898
+SigPnd: 0000000000000000
+ShdPnd: 0000000000000000
+SigBlk: 0000000000000000
+SigIgn: 0000000000000000
+SigCgt: 0000000000014003
+CapInh: 0000000000000000
+CapPrm: ffffffffffffffff
+CapEff: ffffffffffffffff
+CapBnd: ffffffffffffffff
+Speculation_Store_Bypass:       vulnerable
+Cpus_allowed:   1
+Cpus_allowed_list:      0
+Mems_allowed:   00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001
+Mems_allowed_list:      0
+voluntary_ctxt_switches:        1391
+nonvoluntary_ctxt_switches:     3
+[root@vultr ~]# pmap -x 1214
+1214:   crond
+Address           Kbytes     RSS   Dirty Mode   Mapping
+0000562f5206d000      60      44       0 r-x--  crond
+0000562f5227b000       4       4       4 r----  crond
+0000562f5227c000       4       4       4 rw---  crond
+0000562f5227d000     512     136     136 rw---    [ anon ]
+0000562f52413000     132      32      32 rw---    [ anon ]
+00007f290cd8a000      52      20       0 r-x--  libnss_files-2.12.so
+00007f290cd97000    2044       0       0 -----  libnss_files-2.12.so
+00007f290cf96000       4       4       4 r----  libnss_files-2.12.so
+00007f290cf97000       4       4       4 rw---  libnss_files-2.12.so
+00007f290cf98000   96848       4       0 r----  locale-archive
+00007f2912e2c000       8       4       0 r-x--  libfreebl3.so
+00007f2912e2e000    2044       0       0 -----  libfreebl3.so
+00007f291302d000       4       4       4 r----  libfreebl3.so
+00007f291302e000       4       4       4 rw---  libfreebl3.so
+00007f291302f000      28       4       0 r-x--  libcrypt-2.12.so
+00007f2913036000    2048       0       0 -----  libcrypt-2.12.so
+00007f2913236000       4       4       4 r----  libcrypt-2.12.so
+00007f2913237000       4       4       4 rw---  libcrypt-2.12.so
+00007f2913238000     184       0       0 rw---    [ anon ]
+00007f2913266000    1580     448       0 r-x--  libc-2.12.so
+00007f29133f1000    2044       0       0 -----  libc-2.12.so
+00007f29135f0000      16      16      16 r----  libc-2.12.so
+00007f29135f4000       8       8       8 rw---  libc-2.12.so
+00007f29135f6000      16      16      16 rw---    [ anon ]
+00007f29135fa000      96       8       0 r-x--  libaudit.so.1.0.0
+00007f2913612000    2044       0       0 -----  libaudit.so.1.0.0
+00007f2913811000       8       8       8 r----  libaudit.so.1.0.0
+00007f2913813000      44       8       8 rw---  libaudit.so.1.0.0
+00007f291381e000       8       4       0 r-x--  libdl-2.12.so
+00007f2913820000    2048       0       0 -----  libdl-2.12.so
+00007f2913a20000       4       4       4 r----  libdl-2.12.so
+00007f2913a21000       4       4       4 rw---  libdl-2.12.so
+00007f2913a22000      48       8       0 r-x--  libpam.so.0.82.2
+00007f2913a2e000    2048       0       0 -----  libpam.so.0.82.2
+00007f2913c2e000       4       4       4 r----  libpam.so.0.82.2
+00007f2913c2f000       4       4       4 rw---  libpam.so.0.82.2
+00007f2913c30000     116      40       0 r-x--  libselinux.so.1
+00007f2913c4d000    2044       0       0 -----  libselinux.so.1
+00007f2913e4c000       4       4       4 r----  libselinux.so.1
+00007f2913e4d000       4       4       4 rw---  libselinux.so.1
+00007f2913e4e000       4       4       4 rw---    [ anon ]
+00007f2913e4f000     128      84       0 r-x--  ld-2.12.so
+00007f2914065000      20      20      20 rw---    [ anon ]
+00007f291406e000       4       4       4 rw---    [ anon ]
+00007f291406f000       4       4       4 r----  ld-2.12.so
+00007f2914070000       4       4       4 rw---  ld-2.12.so
+00007f2914071000       4       4       4 rw---    [ anon ]
+00007ffe32d70000     520     296     296 rw---    [ stack ]
+00007ffe32df4000       4       4       0 r-x--    [ anon ]
+ffffffffff600000       4       0       0 r-x--    [ anon ]
+----------------  ------  ------  ------
+total kB          116880    1288     616
+
+```
+
 ### 网络
 
 **查看整体网络状况**
