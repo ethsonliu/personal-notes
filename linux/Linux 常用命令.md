@@ -375,11 +375,28 @@ public
 Mem:          995M       364M       631M       472K        21M       270M
 -/+ buffers/cache:        72M       923M
 Swap:           0B         0B         0B
+
 ```
 
 **查看单个进程内存使用状况**
 
+列出内存消耗排名靠前的进程（以下是列出前 10）：
 
+```shell
+[root@vultr ~]# ps aux|head -1;ps aux|grep -v PID|sort -rn -k +4|head -10
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root     23258  0.0  0.4  98252  4644 ?        Ss   00:57   0:05 sshd: root@pts/0,pts/1
+root     28138  0.0  0.3  96676  3836 ?        Ss   02:26   0:00 sshd: unknown [priv]
+root      1200  0.0  0.3  81036  3464 ?        Ss   Dec12   0:00 /usr/libexec/postfix/master
+root      1017  0.0  0.3 251392  3220 ?        Sl   Dec12   0:05 /sbin/rsyslogd -i /var/run/syslogd.pid -c 5
+postfix  27363  0.0  0.3  81116  3424 ?        S    01:17   0:00 pickup -l -t fifo -u
+postfix   1207  0.0  0.3  81284  3472 ?        S    Dec12   0:00 qmgr -l -t fifo -u
+root     23273  0.0  0.2  57300  2168 ?        Ss   00:57   0:00 /usr/libexec/openssh/sftp-server
+ntp       1120  0.0  0.2  30740  2112 ?        Ss   Dec12   0:00 ntpd -u ntp:ntp -p /var/run/ntpd.pid -g
+sshd     28139  0.0  0.1  67632  1772 ?        S    02:26   0:00 sshd: unknown [net]
+root     28142  0.0  0.1 110240  1172 pts/0    R+   02:26   0:00 ps aux
+
+```
 
 如果想确定一个进程内部具体的内存使用情况，可以用下面的命令：
 
