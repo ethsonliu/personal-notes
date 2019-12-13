@@ -363,7 +363,28 @@ public
 ### CPU
 
 **查看整体 CPU 状况**
-**查看单个进程 CPU 使用状况**
+
+
+**查看单个进程 CPU 使用状况（前 10）**
+
+```shell
+[root@iZ94xyihsxsZ ~]# ps aux|head -1;ps aux|grep -v PID|sort -rn -k +3|head -1
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root     22510 10.1  2.5 227216 99232 ?        Sl   Dec11 236:54 /root/ngrok/bin/ngrokd -domain=machine.haiwell.com -httpAddr=:8000 -log-level=ERROR -log=/root/ngrok/log/running.log -httpsAddr=:4433
+[root@iZ94xyihsxsZ ~]# ps aux|head -1;ps aux|grep -v PID|sort -rn -k +3|head -10
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root     22510 10.1  2.5 227216 99232 ?        Sl   Dec11 237:00 /root/ngrok/bin/ngrokd -domain=machine.haiwell.com -httpAddr=:8000 -log-level=ERROR -log=/root/ngrok/log/running.log -httpsAddr=:4433
+mysql    25823  5.6 15.9 1465556 617356 ?      Sl   Nov01 3401:55 /usr/sbin/mysqld --basedir=/usr --datadir=/var/lib/mysql --plugin-dir=/usr/lib64/mysql/plugin --log-error=/var/log/mysqld.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/lib/mysql/mysql.sock
+root     12753  2.3  0.2 131184  9204 ?        S<sl Nov19 817:18 /usr/local/aegis/aegis_client/aegis_10_75/AliYunDun
+root      4100  1.8  5.1 1382988 200908 ?      Rsl  Dec12  19:53 node /var/local/cloud2/dist/index.js
+root        36  1.3  0.0      0     0 ?        S    Aug24 2171:10 [kswapd0]
+root      8152  0.8  0.5 114008 19912 ?        Sl   Dec12   8:33 ./frps -c frps.ini
+root     16350  0.5  0.1 155596  6296 ?        Ss   10:30   0:00 sshd: root@pts/0,pts/1
+root       547  0.4  0.5 1016988 22816 ?       Ssl  Aug24 705:10 /usr/local/cloudmonitor/CmsGoAgent.linux-amd64
+nginx     5326  0.2  0.2 126660  8960 ?        S    Dec02  37:13 nginx: worker process
+nginx     5325  0.2  0.2 125680  8252 ?        S    Dec02  44:27 nginx: worker process
+
+```
 
 ### 内存
 
