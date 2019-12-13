@@ -368,9 +368,6 @@ public
 **查看单个进程 CPU 使用状况（前 10）**
 
 ```shell
-[root@iZ94xyihsxsZ ~]# ps aux|head -1;ps aux|grep -v PID|sort -rn -k +3|head -1
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root     22510 10.1  2.5 227216 99232 ?        Sl   Dec11 236:54 /root/ngrok/bin/ngrokd -domain=machine.haiwell.com -httpAddr=:8000 -log-level=ERROR -log=/root/ngrok/log/running.log -httpsAddr=:4433
 [root@iZ94xyihsxsZ ~]# ps aux|head -1;ps aux|grep -v PID|sort -rn -k +3|head -10
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root     22510 10.1  2.5 227216 99232 ?        Sl   Dec11 237:00 /root/ngrok/bin/ngrokd -domain=machine.haiwell.com -httpAddr=:8000 -log-level=ERROR -log=/root/ngrok/log/running.log -httpsAddr=:4433
@@ -384,6 +381,44 @@ root       547  0.4  0.5 1016988 22816 ?       Ssl  Aug24 705:10 /usr/local/clou
 nginx     5326  0.2  0.2 126660  8960 ?        S    Dec02  37:13 nginx: worker process
 nginx     5325  0.2  0.2 125680  8252 ?        S    Dec02  44:27 nginx: worker process
 
+```
+
+或者更简单点，直接`top`再按`shift + P`，
+
+```shell
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+25823 mysql     20   0 1465556 617356   4368 S  19.3 15.9   3402:10 mysqld                                                                                                                                         
+22510 root      20   0  227216  99040   3856 S  12.0  2.6 237:14.24 ngrokd                                                                                                                                         
+ 4100 root      20   0 1392716 214416  13636 S   4.0  5.5  19:56.34 node /var/local                                                                                                                                
+12753 root      10 -10  131184   9204   5008 S   3.3  0.2 817:21.83 AliYunDun                                                                                                                                      
+ 8152 root      20   0  114008  19912   6944 S   1.0  0.5   8:35.17 frps                                                                                                                                           
+ 5325 nginx     20   0  125680   8252   2400 S   0.7  0.2  44:28.21 nginx                                                                                                                                          
+16350 root      20   0  155596   6308   4588 S   0.7  0.2   0:01.10 sshd                                                                                                                                           
+    9 root      20   0       0      0      0 S   0.3  0.0 291:42.38 rcu_sched                                                                                                                                      
+  547 root      20   0 1016988  22760   5364 S   0.3  0.6 705:11.09 CmsGoAgent.linu                                                                                                                                
+ 1076 redis     20   0  142960   5072    716 S   0.3  0.1 182:25.21 redis-server                                                                                                                                   
+ 1398 root      20   0  989532  90572   3952 S   0.3  2.3 169:41.56 PM2 v2.4.6: God                                                                                                                                
+ 5326 nginx     20   0  126660   8960   2484 S   0.3  0.2  37:13.90 nginx                                                                                                                                          
+21618 root      20   0 1234324  46300  12064 S   0.3  1.2   1:05.90 node /var/local                                                                                                                                
+    1 root      20   0  190996   2612   1316 S   0.0  0.1  15:41.54 systemd                                                                                                                                        
+    2 root      20   0       0      0      0 S   0.0  0.0   0:01.82 kthreadd                                                                                                                                       
+    3 root      20   0       0      0      0 S   0.0  0.0  72:08.33 ksoftirqd/0                                                                                                                                    
+    5 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 kworker/0:0H                                                                                                                                   
+    7 root      rt   0       0      0      0 S   0.0  0.0   2:10.56 migration/0                                                                                                                                    
+    8 root      20   0       0      0      0 S   0.0  0.0   0:00.00 rcu_bh                                                                                                                                         
+   10 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 lru-add-drain                                                                                                                                  
+   11 root      rt   0       0      0      0 S   0.0  0.0   0:45.77 watchdog/0                                                                                                                                     
+   12 root      rt   0       0      0      0 S   0.0  0.0   0:35.94 watchdog/1                                                                                                                                     
+   13 root      rt   0       0      0      0 S   0.0  0.0   2:01.02 migration/1                                                                                                                                    
+   14 root      20   0       0      0      0 S   0.0  0.0   6:09.66 ksoftirqd/1                                                                                                                                    
+   16 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 kworker/1:0H                                                                                                                                   
+   18 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kdevtmpfs                                                                                                                                      
+   19 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 netns                                                                                                                                          
+   20 root      20   0       0      0      0 S   0.0  0.0   0:03.49 khungtaskd                                                                                                                                     
+   21 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 writeback                                                                                                                                      
+   22 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 kintegrityd                                                                                                                                    
+   23 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 bioset                                                                                                                                         
+   24 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 bioset 
 ```
 
 ### 内存
