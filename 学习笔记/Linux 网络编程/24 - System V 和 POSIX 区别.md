@@ -32,6 +32,9 @@ stackoverflow 上探讨：https://stackoverflow.com/questions/4582968/system-v-i
 
 ## 消息队列
 
+1. 对 posix 消息队列的读总是返回最高优先级的最早消息，对 system v 消息队列的读则可以返回任意指定优先级的消息
+2. 当往一个空队列放置一个消息时，posix 消息队列允许产生一个信号或启动一个线程，system v 消息队列则不提供类似机制
+
 ## 共享内存
 
 ## 信号量
