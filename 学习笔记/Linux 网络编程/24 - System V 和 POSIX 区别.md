@@ -43,32 +43,8 @@ stackoverflow 上探讨：https://stackoverflow.com/questions/4582968/system-v-i
 
 ## 信号量
 
+System V 的信号量一般用于进程同步, 且是内核持续的, api 为 `semget` `semctl` `semop`
 
+Posix 的有名信号量一般用于进程同步, 有名信号量是内核持续的. 有名信号量的 api 为 `sem_open` `sem_close` `sem_unlink`。Posix 的无名信号量一般用于线程同步, 无名信号量是进程持续的, 无名信号量的 api 为 `sem_init` `sem_destroy`。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+POSIX sem 实现是基于 futex 的。 在无竞争条件下，不需要陷入内核，执行系统调用，其实现是非常轻量级的。System V sem 则不同，无论有无竞争都要执行系统调用，因此性能落了下风。 POSIX sem 由于没有事事烦扰内核，所以内核也无法帮他记录 sem_adj ，即 POSIX sem 并没有 UNDO 功能。
