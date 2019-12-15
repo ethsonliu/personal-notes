@@ -37,6 +37,10 @@ stackoverflow 上探讨：https://stackoverflow.com/questions/4582968/system-v-i
 
 ## 共享内存
 
+1. Posix 使用一个以 / 打头的名字来获取共享内存，在 /dev/shm 目录下可以看到创建的共享内存。而 System V 使用 key 来对应唯一的共享内存标示符，为了避免不必要的麻烦，我们使用 ftok 函数来生成 key。可以使用命令 ipcs 查看创建的 System V 共享内存。
+2. Posix使用 mmap 函数来将共享内存映射到进程空间，而 System V 使用函数 shmat，不同的是 mmap 还可以将文件映射到进程空间。
+3. Posix 的共享内存引用变为 0 的时候就自动删除，而 System V 即使连接数为 0 也不会自动删除，只能调用函数 shmctl 来手动删除。
+
 ## 信号量
 
 
