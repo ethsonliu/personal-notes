@@ -395,7 +395,73 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
 
 **查看整体 IO 状况**
 
+```shell
+[root@EMQ ~]# iostat -xm 2
+Linux 3.10.0-957.5.1.el7.x86_64 (EMQ)   12/17/2019      _x86_64_        (1 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           3.24    0.00    2.32    0.09    0.00   94.35
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+vda               0.00     1.41    0.01    1.37     0.00     0.01    19.92     0.00    1.89    6.08    1.86   0.79   0.11
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           6.06    0.00    4.55    0.00    0.00   89.39
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+vda               0.00     2.02    0.00    1.52     0.00     0.02    26.67     0.00    1.00    0.00    1.00   0.67   0.10
+
+```
+
+%util 代表磁盘繁忙程度。
+
 **查看单个进程 IO 使用状况**
+
+安装：`sudo apt install iotop` 或者 `sudo yum install iotop`。
+
+```shell
+[root@EMQ ~]# iotop
+Total DISK READ :       0.00 B/s | Total DISK WRITE :       0.00 B/s
+Actual DISK READ:       0.00 B/s | Actual DISK WRITE:       0.00 B/s
+  TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND                                                                                                                                             
+    1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd --switched-root --system --deserialize 22
+    2 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kthreadd]
+    3 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [ksoftirqd/0]
+    5 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kworker/0:0H]
+    7 rt/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [migration/0]
+    8 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [rcu_bh]
+    9 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [rcu_sched]
+   10 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [lru-add-drain]
+   11 rt/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [watchdog/0]
+   13 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kdevtmpfs]
+   14 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [netns]
+   15 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [khungtaskd]
+   16 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [writeback]
+   17 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kintegrityd]
+   18 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [bioset]
+   19 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [bioset]
+   20 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [bioset]
+   21 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kblockd]
+   22 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [md]
+   23 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [edac-poller]
+   24 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [watchdogd]
+ 3098 be/4 mysql       0.00 B/s    0.00 B/s  0.00 %  0.00 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid
+ 3247 be/4 mysql       0.00 B/s    0.00 B/s  0.00 %  0.00 % mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid
+ 3162 be/2 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % AliYunDun
+   30 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kswapd0]
+   31 be/5 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [ksmd]
+   32 be/7 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [khugepaged]
+   33 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [crypto]
+   41 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kthrotld]
+   43 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kmpath_rdacd]
+   44 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kaluad]
+   45 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kpsmoused]
+   46 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [ipv6_addrconf]
+11784 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % frps -c /home/frps.ini
+ 3251 be/2 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % AliYunDun
+  777 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [ttm_swap]
+
+```
 
 ### CPU
 
