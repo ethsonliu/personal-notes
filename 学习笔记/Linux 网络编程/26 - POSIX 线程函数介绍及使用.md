@@ -104,7 +104,7 @@ pthread_t pthread_self(void);
 
 ## pthread_cancel
 
-取消一个执行中的线程。
+取消一个执行中的线程，一般是在另一个线程执行以此来杀掉该线程。
 
 ```c
 #include <pthread.h>
@@ -121,7 +121,6 @@ thread: 线程 ID
 相关函数 `int pthread_setcancelstate(int state, int *oldstate)` `int pthread_setcanceltype(int type, int *oldtype)` 为保证一个事务型处理逻辑的完整可以使用这两个函数，如下举例，主线程创建完线程睡眠一阵调用 pthread_cancel，test 是 thread_function。
 
 ```c++
-	
 void *test(void *arg)
 {
     for (int i = 0; i < 10; i++)
