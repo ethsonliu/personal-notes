@@ -172,11 +172,16 @@ server {
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
       add_header X-Cache $upstream_cache_status;
-      add_header Cache-Control no-cache,no-store,must-revalidate; # 设置浏览器不缓存
+      add_header Cache-Control no-cache,public; # 设置浏览器协商缓存
       expires 12h; # 设置 nginx' 缓存 12 小时
     }
 }
 ```
+
+关于 Cache-Control 参考：
+
+- <https://www.cnblogs.com/luozx207/p/11058348.html>
+- <https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-CN>
 
 输入`nginx -t -c /etc/nginx/nginx.conf`，查看配置是否正确，Nginx 重新加载配置文件后，先启动公网上的 frps，再启动位于内网的机器上的 frpc，然后浏览器输入`$ID.example.com`，会自动跳到`https://$ID.example.com`。
 
