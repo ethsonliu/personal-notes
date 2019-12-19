@@ -173,7 +173,7 @@ server {
       proxy_set_header Connection "upgrade";
       add_header X-Cache $upstream_cache_status;
       add_header Cache-Control no-cache,public; # 设置浏览器协商缓存
-      expires 12h; # 设置 nginx' 缓存 12 小时
+      expires 12h; # 设置 nginx 缓存 12 小时
     }
 }
 ```
