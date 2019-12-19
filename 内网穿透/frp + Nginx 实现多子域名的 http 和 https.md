@@ -162,6 +162,8 @@ server {
       # 相当于向 frps 请求 http://$ID.example.com:8080
       proxy_pass http://$server_name:8080;
       
+      keepalive_timeout  0;
+      
       # 剩下的不要动，直接复制
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
@@ -170,7 +172,8 @@ server {
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
       add_header X-Cache $upstream_cache_status;
-      expires 12h; # 设置缓存 12 小时
+      add_header Cache-Control no-cache,no-store,must-revalidate; # 设置浏览器不缓存
+      expires 12h; # 设置 nginx' 缓存 12 小时
     }
 }
 ```
