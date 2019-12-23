@@ -229,10 +229,10 @@ class UrlTableTester { ...
 struct UrlTableProperties { ...
 
 // 类型定义
-typedef hash_map<UrlTableProperties *, string> PropertiesMap;
+typedef hash_map<UrlTableProperties*, string> PropertiesMap;
 
 // using 别名
-using PropertiesMap = hash_map<UrlTableProperties *, string>;
+using PropertiesMap = hash_map<UrlTableProperties*, string>;
 
 // 枚举
 enum UrlTableErrors { ...
