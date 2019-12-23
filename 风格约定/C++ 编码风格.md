@@ -629,7 +629,7 @@ void GamePlayer::Heartbeat()
 
 ```c++
 inline std::string getName() const;
-void setName(const std::string &name);
+void setName(const std::string& name);
 inline bool isEmpty() const;
 bool isBackgroundEnabled() const
 void setBackgroundEnabled(bool enabled)
