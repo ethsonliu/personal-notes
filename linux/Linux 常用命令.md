@@ -12,7 +12,9 @@
   - [普通文件](#普通文件)
 - [查看某个进程的使用情况](#查看某个进程的使用情况)
 - [查看某个进程启动的个数](#查看某个进程启动的个数)
-- [端口占用](#端口占用)
+- [netstat](#netstat)
+  - [端口占用](#端口占用)
+  - [查看 tcp 状态](#查看-tcp-状态)
 - [查看磁盘和文件大小](#查看磁盘和文件大小)
 - [防火墙](#防火墙)
   - [firewall](#firewall)
@@ -183,14 +185,21 @@ nonvoluntary_ctxt_switches:	89475
 ```
 详情参见：<https://www.cnblogs.com/youxin/p/5976194.html>
 
-# 查看某个进程启动的个数
+## 查看某个进程启动的个数
 
 ```shell
 [root@iZ94xyihsxsZ home]# ps -ef|grep php-fpm|grep -v "grep"|wc -l
 6
 ```
 
-## 端口占用
+## netstat
+
+参考：
+
+- [https://www.runoob.com/linux/linux-comm-netstat.html](https://www.runoob.com/linux/linux-comm-netstat.html)
+- [https://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html](https://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html)
+
+### 端口占用
 
 显示所有 tcp，udp 的端口和进程等相关情况，
 ```shell
@@ -213,6 +222,44 @@ udp        0      0 10.25.139.78:123        0.0.0.0:*                           
 udp        0      0 127.0.0.1:123           0.0.0.0:*                           425/ntpd
 udp        0      0 0.0.0.0:123             0.0.0.0:*                           425/ntpd
 udp6       0      0 :::123                  :::*                                425/ntpd
+```
+
+### 查看 tcp 状态
+
+```shell
+hapoa@hapoa-virtual-machine:~$ netstat -nat
+激活Internet连接 (服务器和已建立连接的)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 0.0.0.0:8084            0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.1.1:53            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:53049           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:5369            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:60506           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:1883            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:46205           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:2049            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:6369            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:18083           0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:11883         0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:53709           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:4369            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:8883            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:8083            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:45235           0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:38203         127.0.0.1:4369          ESTABLISHED
+tcp        0      0 127.0.0.1:4369          127.0.0.1:38203         ESTABLISHED
+tcp6       0      0 :::59230                :::*                    LISTEN     
+tcp6       0      0 :::2049                 :::*                    LISTEN     
+tcp6       0      0 :::52195                :::*                    LISTEN     
+tcp6       0      0 :::51331                :::*                    LISTEN     
+tcp6       0      0 127.0.0.1:4332          :::*                    LISTEN     
+tcp6       0      0 :::47855                :::*                    LISTEN     
+tcp6       0      0 :::111                  :::*                    LISTEN     
+tcp6       0      0 :::59440                :::*                    LISTEN     
+tcp6       0      0 :::4369                 :::*                    LISTEN
 ```
 
 ## 查看磁盘和文件大小
