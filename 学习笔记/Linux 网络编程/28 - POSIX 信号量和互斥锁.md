@@ -2,7 +2,6 @@
 
 - [POSIX 信号量](#POSIX-信号量)
 - [POSIX 互斥锁](#POSIX-互斥锁)
-- [生产者消费者](#生产者消费者)
 - [自旋锁和读写锁](#自旋锁和读写锁)
 
 ## POSIX 信号量
@@ -208,9 +207,6 @@ pthread_mutex_unlock(&mtx);
 ```c
 pthread_mutex_destroy(&mtx)
 ```
-
-## 生产者消费者
-
 
 ## 自旋锁和读写锁
 
