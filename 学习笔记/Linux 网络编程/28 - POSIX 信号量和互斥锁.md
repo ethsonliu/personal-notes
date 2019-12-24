@@ -237,6 +237,8 @@ pthread_mutex_destroy(&mtx)
 
 其余的参考：https://www.zhihu.com/question/66733477
 
+以下是自旋锁接口：
+
 ```c
 #include <pthread.h>
 
@@ -246,4 +248,27 @@ int pthread_spin_destroy(pthread_spinlock_t *lock);
 int pthread_spin_lock(pthread_spinlock_t *lock);
 int pthread_spin_trylock(pthread_spinlock_t *lock);
 int pthread_spin_unlock(pthread_spinlock_t *lock);
+```
+
+以下是读写锁介绍：
+
+只要没有现成持有给定的读写锁用于写，那么任意数目的线程可以持有读写锁用于读。
+
+仅当没有线程持有某个给定的读写锁用于读或写时，才能分配读写锁用于写。
+
+读写锁用于读称为共享锁，用于写称为排它锁。
+
+```c
+#include <pthread.h>
+
+int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);
+int pthread_rwlock_init(pthread_rwlock_t *restrict rwlock, const pthread_rwlockattr_t *restrict attr);
+
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_timedrdlock(pthread_rwlock_t *restrict rwlock, const struct timespec *restrict abs_timeout);
+int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
+
+int pthread_rwlockattr_destroy(pthread_rwlockattr_t *attr);
+int pthread_rwlockattr_init(pthread_rwlockattr_t *attr);
 ```
