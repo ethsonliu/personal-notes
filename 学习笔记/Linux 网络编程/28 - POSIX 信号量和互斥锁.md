@@ -235,6 +235,8 @@ pthread_mutex_destroy(&mtx)
 
 至于自旋锁就主要用在临界区持锁时间非常短且 CPU 资源不紧张的情况下，自旋锁一般用于多核的服务器。
 
+其余的参考：https://www.zhihu.com/question/66733477
+
 ```c
 #include <pthread.h>
 
@@ -245,43 +247,3 @@ int pthread_spin_lock(pthread_spinlock_t *lock);
 int pthread_spin_trylock(pthread_spinlock_t *lock);
 int pthread_spin_unlock(pthread_spinlock_t *lock);
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
