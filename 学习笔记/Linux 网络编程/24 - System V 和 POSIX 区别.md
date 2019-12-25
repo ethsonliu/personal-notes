@@ -14,7 +14,7 @@ POSIX(Portable Operating System Interface for Computing Systems)是由 IEEE 和 
 | SYSTEM V                                                     | POSIX                                                        |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | 1983 年 由 AT&T 开发的三种进程间通信：消息队列，共享内存和信号量。 | 由 IEEE 和 ISO/IEC 开发的一簇标准，同样包含了三种进程间通信。 |
-| 包含所有 IPC机制：管道，命名管道，消息队列，信号，信号量和共享内存。同时也有 unix 域套接字。 | 和 System V 一样，只是接口不同而已。                         |
+| 包含所有 IPC 机制：管道，命名管道，消息队列，信号，信号量和共享内存。同时也有 unix 域套接字。 | 和 System V 一样，只是接口不同而已。                         |
 | 共享内存接口shmget(), shmat(), shmdt(), shmctl()             | 共享内存接口 shm_open(), mmap(), shm_unlink()                |
 | 消息队列接口msgget(), msgsnd(), msgrcv(), msgctl()           | 消息队列接口 mq_open(), mq_send(), mq_receive(), mq_unlink() |
 | 信号量接口 semget(), semop(), semctl()                       | 命名信号量 sem_open(), sem_close(), sem_unlink(), sem_post(), sem_wait(), sem_trywait(), sem_timedwait(), sem_getvalue()。无名或是基于内存的信号量 sem_init(), sem_post(), sem_wait(), sem_getvalue(),sem_destroy() |
