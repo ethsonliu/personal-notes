@@ -14,5 +14,120 @@ int pthread_cond_timedwait(pthread_cond_t *restrict cond, pthread_mutex_t *restr
 int pthread_cond_wait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex);
 ```
 
+第一，等待条件代码
+
+```
+pthread_mutex_lock(&mutex);
+while (条件为假）
+    pthread_cond_wait(cond, mutex);
+修改条件;
+pthread_mutex_unlock(&mutex);
+```
+
+第二，修改条件代码
+```
+pthread_mutex_lock(&mutex);
+设置条件为真
+pthread_cond_signal(cond);
+pthread_mutex_unlock(&mutex);
+```
+
+在这里的一个难点是，第一段条件等待代码为什么不用 if 而用 while 呢？在 man 3 pthread_cond_wait 之后发现这样一段话
+
+If a signal is delivered to a thread waiting for a condition variable, upon return from the signal handler the thread resumes waiting for the condition variable as if it was not interrupted, or it shall return zero due to spurious wakeup.
+
+也就是说，唤醒条件的信号，可以唤醒多个线程，但是只能允许一个信号访问，也就是说，因此等待线程需要不断的用 while 轮询一直到达到条件了才行。
 
 
+```c++
+#include <unistd.h>
+#include <sys/types.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+
+#define ERR_EXIT(m) \
+        do \
+        { \
+                perror(m); \
+                exit(EXIT_FAILURE); \
+        } while(0)
+
+#define CONSUMERS_COUNT 2
+#define PRODUCERS_COUNT 1
+
+pthread_mutex_t g_mutex;
+pthread_cond_t g_cond;
+
+pthread_t g_thread[CONSUMERS_COUNT + PRODUCERS_COUNT];
+
+int nready = 0;
+
+void *consume(void *arg)
+{
+    int num = (int)arg;
+    while (1)
+    {
+        pthread_mutex_lock(&g_mutex);
+        while (nready == 0)
+        {
+            printf("%d begin wait a condtion ...\n", num);
+            pthread_cond_wait(&g_cond, &g_mutex);
+        }
+
+        printf("%d end wait a condtion ...\n", num);
+        printf("%d begin consume product ...\n", num);
+        --nready;
+        printf("%d end consume product ...\n", num);
+        pthread_mutex_unlock(&g_mutex);
+        sleep(1);
+    }
+    return NULL;
+}
+
+void *produce(void *arg)
+{
+    int num = (int)arg;
+    while (1)
+    {
+        pthread_mutex_lock(&g_mutex);
+        printf("%d begin produce product ...\n", num);
+        ++nready;
+        printf("%d end produce product ...\n", num);
+        pthread_cond_signal(&g_cond);
+        printf("%d signal ...\n", num);
+        pthread_mutex_unlock(&g_mutex);
+        sleep(1);
+    }
+    return NULL;
+}
+
+int main(void)
+{
+    int i;
+
+    pthread_mutex_init(&g_mutex, NULL);
+    pthread_cond_init(&g_cond, NULL);
+
+
+    for (i = 0; i < CONSUMERS_COUNT; i++)
+        pthread_create(&g_thread[i], NULL, consume, (void *)i);
+
+    sleep(1);
+
+    for (i = 0; i < PRODUCERS_COUNT; i++)
+        pthread_create(&g_thread[CONSUMERS_COUNT + i], NULL, produce, (void *)i);
+
+    for (i = 0; i < CONSUMERS_COUNT + PRODUCERS_COUNT; i++)
+        pthread_join(g_thread[i], NULL);
+
+    pthread_mutex_destroy(&g_mutex);
+    pthread_cond_destroy(&g_cond);
+
+    return 0;
+}
+```
