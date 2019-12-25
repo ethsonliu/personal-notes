@@ -39,6 +39,13 @@ If a signal is delivered to a thread waiting for a condition variable, upon retu
 也就是说，唤醒条件的信号，可以唤醒多个线程，但是只能允许一个信号访问，也就是说，因此等待线程需要不断的用 while 轮询一直到达到条件了才行。
 
 
+关于 pthread_cond_wait 的具体实现，
+
+参考：
+
+- <https://www.zhihu.com/question/24116967>
+- <https://android.googlesource.com/platform/external/pthreads/+/216eb8153b2455d1e15f8fbf84d4413ddcc40adc/pthread_cond_wait.c>
+
 ```c++
 #include <unistd.h>
 #include <sys/types.h>
