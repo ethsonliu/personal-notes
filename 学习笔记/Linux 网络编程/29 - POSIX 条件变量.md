@@ -1,3 +1,19 @@
+## 目录
+
+- [条件变量和互斥量的区别](#条件变量和互斥量的区别)
+- [条件变量接口](#条件变量接口)
+- [条件变量和互斥量搭配的使用模板](#条件变量和互斥量搭配的使用模板)
+- [pthread_cond_wait](#pthread_cond_wait)
+- [条件变量和互斥量实现生产者消费者](#条件变量和互斥量实现生产者消费者)
+
+
+## 条件变量和互斥量的区别
+
+- [https://stackoverflow.com/questions/4742196/advantages-of-using-condition-variables-over-mutex](https://stackoverflow.com/questions/4742196/advantages-of-using-condition-variables-over-mutex)
+
+
+## 条件变量接口
+
 ```c
 #include <pthread.h>
 
@@ -13,6 +29,8 @@ int pthread_cond_signal(pthread_cond_t *cond); // for at least one
 int pthread_cond_timedwait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex, const struct timespec *restrict abstime);
 int pthread_cond_wait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex);
 ```
+
+## 条件变量和互斥量搭配的使用模板
 
 第一，等待条件代码
 
@@ -38,6 +56,7 @@ If a signal is delivered to a thread waiting for a condition variable, upon retu
 
 也就是说，唤醒条件的信号，可以唤醒多个线程，但是只能允许一个信号访问，也就是说，因此等待线程需要不断的用 while 轮询一直到达到条件了才行。
 
+## pthread_cond_wait
 
 关于 pthread_cond_wait 的具体实现，
 
@@ -45,6 +64,8 @@ If a signal is delivered to a thread waiting for a condition variable, upon retu
 
 - <https://www.zhihu.com/question/24116967>
 - <https://android.googlesource.com/platform/external/pthreads/+/216eb8153b2455d1e15f8fbf84d4413ddcc40adc/pthread_cond_wait.c>
+
+## 条件变量和互斥量实现生产者消费者
 
 ```c++
 #include <unistd.h>
