@@ -17,6 +17,10 @@
 - `need-more-information`：问题描述不清。
 - `need-reproduce`：需要重现。
 
+参考：
+
+- <https://github.com/microsoft/terminal/issues>
+
 ## commit message 规范
 
 ```
