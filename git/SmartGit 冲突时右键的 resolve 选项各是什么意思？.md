@@ -51,6 +51,8 @@ $ git checkout --ours codefile.js   # to select the changes done in master
 $ git checkout --theirs codefile.js # to select the changes done in feature
 ```
 
+### 总结
 
+总结起来，对于上面的`git merge`和`git rebase`，ours 指的是 are rebased onto, 而 theirs 指的是 is being rebased，也就是`theirs------>ours`，箭头表示数据的流向。
 
-
+而对于`git pull rebase`，正好相反。
