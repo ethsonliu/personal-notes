@@ -117,21 +117,23 @@ void test(D* x) { f(x); }  // calls f(B*)
 - 如果是在开发一个应用的话，就是只是调库，而不是造轮子，没必要加命名空间，因为你在做的已经是最上层的应用了。
 - 不应该使用 using namespace 引入整个命名空间的标识符号。
 - 内联命名空间很容易令人迷惑，毕竟其内部的成员不再受其声明所在命名空间的限制。内联命名空间只在大型版本控制里有用，主要用来保持跨版本的 ABI 兼容性。
-- 不需要缩进。
+- 不需要缩进，即使是多级。
 
 ```c++
-namspace MyName
+namespace muduo
+{
+namespace net
 {
 
-class A
+class Buffer : public muduo::copyable
 {
+ public:
+  static const size_t kCheapPrepend = 8;
+  static const size_t kInitialSize = 1024;
 };
 
-class B
-{
-};
-
-}
+} /** namespace net */
+} /** namespace muduo */
 ```
 
 ### 匿名命名空间和静态变量
