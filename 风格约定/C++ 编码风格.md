@@ -639,7 +639,26 @@ void setBackgroundEnabled(bool enabled)
 
 ### 一行代码不超过 80 列
 
-这个约定在左右分栏的时候很有用。
+函数参数（大于三个）、class 初始化列表，要换行写，
+
+```c++
+class Buffer : public muduo::copyable
+{
+ public:
+  static const size_t kCheapPrepend = 8;
+  static const size_t kInitialSize = 1024;
+
+  explicit Buffer(size_t initialSize = kInitialSize)
+    : buffer_(kCheapPrepend + initialSize),
+      readerIndex_(kCheapPrepend),
+      writerIndex_(kCheapPrepend)
+  {
+    assert(readableBytes() == 0);
+    assert(writableBytes() == initialSize);
+    assert(prependableBytes() == kCheapPrepend);
+  }
+}
+```
 
 ### 尽量使用 cpp 库
 
