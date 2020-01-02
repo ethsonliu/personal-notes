@@ -47,15 +47,13 @@ Header 部分只有一行，包括三个字段：type（必需）、scope（可�
   - revert: 恢复到某一个提交记录
   - chore: 构建或辅助工具的变动
   - misc: 一些未归类或不知道将它归类到什么方面的提交
-
-如果 type 为 feat 和 fix，则该 commit 将肯定出现在 Change log 之中。其他情况（docs、chore、style、refactor、test）由你决定，要不要放入 Change log，建议是不要。
-
 - scope 用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
-
-- subject是 commit 目的的简短描述，不超过 50 个字符。
+- subject 是 commit 目的的简短描述，不超过 50 个字符。
   - 以动词开头，使用第一人称现在时，比如 change，而不是 changed 或 changes
   - 第一个字母小写
   - 结尾不加句号（.）
+
+如果 type 为 feat 和 fix，则该 commit 将肯定出现在 Change log 之中。其他情况（docs、chore、style、refactor、test）由你决定，要不要放入 Change log，建议是不要。
 
 ### Body
 
