@@ -31,6 +31,12 @@
 <footer>
 ```
 
+每次提交，commit message 都包括三个部分：Header，Body 和 Footer。
+
+### Header
+
+Header 部分只有一行，包括三个字段：type（必需）、scope（可选）和subject（必需）。
+
 - type: 是用于说明该 commit 的类型的，一般我们会规定 type 的类型如下，
   - feat: 新功能(feature)
   - fix: 修复 bug
@@ -41,21 +47,97 @@
   - revert: 恢复到某一个提交记录
   - chore: 构建或辅助工具的变动
   - misc: 一些未归类或不知道将它归类到什么方面的提交
-- scope: 说明 commit 影响的范围，比如数据层，控制层，视图层等等，这个需要视具体场景与项目的不同而灵活变动。
-  - 使用第一人称现在时的动词开头，比如 modify 而不是 modified 或 modifies
-  - 首字母小写，并且结尾不加句号
-- subject: 对于该 commit 目的的简短描述。
-- ISSUE_ID: 假设你的需求或者 bug 修复可能会有对应的 issues 记录，你可以加到你的 commit 信息中如 issue-37938634。
-- body: 就是 subject 的详细说明。
-- footer: 你可以填写相关的需求管理 issues id
-  - 当有非兼容修改(Breaking Change)时必须在这里描述清楚
-  - 关联相关 issue，如 Closes #1, Closes #2, #3
-  - 如果功能点有新增或修改的，还需要关联文档 doc 和 egg-core 的 PR，如 eggjs/egg-core#123
+
+如果 type 为 feat 和 fix，则该 commit 将肯定出现在 Change log 之中。其他情况（docs、chore、style、refactor、test）由你决定，要不要放入 Change log，建议是不要。
+
+- scope 用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
+
+- subject是 commit 目的的简短描述，不超过 50 个字符。
+  - 以动词开头，使用第一人称现在时，比如 change，而不是 changed 或 changes
+  - 第一个字母小写
+  - 结尾不加句号（.）
+
+### Body
+
+Body 部分是对本次 commit 的详细描述，可以分成多行。下面是一个范例。
+
+```
+More detailed explanatory text, if necessary.  Wrap it to 
+about 72 characters or so. 
+
+Further paragraphs come after blank lines.
+
+- Bullet points are okay, too
+- Use a hanging indent
+```
+
+有两个注意点。
+
+（1）使用第一人称现在时，比如使用change而不是changed或changes。
+
+（2）应该说明代码变动的动机，以及与以前行为的对比。
+
+### Footer
+
+Footer 部分只用于两种情况。
+
+（1）不兼容变动
+
+如果当前代码与上一个版本不兼容，则 Footer 部分以 BREAKING CHANGE 开头，后面是对变动的描述、以及变动理由和迁移方法。
+
+```
+BREAKING CHANGE: isolate scope bindings definition has changed.
+
+    To migrate the code follow the example below:
+
+    Before:
+
+    scope: {
+      myAttr: 'attribute',
+    }
+
+    After:
+
+    scope: {
+      myAttr: '@',
+    }
+
+    The removed `inject` wasn't generaly useful for directives so there should be no code using it.
+```
+
+（2）关闭 Issue
+
+如果当前 commit 针对某个 issue，那么可以在 Footer 部分关闭这个 issue 。
+
+```
+Closes #234
+```
+
+也可以一次关闭多个 issue 。
+
+```
+Closes #123, #245, #992
+```
+
+### Revert
+
+还有一种特殊情况，如果当前 commit 用于撤销以前的 commit，则必须以 `revert:` 开头，后面跟着被撤销 Commit 的 Header。
+
+```
+revert: feat(pencil): add 'graphiteWidth' option
+
+This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
+```
+
+Body 部分的格式是固定的，必须写成 `This reverts commit $hash>.`，其中的hash是被撤销 commit 的 SHA 标识符。
+
+如果当前 commit 与被撤销的 commit，在同一个发布（release）里面，那么它们都不会出现在 Change log 里面。如果两者在不同的发布，那么当前 commit，会出现在 Change log 的 Reverts 小标题下面。
 
 具体参考：<https://github.com/angular/angular/commits/master>
 
 ## 参考
 
+- <https://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html>
 - [egg 代码贡献规范](https://eggjs.org/zh-cn/contributing.html)
 - [Git 协同与提交规范](https://www.yuque.com/fe9/basic/nruxq8#6c228def)
 - [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit)
