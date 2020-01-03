@@ -45,7 +45,7 @@ Header 部分只有一行，包括三个字段：type（必需）、scope（可�
   - refactor: 重构(既不是新增功能，也不是修改 bug 的代码变动)
   - test: 测试
   - revert: 恢复到某一个提交记录
-  - chore: 构建或辅助工具的变动
+  - build: 构建或辅助依赖工具的变动（chore 也可以，但个人推荐用 build）
   - misc: 一些未归类或不知道将它归类到什么方面的提交
 - scope 用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
 - subject 是 commit 目的的简短描述，不超过 50 个字符。
