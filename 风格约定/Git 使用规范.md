@@ -35,7 +35,7 @@
 
 ### Header
 
-Header 部分只有一行，包括三个字段：type（必需）、scope（可选）和subject（必需）。
+Header 部分只有一行，包括三个字段：type（必需）、scope（可选）和 subject（必需）。
 
 - type: 是用于说明该 commit 的类型的，一般我们会规定 type 的类型如下，
   - feat: 新功能(feature)
