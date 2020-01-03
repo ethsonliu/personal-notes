@@ -43,8 +43,9 @@ Header 部分只有一行，包括三个字段：type（必需）、scope（可�
   - docs: 文档(documents)
   - style: 代码格式(不影响代码运行的格式变动，空格、缩进、代码注释的修改等等)
   - refactor: 重构(既不是新增功能，也不是修改 bug 的代码变动)
-  - test: 测试
+  - test: 增加了测试或者修改了测试
   - revert: 恢复到某一个提交记录
+  - perf: 对性能（performance）的改善
   - build: 构建或辅助依赖工具的变动（chore 也可以，但个人推荐用 build）
   - misc: 一些未归类或不知道将它归类到什么方面的提交
 - scope 用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
