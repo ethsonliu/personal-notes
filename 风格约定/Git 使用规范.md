@@ -47,8 +47,8 @@ Header 部分只有一行，包括三个字段：type（必需）、scope（可�
   - revert: 恢复到某一个提交记录
   - perf: 对性能（performance）的改善
   - build: 构建或辅助依赖工具的变动（chore 也可以，但个人推荐用 build）
-  - 3rd: 第三方库
   - misc: 一些未归类或不知道将它归类到什么方面的提交
+  - 3rd: 第三方库
 - scope 用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
 - subject 是 commit 目的的简短描述，不超过 50 个字符。
   - 以动词开头，使用第一人称现在时，比如 change，而不是 changed 或 changes
@@ -73,7 +73,7 @@ Further paragraphs come after blank lines.
 
 有两个注意点。
 
-（1）使用第一人称现在时，比如使用change而不是changed或changes。
+（1）使用第一人称现在时，比如使用 change 而不是 changed 或 changes。
 
 （2）应该说明代码变动的动机，以及与以前行为的对比。
 
