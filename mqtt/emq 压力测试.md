@@ -6,6 +6,10 @@ zone.external.max_mqueue_len = 0
 zone.external.max_mqueue_len = 0
 ```
 
+emq 在压力测试的时候，内存肯定会飙高，为了避免被 OOM Killer干掉，需要设置一下，参考文章 [Linux 如何保护重要进程不被OOM Killer干掉](https://blog.csdn.net/wtopps/article/details/89052550)。
+
+
+
 ## 参考
 
 - [Linux 如何保护重要进程不被OOM Killer干掉](https://blog.csdn.net/wtopps/article/details/89052550)
