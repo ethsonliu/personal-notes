@@ -1,4 +1,10 @@
+首先修改 emq 配置文件，修改下面的字段为这样：
 
+```
+ // 修改队列无限大
+zone.external.max_mqueue_len = 0
+zone.external.max_mqueue_len = 0
+```
 
 ## 参考
 
