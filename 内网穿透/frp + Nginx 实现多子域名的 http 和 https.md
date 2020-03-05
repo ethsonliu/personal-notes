@@ -166,6 +166,8 @@ server {
       
       # 剩下的不要动，直接复制
       proxy_set_header Host $host;
+      # proxy_set_header Host $http_host:8080; # 对于 ngrok 需要用这句
+      
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header REMOTE-HOST $remote_addr;
