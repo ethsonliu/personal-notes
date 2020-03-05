@@ -2,4 +2,6 @@
 
 `.pro` 文件加入 `QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01`，参考 <https://blog.csdn.net/qq527703883/article/details/54925632>
 
-如果有用到 openssl，那么编译的时候注意：
+如果有用到 openssl，那么编译的时候下面的代码，否则会报错 bcrypt.dll 找不到。
+
+
