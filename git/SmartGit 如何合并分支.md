@@ -7,6 +7,16 @@
 
 合并的过程中会出现冲突，SmartGit 默认的冲突解决编辑器分为三个窗口，左边的为 dev ，右边的为 feature，中间的就是你实际要的内容，改完之后关掉窗口，会弹窗是否解决完冲突，解决完就会 stage，点击确定，你就会发现这个文件从冲突的状态变为了 staged。
 
+合并的时候注意中间部分里的，
+
+```
+<<<<<<< HEAD
+----
+>>>>>>> release/Release
+```
+
+这个时候，可以点击 Take Left，然后一行一行比对右侧，手动放到中间里。
+
 ## dev-master
 
 把 dev 合并到 master，步骤：checkout 到 master，右键 dev 选择 merge，再选择 create-merge-commit，如果没有冲突就会直接合并进去；如果有冲突就解决。
