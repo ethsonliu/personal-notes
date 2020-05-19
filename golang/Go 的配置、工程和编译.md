@@ -9,8 +9,7 @@ export PATH=$PATH:/home/hapoa/packages/local/go-1-14-2/bin
 ```
 
 下面这个可以不放，每次编译的时候再指定
-export GOPATH=/home/hapoa/packages/caddy-master
-export GO111MODULE=on
+
 
 ## 工程创建
 
@@ -22,22 +21,7 @@ Go 1.11 中的 module 支持临时环境变量 GO111MODULE，它可以设置以�
 
 以上参考：<https://blog.csdn.net/benben_2015/article/details/82227338>
 
-个人习惯 module-aware 模式。
-
-假设现有一个工程，工程名为 my_project，
-
-```shell
-hapoa@virtual-machine:~/projects/my_project$ pwd
-/home/hapoa/projects/my_project
-hapoa@virtual-machine:~/projects/my_project$ ls
-cmd/ conf/ doc/ test/ make_all.sh go.mod
-```
-
-- cmd 目录下存放 main.go 文件
-- conf 目录下存放该程序使用的配置文件模板
-- doc 目录存放使用文档
-- test 目录下存放测试用例
-- go.mod 为 module-aware 模式生成的必备文件，
+个人习惯 module-aware 模式。使用以下命令生成 go.mod 文件，注意，g**o.mod 不能在 GOPATH 下，可以考虑在文件中创建一个目录 pkg，将这个目录设为 GOPATH。**
 
 ```shell
 hapoa@virtual-machine:~/projects/my_project$ pwd
@@ -49,10 +33,11 @@ go: creating new go.mod: module my_project
 # go: creating new go.mod: module github.com/EthsonLiu/my_project
 ```
 
-```bash
-# 切换到 cmd 下 main.go 的同级目录，然后执行以下
+## 编译
 
-GOPATH=/home/hapoa/packages/caddy-master
+```bash
+export GOPATH=/home/hapoa/projects/go_update/pkg
+export GO111MODULE=on
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./release/frpc_darwin_amd64 ./cmd/frpc
 
@@ -81,3 +66,4 @@ CGO_ENABLED=0 GOOS=linux GOARCH=mips GOMIPS=softfloat go build -o ./release/frpc
 CGO_ENABLED=0 GOOS=linux GOARCH=mipsle GOMIPS=softfloat go build -o ./release/frpc_linux_mipsle ./cmd/frpc
 ```
 
+`go build -o ./release/frpc_linux_mipsle ./cmd/frpc`，其中 `./release/frpc_linux_mipsle` 是指定生成的程序名和安放目录，`./cmd/frpc` 是 `mian.go` 的目录。
