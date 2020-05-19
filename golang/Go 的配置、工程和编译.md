@@ -26,6 +26,29 @@ Go 1.11 中的 module 支持临时环境变量 GO111MODULE，它可以设置以�
 
 假设现有一个工程，工程名为 my_project，
 
+```shell
+hapoa@virtual-machine:~/projects/my_project$ pwd
+/home/hapoa/projects/my_project
+hapoa@virtual-machine:~/projects/my_project$ ls
+cmd/ conf/ doc/ test/ make_all.sh go.mod
+```
+
+- cmd 目录下存放 main.go 文件
+- conf 目录下存放该程序使用的配置文件模板
+- doc 目录存放使用文档
+- test 目录下存放测试用例
+- go.mod 为 module-aware 模式生成的必备文件，
+
+```shell
+hapoa@virtual-machine:~/projects/my_project$ pwd
+/home/hapoa/projects/my_project
+hapoa@virtual-machine:~/projects/my_project$ go mod init my_project
+go: creating new go.mod: module my_project
+# 如果是开源项目，可用下面命令
+# hapoa@virtual-machine:~/projects/my_project$ go mod init github.com/EthsonLiu/my_project
+# go: creating new go.mod: module github.com/EthsonLiu/my_project
+```
+
 ```bash
 # 切换到 cmd 下 main.go 的同级目录，然后执行以下
 
