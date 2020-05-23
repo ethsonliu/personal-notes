@@ -174,7 +174,7 @@ $ gcc -o mosquitto_client_sub mosquitto_client_sub.c -lmosquitto
 其它开发需要的注意点：
 
 1. client id，这在上面代码注释里已经讲过了。
-2. mosquitto有两种编程模式，详见 https://github.com/eclipse/mosquitto/issues/1282，多线程场景下需要注意。
+2. mosquitto有两种编程模式，详见 <https://github.com/eclipse/mosquitto/issues/1282>，多线程场景下需要注意。
 
 参考：
 
