@@ -10,7 +10,7 @@ mosquitto 编译同时也会编译 doc，但这个可要可不要。如果一定
 sudo apt-get install xsltproc
 ```
 
-或者可以进入 `config.mk`，修改不让它编译 doc，
+如果不需要，则可以进入 `config.mk`，修改它跳过编译 doc，
 
 ```
 # Build man page documentation by default.
@@ -32,10 +32,7 @@ Makefile:17: recipe for target 'docs' failed
 make: *** [docs] Error 2
 ```
 
-其实库已经编译好了，
-
 若想指定安装目录，打开 `config.mk` 修改 `prefix`。
-
 
 接着 `sudo make install`，你就可以在你指定的目录或默认 `/usr/local/lib` 找到可执行程序、头文件和动态库。
 
