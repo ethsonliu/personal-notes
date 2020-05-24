@@ -6,7 +6,7 @@
 
 解压：
 
-`tar –zxvf openssl-1.0.1s.tar.gz，解压目录为：openssl-1.0.1s`
+`tar –zxvf openssl-1.0.1s.tar.gz`，解压目录为：openssl-1.0.1s
 
 然后进入到 `cd openssl-1.0.1s`，进行配置、编译、安装。
 
