@@ -6,6 +6,7 @@
 export GOROOT=/home/hapoa/packages/local/go-1-14-2
 export GOPROXY=https://goproxy.cn
 export PATH=$PATH:/home/hapoa/packages/local/go-1-14-2/bin
+export GO111MODULE=on
 ```
 
 下面这个可以不放，每次编译的时候再指定
@@ -37,7 +38,6 @@ go: creating new go.mod: module my_project
 
 ```bash
 export GOPATH=/home/hapoa/projects/go_update/pkg
-export GO111MODULE=on
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./release/frpc_darwin_amd64 ./cmd/frpc
 
