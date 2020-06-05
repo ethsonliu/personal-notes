@@ -37,7 +37,9 @@ go: creating new go.mod: module my_project
 ## 编译
 
 ```bash
-export GOPATH=/home/hapoa/projects/go_update/pkg
+# export GOPATH=/home/hapoa/projects/go_update/pkg
+# 让它默认在 ~/go 目录下
+unset GOPATH
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./release/frpc_darwin_amd64 ./cmd/frpc
 
