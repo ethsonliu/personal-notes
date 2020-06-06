@@ -287,7 +287,7 @@ struct UrlTableProperties
 };
 ```
 
-静态变量，若位于结构体中，就和结构体变量命名保持一致；若位于类中，如是私有的，就和类成员变量保持一致，若是共有的，就和普通变量保持一致；若位于函数体内，就和普通变量保持一致。例如，
+静态变量，若位于结构体中，就和结构体变量命名保持一致；若位于类中，就和类成员变量保持一致；若位于函数体内，就和普通变量保持一致。例如，
 
 ```c++
 struct Student
@@ -301,7 +301,7 @@ class Student
 public:
     static int age;
 private:
-    static int m_id;
+    static int id;
 };
 
 void func()
@@ -312,10 +312,10 @@ void func()
 }
 ```
 
-常量，一律大写，例如：
+常量，不管位于何处，一律以 `k` 开头，后面的单词首字母大写，例如：
 
 ```c++
-const int DAYS_IN_A_WEEK = 7;
+const int kDaysInAWeek = 7;
 ```
 
 ### 函数命名
