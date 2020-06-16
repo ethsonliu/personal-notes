@@ -339,8 +339,9 @@ int main(int argc, char** argv) {
 
     while (1)
     {
-        // 等侍注册在epfd上的socket fd的事件的发生，如果发生则将发生的sokct fd和事件类型放入到events数组中
-        nready = epoll_wait(epollfd, &*events.begin(), static_cast<int>(events.size()), -1);    // 用于轮询I/O事件的发生
+        // 等侍注册在 epfd 上的 socket fd 的事件的发生，如果发生则将发生的 sokct fd 和事件类型放入到 events 数组中
+        nready = epoll_wait(epollfd, &*events.begin(),
+                            static_cast<int>(events.size()), -1); // 用于轮询 I/O 事件的发生
         if (nready == -1)
         {
             if (errno == EINTR)
@@ -362,7 +363,8 @@ int main(int argc, char** argv) {
 
         for (i = 0; i < nready; ++i)
         {
-            if (events[i].data.fd == listenfd)
+            // accept，并且将新 accept 的 fd 加进 epoll 中
+            if (events[i].data.fd == listenfd) 
             {
                 peerlen = sizeof(peeraddr);
                 connfd = accept(listenfd, (struct sockaddr*)&peeraddr, &peerlen);
@@ -379,7 +381,8 @@ int main(int argc, char** argv) {
                 event.events = EPOLLIN | EPOLLET;
                 epoll_ctl(epollfd, EPOLL_CTL_ADD, connfd, &event);
 
-            } else if (events[i].events & EPOLLIN)
+            }
+            else if (events[i].events & EPOLLIN) // 对此 fd 进行读操作
             {
                 connfd = events[i].data.fd;
                 if (connfd < 0)
@@ -405,6 +408,9 @@ int main(int argc, char** argv) {
                 }
                 fputs(recvbuf, stdout);
                 writen(connfd, recvbuf, strlen(recvbuf));
+            }
+            else if (events[i].events & EPOLLOUT) // 对此 fd 进行写操作
+            {
             }
         }
 
