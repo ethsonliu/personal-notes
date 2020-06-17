@@ -37,7 +37,7 @@ int pthread_cond_wait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict m
 ```
 pthread_mutex_lock(&mutex);
 while (条件为假）
-    pthread_cond_wait(cond, mutex);
+    pthread_cond_wait(&cond, &mutex);
 修改条件;
 pthread_mutex_unlock(&mutex);
 ```
@@ -46,7 +46,7 @@ pthread_mutex_unlock(&mutex);
 ```
 pthread_mutex_lock(&mutex);
 设置条件为真
-pthread_cond_signal(cond);
+pthread_cond_signal(&cond);
 pthread_mutex_unlock(&mutex);
 ```
 
