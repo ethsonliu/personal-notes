@@ -22,14 +22,18 @@ Go 1.11 中的 module 支持临时环境变量 GO111MODULE，它可以设置以�
 
 以上参考：<https://blog.csdn.net/benben_2015/article/details/82227338>
 
-个人习惯 module-aware 模式。使用以下命令生成 go.mod 文件，注意，**go.mod 不能在 GOPATH 下，可以考虑在文件中创建一个目录 pkg，将这个目录设为 GOPATH。**
+个人习惯 module-aware 模式。使用以下命令生成 go.mod 文件，注意，**go.mod 不能在 GOPATH 下，可以考虑统一放置在一个目录。**
 
 ```shell
 hapoa@virtual-machine:~/projects/my_project$ pwd
 /home/hapoa/projects/my_project
 hapoa@virtual-machine:~/projects/my_project$ go mod init my_project
 go: creating new go.mod: module my_project
-# 如果是开源项目，可用下面命令
+```
+
+如果是开源项目，可用下面命令
+
+```shell
 # hapoa@virtual-machine:~/projects/my_project$ go mod init github.com/EthsonLiu/my_project
 # go: creating new go.mod: module github.com/EthsonLiu/my_project
 ```
@@ -37,7 +41,6 @@ go: creating new go.mod: module my_project
 ## 编译
 
 ```bash
-# export GOPATH=/home/hapoa/projects/go_update/pkg
 # 让它默认在 /home/$USER/go" 目录下
 unset GOPATH
 
