@@ -15,7 +15,7 @@
 >>>>>>> release/Release
 ```
 
-这个时候，可以点击 Take Left，然后一行一行比对右侧，手动放到中间里。
+这个时候，在上述区域点击就会发现上面顶栏出现 Take Left, Take Right...，可以适当选择点击 Take Left/Right，然后一行一行比对右侧，手动放到中间里。
 
 ## dev-master
 
