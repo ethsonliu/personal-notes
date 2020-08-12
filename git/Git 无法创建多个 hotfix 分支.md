@@ -1,4 +1,4 @@
-执行
+在当前项目打开终端，并执行
 
 ```shell
 git config --add gitflow.multi-hotfix true
