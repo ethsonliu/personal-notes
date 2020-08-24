@@ -429,6 +429,32 @@ Object getArray(int checkKind, String args);
 }
 ```
 
+```c++
+//
+// Function: mosquitto_lib_version
+//
+// Can be used to obtain version information for the mosquitto library.
+// This allows the application to compare the library version against the
+// version it was compiled against by using the LIBMOSQUITTO_MAJOR,
+// LIBMOSQUITTO_MINOR and LIBMOSQUITTO_REVISION defines.
+//
+// Parameters:
+//   major    -  an integer pointer. If not NULL, the major version of the
+//               library will be returned in this variable.
+//   minor    -  an integer pointer. If not NULL, the minor version of the
+//               library will be returned in this variable.
+//   revision -  an integer pointer. If not NULL, the revision of the library will
+//               be returned in this variable.
+//
+// Returns:
+//   LIBMOSQUITTO_VERSION_NUMBER, which is a unique number based on the major,
+//		minor and revision values.
+// See Also:
+//   <mosquitto_lib_cleanup>, <mosquitto_lib_init>
+//
+libmosq_EXPORT int mosquitto_lib_version(int *major, int *minor, int *revision);
+```
+
 ### 块内注释
 
 ```c++
