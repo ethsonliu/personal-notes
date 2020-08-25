@@ -79,8 +79,8 @@ std::make_shared 函数里面完成，并不是在 enable_shared_from_this 类�
 源码参见，
 
 1. [boost/boost/smart_ptr/enable_shared_from_this.hpp](https://code.woboq.org/boost/boost/boost/smart_ptr/enable_shared_from_this.hpp.html)
-2. [boost/boost/smart_ptr/shared_ptr.hpp](https://code.woboq.org/boost/boost/boost/smart_ptr/shared_ptr.hpp.html)
-3. [boost/boost/smart_ptr/weak_ptr.hpp](https://code.woboq.org/boost/boost/boost/smart_ptr/weak_ptr.hpp.html)
+2. [boost/boost/smart_ptr/shared_ptr.hpp](https://code.woboq.org/boost/boost/boost/smart_ptr/shared_ptr.hpp.html#boost::shared_ptr)
+3. [boost/boost/smart_ptr/weak_ptr.hpp](https://code.woboq.org/boost/boost/boost/smart_ptr/weak_ptr.hpp.html#boost::weak_ptr)
 
 ## 参考：
 
