@@ -82,6 +82,8 @@ std::make_shared 函数里面完成，并不是在 enable_shared_from_this 类�
 2. [boost/boost/smart_ptr/shared_ptr.hpp](https://code.woboq.org/boost/boost/boost/smart_ptr/shared_ptr.hpp.html#boost::shared_ptr)
 3. [boost/boost/smart_ptr/weak_ptr.hpp](https://code.woboq.org/boost/boost/boost/smart_ptr/weak_ptr.hpp.html#boost::weak_ptr)
 
+注意：enable_shared_from_this 里的 `_internal_accept_owner` 函数，它在 shared_ptr 构造的时候被调用了。
+
 ## 参考：
 
 1. [C++ 11 新特性之十：enable_shared_from_this](https://blog.csdn.net/caoshangpa/article/details/79392878)
