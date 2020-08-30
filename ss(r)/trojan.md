@@ -1,6 +1,6 @@
 ## 目录
 
-- [Shadowsocks 是如何被检测和封锁的](#Shadowsocks 是如何被检测和封锁的)
+- [Shadowsocks 是如何被检测和封锁的](#Shadowsocks-是如何被检测和封锁的)
 - [Trojan 如何绕过 GFW](#Trojan-如何绕过-GFW)
 - [](#)
 - [](#)
