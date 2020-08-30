@@ -2,7 +2,7 @@
 
 - [Shadowsocks 是如何被检测和封锁的](#Shadowsocks-是如何被检测和封锁的)
 - [Trojan 如何绕过 GFW](#Trojan-如何绕过-GFW)
-- [](#)
+- [服务器带宽测试](#服务器带宽测试)
 - [](#)
 - [](#)
 
@@ -23,3 +23,12 @@
 对于被动检测，Trojan 协议的流量与 HTTPS 流量的特征和行为完全一致。而 HTTPS 流量占据了目前互联网流量的一半以上，且 TLS 握手成功后流量均为密文，几乎不存在可行方法从其中分辨出 Trojan 协议流量。
 
 对于主动检测，当防火墙主动连接 Trojan 服务器进行检测时，Trojan 可以正确识别非 Trojan 协议的流量。与 Shadowsocks 等代理不同的是，此时 Trojan 不会断开连接，而是将这个连接代理到一个正常的 Web 服务器。在 GFW 看来，该服务器的行为和一个普通的 HTTPS 网站行为完全相同，无法判断是否是一个 Trojan 代理节点。这也是 Trojan 推荐使用合法的域名、使用权威 CA 签名的 HTTPS 证书的原因: 这让你的服务器完全无法被 GFW 使用主动检测判定是一个 Trojan 服务器。
+
+## 服务器带宽测试
+
+```shell
+cd /home
+wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+chmod +x speedtest-cli
+./speedtest-cli
+```
