@@ -53,7 +53,11 @@ typedef noncopyable_::noncopyable noncopyable;
 } // namespace boost
 ```
 
+参考：
 
+- <https://www.boost.org/doc/libs/1_63_0/libs/core/doc/html/core/noncopyable.html>
+- <http://bajamircea.github.io/coding/cpp/2017/02/22/noncopyable-adl.html>
+- <https://stackoverflow.com/questions/7823990/what-are-the-advantages-of-boostnoncopyable>
 
 
 
