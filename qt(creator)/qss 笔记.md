@@ -12,17 +12,32 @@
 ## 字体
 
 ```c++
+// 设置全局字体
+QFont font;
+font.setFamily("MS Shell Dlg 2");
+qApp->setFont(font);
+
 // 输出当前系统下的所有字体
 QFontDatabase database;
 foreach (const QString &family, database.families())
 {
     qDebug() << family;
 }
+
+// 检测全局字体：
+qDebug() << qApp->font().rawName();
+qDebug() << qApp->font().family();
+qDebug() << qApp->font().defaultFamily();
+qDebug() << qApp->font().styleName();
+qDebug() << qApp->font().toString();
+qDebug() << qApp->font().key();
 ```
 
 ## QPushButton
 
+```css
 
+```
 
 ## QDockWidget
 
