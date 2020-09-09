@@ -53,6 +53,12 @@ typedef noncopyable_::noncopyable noncopyable;
 } // namespace boost
 ```
 
+为什么上面开头的代码要用私有继承呢？这里有相关的讨论，见 <https://stackoverflow.com/questions/5654330/privately-or-publicly-inherit-from-boostnon-copyable>，因为 `boost::noncopyable` 没有 virtual 析构函数。
+
+其中 protected 构造函数和析构函数是为了强调这只能用作基类，详见 <https://www.boost.org/doc/libs/1_63_0/libs/core/doc/html/core/noncopyable.html>。
+
+那么 `boost::noncopyable` 的优点就是这个么？或者说有缺点么？这个是 Stack Overflow 上对此的讨论，见 <https://stackoverflow.com/questions/7823990/what-are-the-advantages-of-boostnoncopyable>。
+
 
 
 参考：
@@ -60,6 +66,4 @@ typedef noncopyable_::noncopyable noncopyable;
 - <https://www.boost.org/doc/libs/1_63_0/libs/core/doc/html/core/noncopyable.html>
 - <http://bajamircea.github.io/coding/cpp/2017/02/22/noncopyable-adl.html>
 - <https://stackoverflow.com/questions/7823990/what-are-the-advantages-of-boostnoncopyable>
-
-
-
+- <https://stackoverflow.com/questions/5654330/privately-or-publicly-inherit-from-boostnon-copyable>
