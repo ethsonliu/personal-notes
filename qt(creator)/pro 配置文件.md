@@ -1,3 +1,8 @@
+## 目录
+
+- [SOURCES 和 HEADERS](#SOURCES-和-HEADERS)
+- [QMAKE_CFLAGS](#QMAKE_CFLAGS)
+
 ## SOURCES 和 HEADERS
 
 指定项目中的所有源文件和头文件。
@@ -27,3 +32,8 @@ HEADERS += $$files(*.h, true)
 ```
 
 `files`是一个函数，按第一个参数去匹配，返回文件列表。第二个参数为 true时，表示子文件夹递归搜索。
+
+## QMAKE_CFLAGS
+
+
+
