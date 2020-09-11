@@ -1,7 +1,7 @@
 ## 目录
 
 - [SOURCES 和 HEADERS](#SOURCES-和-HEADERS)
-- [QMAKE_CFLAGS](#QMAKE_CFLAGS)
+- [参考](#参考)
 
 ## SOURCES 和 HEADERS
 
@@ -33,7 +33,6 @@ HEADERS += $$files(*.h, true)
 
 `files`是一个函数，按第一个参数去匹配，返回文件列表。第二个参数为 true时，表示子文件夹递归搜索。
 
-## QMAKE_CFLAGS
+## 参考
 
-
-
+- [QMAKE Variables](https://doc.qt.io/qt-5/qmake-variable-reference.html)
