@@ -9,9 +9,6 @@ export PATH=$PATH:/home/hapoa/packages/local/go-1-14-2/bin
 export GO111MODULE=on
 ```
 
-下面这个可以不放，每次编译的时候再指定
-
-
 ## 工程创建
 
 Go 1.11 中的 module 支持临时环境变量 GO111MODULE，它可以设置以下三个值：off，on 或者 auto(默认)。
@@ -41,7 +38,7 @@ go: creating new go.mod: module my_project
 ## 编译
 
 ```bash
-# 让它默认在 /home/$USER/go" 目录下
+# 下面的命令会让程序的下载默认放在 /home/$USER/go" 目录下
 unset GOPATH
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./release/frpc_darwin_amd64 ./cmd/frpc
