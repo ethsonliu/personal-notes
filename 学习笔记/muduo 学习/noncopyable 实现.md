@@ -63,7 +63,7 @@ typedef noncopyable_::noncopyable noncopyable;
 
 3. 那么 `boost::noncopyable` 的优点就是这个么？或者说有缺点么？为什么不可以直接用 delete 来修饰呢？
 
-
+`boost::noncopyable` 的好处就是可以很明显地提醒别人这是不可复制的，但在多继承下，会占用多余的空间，就个人而言，直接使用 delete 比较好，当然可以退一步，定义一个宏，比如 NONCOPYABLE 用来提醒别人也未尝不可。
 
 参考：
 
