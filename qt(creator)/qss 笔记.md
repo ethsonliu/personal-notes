@@ -36,7 +36,16 @@ qDebug() << qApp->font().key();
 ## QPushButton
 
 ```css
-
+QPushButton {
+    color: white;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    border-radius: 4px;
+}
 ```
 
 ## QDockWidget
