@@ -48,6 +48,10 @@ QPushButton {
 }
 ```
 
+参考：
+
+- <https://blog.csdn.net/wanyongtai/article/details/80189299>
+
 ## QDockWidget
 
 参考：
