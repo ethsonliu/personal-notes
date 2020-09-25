@@ -53,11 +53,15 @@ typedef noncopyable_::noncopyable noncopyable;
 } // namespace boost
 ```
 
-为什么上面开头的代码要用私有继承呢？因为 `boost::noncopyable` 没有 virtual 析构函数。
+1. 为什么上面开头的代码要用私有继承呢？
+    
+    因为 `boost::noncopyable` 没有 virtual 析构函数。
 
-其中构造函数和析构函数用 protected 修饰是为了强调这只能用作基类。
+2. 构造函数和析构函数为什么用 protected 修饰？
 
-那么 `boost::noncopyable` 的优点就是这个么？或者说有缺点么？为什么不可以直接用 delete 来修饰呢？
+    是为了强调这只能用作基类，你不可以用它来定义对象。
+
+3. 那么 `boost::noncopyable` 的优点就是这个么？或者说有缺点么？为什么不可以直接用 delete 来修饰呢？
 
 
 
