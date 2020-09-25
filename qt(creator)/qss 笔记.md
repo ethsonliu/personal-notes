@@ -51,6 +51,8 @@ QPushButton {
 参考：
 
 - <https://blog.csdn.net/wanyongtai/article/details/80189299>
+- <https://github.com/danielepantaleone/eddy/blob/master/resources/styles/QPushButton.qss>
+- <https://www.cnblogs.com/linuxAndMcu/p/11039814.html>
 
 ## QDockWidget
 
