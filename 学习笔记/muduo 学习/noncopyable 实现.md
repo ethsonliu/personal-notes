@@ -1,3 +1,5 @@
+<https://github.com/chenshuo/muduo/blob/cpp17/muduo/base/noncopyable.h>
+
 `boost::noncopyable` 允许程序轻松地实现一个禁止拷贝的类，使用时只需包含头文件 `<boost/noncopyable.hpp>` 即可。
 
 ```c++
