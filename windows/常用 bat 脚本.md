@@ -49,44 +49,9 @@ TASKKILL /F /IM mosquitto.exe
 
 ## 后台启动程序
 
-```
+```bat
 start /b "" "C:\Users\liuyi\Desktop\Scada-v3.21.0.9\Scada\Resources\app\bin\backmanage.exe"  "C:/Users/liuyi/Desktop/Scada-v3.21.0.9/Scada/Resources/app" "Online" >C:\Users\liuyi\Desktop\logout.txt 2>&1
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
