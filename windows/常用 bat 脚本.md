@@ -2,6 +2,7 @@
 
 - [判断服务是否存在](#判断服务是否存在)
 - [杀掉所有同名进程](#杀掉所有同名进程)
+- [后台启动程序](#后台启动程序)
 
 ## 判断服务是否存在
 
@@ -46,7 +47,11 @@ if "%one%" == "start" (
 TASKKILL /F /IM mosquitto.exe
 ```
 
+## 后台启动程序
 
+```
+start /b "" "C:\Users\liuyi\Desktop\Scada-v3.21.0.9\Scada\Resources\app\bin\backmanage.exe"  "C:/Users/liuyi/Desktop/Scada-v3.21.0.9/Scada/Resources/app" "Online" >C:\Users\liuyi\Desktop\logout.txt 2>&1
+```
 
 
 
