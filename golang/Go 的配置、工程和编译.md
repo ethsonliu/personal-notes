@@ -31,8 +31,8 @@ go: creating new go.mod: module my_project
 如果是开源项目，可用下面命令
 
 ```shell
-# hapoa@virtual-machine:~/projects/my_project$ go mod init github.com/EthsonLiu/my_project
-# go: creating new go.mod: module github.com/EthsonLiu/my_project
+hapoa@virtual-machine:~/projects/my_project$ go mod init github.com/EthsonLiu/my_project
+go: creating new go.mod: module github.com/EthsonLiu/my_project
 ```
 
 ## 编译
