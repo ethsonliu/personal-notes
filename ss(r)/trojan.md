@@ -4,7 +4,7 @@
 - [Trojan 如何绕过 GFW](#Trojan-如何绕过-GFW)
 - [服务器带宽测试](#服务器带宽测试)
 - [参考](#参考)
-- [](#)
+- [acme 证书生成](#acme-证书生成)
 
 
 ## Shadowsocks-是如何被检测和封锁的
@@ -46,6 +46,20 @@ Download: 4.61 Mbit/s
 Testing upload speed................................................................................................
 Upload: 2.11 Mbit/s
 ```
+
+## acme 证书生成
+
+```shell
+curl  https://get.acme.sh | sh
+alias acme.sh=~/.acme.sh/acme.sh
+
+export Ali_Key=""
+export Ali_Secret=""
+
+acme.sh --issue --dns dns_ali -d example.com -d www.example.com
+```
+
+参考：<https://github.com/acmesh-official/acme.sh>
 
 ## 参考
 
