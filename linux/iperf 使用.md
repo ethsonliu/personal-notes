@@ -16,7 +16,7 @@ make install
 打开 `/etc/profile`，加入以下命令使其开机启动，
 
 ```shell
-/usr/local/bin/iperf3 -s -D -p 5201
+nohup /usr/local/bin/iperf3 -s -D -p 5201 >/dev/null 2>&1 &
 ```
 
 接着执行 `nohup /usr/local/bin/iperf3 -s -D -p 5201 >/dev/null 2>&1 &` 来启动。
