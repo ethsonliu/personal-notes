@@ -44,6 +44,8 @@ v12.18.0
 }
 ```
 
+注：关于 scripts 的使用，参照 <https://www.ruanyifeng.com/blog/2016/10/npm_scripts.html>。
+
 再新建文件 `index.js`，模板如下，
 
 ```js
