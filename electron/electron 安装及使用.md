@@ -13,10 +13,9 @@ C:\Users\liuyi>node -v
 v12.18.0
 ```
 
-## 设置淘宝源
+## 安装 cnpm
 
-打开 cmd，输入 `npm config set registry https://registry.npm.taobao.org`，然后输入 `npm config get registry` 验证是否设置成功。
-
+打开 cmd，输入 `npm install -g cnpm --registry=https://registry.npm.taobao.org`，以后以 cnpm 代替 npm 即可。
 
 ## 一个项目
 
