@@ -82,21 +82,20 @@ app.on('activate', () => {
 再新建文件 `index.html`，模板如下，
 
 ```html
-<OCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Hello World!</title>
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    </head>
-    <body>
-        <h1>Hello World！</h1>
-        我们正在使用节点 <script>文档。 Rite(process.versions.node)</script>,
-        Chrome <script>document.write(process.versions. hrome)</script>,
-        and Electron <script>document.write(cess.versions.electron)</script>.
-    </body>
-    </html>
-    
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+<body>
+    <h1>Hello World!</h1>
+    We are using node <script>document.write(process.versions.node)</script>,
+    Chrome <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.
+</body>
+</html>
 ```
 
 ## 安装 electron
