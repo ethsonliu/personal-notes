@@ -109,3 +109,11 @@ app.on('ready', function() {
 ```
 cnpm i -D electron@latest
 ```
+
+## 运行项目
+
+因为上面的 electron 是局部安装，所以需要这样执行，
+
+```
+.\node_modules\.bin\electron.cmd .
+```
