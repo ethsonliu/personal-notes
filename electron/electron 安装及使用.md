@@ -102,3 +102,10 @@ app.on('ready', function() {
 </html>
 ```
 
+## 安装 electron
+
+在项目根目录下执行，
+
+```
+cnpm i -D electron@latest
+```
