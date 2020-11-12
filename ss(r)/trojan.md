@@ -49,7 +49,9 @@ Upload: 2.11 Mbit/s
 ## acme 证书生成
 
 ```shell
+# 如果执行超时，请参考 https://github.com/acmesh-official/acme.sh/wiki/How-to-install
 curl  https://get.acme.sh | sh
+
 alias acme.sh=~/.acme.sh/acme.sh
 
 export Ali_Key=""
