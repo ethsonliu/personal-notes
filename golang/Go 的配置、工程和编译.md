@@ -38,7 +38,7 @@ go: creating new go.mod: module github.com/EthsonLiu/my_project
 ## 编译
 
 ```bash
-# 下面的命令会让程序的下载默认放在 /home/$USER/go" 目录下
+# 下面的命令会让程序的下载默认放在 /home/$USER/go 目录下
 unset GOPATH
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./release/frpc_darwin_amd64 ./cmd/frpc
