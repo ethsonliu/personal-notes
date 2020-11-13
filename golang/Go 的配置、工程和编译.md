@@ -39,6 +39,7 @@ go: creating new go.mod: module github.com/EthsonLiu/my_project
 
 ```bash
 # 下面的命令会让程序的下载默认放在 /home/$USER/go 目录下
+# 但我的建议是，在 Linux 和 MAC 上这么做，但是在 Windows 上还是不要执行，因为默认会放置在 C 盘，建议预先设置 GOPATH 在一个非 C 盘目录
 unset GOPATH
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./release/frpc_darwin_amd64 ./cmd/frpc
