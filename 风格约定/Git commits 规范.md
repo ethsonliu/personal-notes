@@ -58,6 +58,8 @@ Header 部分只有一行，包括三个字段：type（必需）、scope（可�
 
 如果 type 为 feat 和 fix，则该 commit 将肯定出现在 Change log 之中。其他情况（docs、chore、style、refactor、test）由你决定，要不要放入 Change log，建议是不要。
 
+偶然发现 Golang 的 commits 的风格也很好，有些模块类项目可以采用这种风格，参考 <https://github.com/golang/go/commits/master>。
+
 ### Body
 
 Body 部分是对本次 commit 的详细描述，可以分成多行。下面是一个范例。
