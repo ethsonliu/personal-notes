@@ -24,7 +24,7 @@ foreach (const QString &family, database.families())
     qDebug() << family;
 }
 
-// 检测全局字体：
+// 检测全局字体
 qDebug() << qApp->font().rawName();
 qDebug() << qApp->font().family();
 qDebug() << qApp->font().defaultFamily();
