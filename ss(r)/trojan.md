@@ -62,7 +62,21 @@ Upload: 2.11 Mbit/s
 
 下载地址：https://iperf.fr/iperf-download.php
 
+在服务端启动，
 
+```
+iperf3 -s -p 9999
+```
+
+在客户端启动，
+
+```
+## client-->server
+.\iperf3.exe -c x.x.x.x -p 9999
+
+## client<--server
+.\iperf3.exe -c x.x.x.x -p 9999 -R
+```
 
 ## acme 证书生成
 
