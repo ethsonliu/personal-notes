@@ -50,7 +50,7 @@ Testing upload speed............................................................
 Upload: 2.11 Mbit/s
 ```
 
-```
+```shell
 # 列出服务器列表
 ./speedtest-cli --list
 
@@ -64,17 +64,17 @@ Upload: 2.11 Mbit/s
 
 在服务端启动，
 
-```
+```shell
 iperf3 -s -p 9999
 ```
 
 在客户端启动，
 
-```
-## client-->server
+```shell
+# client-->server
 .\iperf3.exe -c x.x.x.x -p 9999
 
-## client<--server
+# client<--server
 .\iperf3.exe -c x.x.x.x -p 9999 -R
 ```
 
