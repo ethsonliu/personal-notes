@@ -3,6 +3,8 @@
 - [Shadowsocks 是如何被检测和封锁的](#Shadowsocks-是如何被检测和封锁的)
 - [Trojan 如何绕过 GFW](#Trojan-如何绕过-GFW)
 - [服务器带宽测试](#服务器带宽测试)
+  - [speedtest](#speedtest)
+  - [iperf](#iperf)
 - [acme 证书生成](#acme-证书生成)
 - [参考](#参考)
 
@@ -25,6 +27,8 @@
 
 ## 服务器带宽测试
 
+### speedtest
+
 ```shell
 cd /home
 wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
@@ -45,6 +49,16 @@ Download: 4.61 Mbit/s
 Testing upload speed................................................................................................
 Upload: 2.11 Mbit/s
 ```
+
+```
+# 列出服务器列表
+./speedtest-cli --list
+
+# 选择指定服务器测试
+./speedtest-cli --server 1204
+```
+
+### iperf
 
 ## acme 证书生成
 
