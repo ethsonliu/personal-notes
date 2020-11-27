@@ -47,7 +47,7 @@ grep "password" /var/log/mysqld.log
 mysql -u root -p
 ```
 
-输入密码，即可进去，最好修改下密码，初始密码太繁琐，因为mysql 8 启用了更高级的密码等级，所以我们可以把它设置的简单一点，先输入命令，
+输入密码，即可进去，最好修改下密码，初始密码太繁琐，因为 mysql 8 启用了更高级的密码等级，所以我们可以把它设置的简单一点，先输入命令，
 
 ```shell
 mysql> set global validate_password.policy=LOW;
