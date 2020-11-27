@@ -10,15 +10,19 @@ wget http://repo.mysql.com/mysql80-community-release-el7.rpm
 完成之后，进行安装：
 
 ```shell
+# 版本 8.0
 rpm -ivh mysql80-community-release-el7.rpm
+
+# 版本 5.7
+rpm -ivh mysql57-community-release-el7-11.noarch.rpm
 ```
 
 开始安装 MySQL：
 
 ```shell
 yum install mysql
-yum install mysql-server 
-yum install mysql-devel 
+yum install mysql-server
+yum install mysql-devel
 ```
 
 mysql 是 MySQL 客户端，mysql-server 是数据库服务器，mysql-devel 则包含了开发用到的库以及头文件。
