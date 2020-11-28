@@ -375,8 +375,11 @@ systemctl enable firewalld  # 允许开机启动
 firewall-cmd --permanent --add-port=80/tcp
 firewall-cmd --permanent --add-port=443/tcp
 
-# 重新加载生效
+# 不中断服务的重新加载
 firewall-cmd --reload
+
+# 中断所有连接的重新加载
+firewall-cmd --complete-reload      
 
 # 删掉端口
 firewall-cmd --remove-port=9999/tcp
