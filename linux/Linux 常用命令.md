@@ -351,7 +351,9 @@ service start firewalld   # 开启
 service stop firewalld    # 停止
 service restart firewalld # 重启
 service status firewalld  # 查看状态
-service disable firewalld # 禁止开机启动
+
+systemctl disable firewalld # 禁止开机启动
+systemctl enable firewalld  # 允许开机启动
 ```
 
 配置文件
