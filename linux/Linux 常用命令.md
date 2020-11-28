@@ -370,6 +370,18 @@ systemctl enable firewalld  # 允许开机启动
 /etc/firewalld/zones
 ```
 
+```shell
+# 永久加入端口
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --permanent --add-port=443/tcp
+
+# 重新加载生效
+firewall-cmd --reload
+
+# 删掉端口
+firewall-cmd --remove-port=9999/tcp
+```
+
 查看所有开放的端口、服务...
 
 ```shell
