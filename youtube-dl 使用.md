@@ -1,6 +1,17 @@
 开源地址：<https://github.com/ytdl-org/youtube-dl>
 
 ```bash
+参照 https://linuxize.com/post/how-to-install-ffmpeg-on-centos-7/
+# centos7 安装 ffmpeg
+sudo yum install epel-release
+sudo yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm
+sudo yum install ffmpeg ffmpeg-devel
+ffmpeg -version
+```
+
+
+```bash
+# 参照 https://www.sysgeek.cn/youtube-dl-examples/
 # 列出单个视频的所有可用的音/视频格式
 [root@localhost home]# ./youtube-dl -F https://www.youtube.com/watch?v=xyzabc
 [youtube] IwhGr38OBQ4: Downloading webpage
@@ -42,7 +53,3 @@ format code  extension  resolution note
 [download] 100% of 553.86MiB in 00:28
 
 ```
-
-## 参考
-
-- <https://www.sysgeek.cn/youtube-dl-examples/>
