@@ -1,7 +1,7 @@
 开源地址：<https://github.com/ytdl-org/youtube-dl>
 
 ```bash
-参照 https://linuxize.com/post/how-to-install-ffmpeg-on-centos-7/
+# 参照 https://linuxize.com/post/how-to-install-ffmpeg-on-centos-7/
 # centos7 安装 ffmpeg
 sudo yum install epel-release
 sudo yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm
