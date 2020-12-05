@@ -1,6 +1,6 @@
 开源地址：<https://github.com/ytdl-org/youtube-dl>
 
-```shell
+```bash
 # 列出单个视频的所有可用的音/视频格式
 [root@localhost home]# ./youtube-dl -F https://www.youtube.com/watch?v=xyzabc
 [youtube] IwhGr38OBQ4: Downloading webpage
