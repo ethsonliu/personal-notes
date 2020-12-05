@@ -51,5 +51,4 @@ format code  extension  resolution note
 [youtube] xyzabc: Downloading webpage
 [download] Destination: xxxxxxxxxxxxxxxxxxxxxxx.webm
 [download] 100% of 553.86MiB in 00:28
---merge-output-format mp4
 ```
