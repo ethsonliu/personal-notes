@@ -47,9 +47,9 @@ format code  extension  resolution note
 22           mp4        1280x640   720p  534k , avc1.64001F, 30fps, mp4a.40.2@192k (44100Hz) (best)
 
 # 选择上述的最高质量下载，code 码为 401
-[root@localhost home]# ./youtube-dl -f 401 https://www.youtube.com/watch?v=xyzabc
+[root@localhost home]# ./youtube-dl -f bestvideo+bestaudio  https://www.youtube.com/watch?v=xyzabc
 [youtube] xyzabc: Downloading webpage
-[download] Destination: xxxxxxxxxxxxxxxxxxxxxxx.mp4
+[download] Destination: xxxxxxxxxxxxxxxxxxxxxxx.webm
 [download] 100% of 553.86MiB in 00:28
-
+--merge-output-format mp4
 ```
