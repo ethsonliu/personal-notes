@@ -35,6 +35,13 @@ ulimit -c unlimited
 ulimit -c 1024
 ```
 
+上面这个方法在系统重启后会消失，永久生效的方法是：打开 /etc/security/limits.conf 文件，
+
+```
+*     soft  core unlimited
+*     hard  core unlimited
+```
+
 再次执行程序就在程序当前目录下生成了 core 文件。
 
 ```shell
