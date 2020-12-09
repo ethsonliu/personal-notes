@@ -73,4 +73,26 @@ X-Frame-Options: ALLOW-FROM http://example.com
 
 不指定 X-Frame-Options 的网页等同表示它可以放在任何 iFrame 内。X-Frame-Options 可以保障你的网页不会被放在恶意网站设定的 iFrame 内，令用户成为点击劫持的受害人。
 
+### X-Content-Type-Options
+
+互联网上的资源有各种类型，通常浏览器会根据响应头的 Content-Type 字段来分辨它们的类型。例如："text/html" 代表 html 文档，"image/png" 是 PNG 图片，"text/css" 是 CSS 样式文档。然而，有些资源的 Content-Type 是错的或者未定义。这时，某些浏览器会启用 MIME-sniffing 来猜测该资源的类型，解析内容并执行。
+
+例如，我们即使给一个 html 文档指定 Content-Type 为 "text/plain"，在 IE8 中这个文档依然会被当做 html 来解析。利用浏览器的这个特性，攻击者甚至可以让原本应该解析为图片的请求被解析为 JavaScript。通过下面这个响应头可以禁用浏览器的类型猜测行为：
+
+```
+X-Content-Type-Options: nosniff
+```
+
+### X-XSS-Protection
+
+顾名思义，这个响应头是用来防范 XSS 的。现在主流浏览器都支持，并且默认都开启了 XSS 保护，用这个 header 可以关闭它。它有几种配置：
+
+- 0：禁用 XSS 保护
+- 1：启用 XSS 保护
+- 1; mode=block：启用 XSS 保护，并在检查到 XSS 攻击时，停止渲染页面（例如 IE8 中，检查到攻击时，整个页面会被一个 # 替换）
+
+浏览器提供的 XSS 保护机制并不完美，但是开启后仍然可以提升攻击难度，总之没有特别的理由，不要关闭它。
+
+
+
 
