@@ -42,7 +42,7 @@ server {
 	resolver 8.8.8.8 8.8.4.4;
 	ssl_stapling on;
 	ssl_stapling_verify on;
-	ssl_trusted_certificate /etc/nginx/ssl/star_forgott_com.crt;
+	ssl_trusted_certificate /root/.acme.sh/example.com/fullchain.cer;
 
   	# ... 其他配置
 }
@@ -145,5 +145,5 @@ openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
 
 ### ssl_stapling
 
-
+ssl_certificate 使用的是 fullchain.pem，带了中间证书，所以只需要指定 resolver 即可，ssl_trusted_certificate 和 ssl_stapling_file 不用也可。
 
