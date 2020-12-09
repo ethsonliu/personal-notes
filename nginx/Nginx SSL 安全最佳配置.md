@@ -59,3 +59,18 @@ Server:Tengine
 
 ### X-Frame-Options
 
+X-Frame-Options 是一个 HTTP header，用来告诉浏览器这个网页是否可以放在 iFrame/frame/object 内。它有三个可选值：
+
+```
+X-Frame-Options: DENY
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: ALLOW-FROM http://example.com
+```
+
+- DENY 告诉浏览器不要把这个网页放在 iFrame 内，通常的目的就是要帮助用户对抗点击劫持。
+- SAMEORIGIN 告诉浏览器只有当架设 iFrame 的网站与发出 X-Frame-Options 的网站相同，才能显示发出 X-Frame-Options 网页的内容。
+- ALLOW-FROM uri 告诉浏览器这个网页只能放在 http://example.com 网页架设的 iFrame 内。
+
+不指定 X-Frame-Options 的网页等同表示它可以放在任何 iFrame 内。X-Frame-Options 可以保障你的网页不会被放在恶意网站设定的 iFrame 内，令用户成为点击劫持的受害人。
+
+
