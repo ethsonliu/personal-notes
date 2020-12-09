@@ -24,8 +24,8 @@ server {
 	listen [::]:443 ssl http2;
 	server_name example.com;
 
-	ssl_certificate /etc/nginx/ssl/star_forgott_com.crt;
-	ssl_certificate_key /etc/nginx/ssl/star_forgott_com.key;
+	ssl_certificate /etc/nginx/ssl/example.com.crt;
+	ssl_certificate_key /etc/nginx/ssl/example.com.key;
 
 	ssl_session_cache shared:SSL:50m;
 	ssl_session_timeout 1d;
