@@ -46,4 +46,16 @@ server {
 
 以下是针对上述内容的解析，
 
-###
+### server_tokens
+
+http 请求的 response 里面的 header 中，我们会发现有 server 这个参数，它表示服务端使用的是什么 web 服务器。
+
+```
+Server:nginx
+Server:Tengine
+```
+
+很多网站不止返回了 nginx 而且还带了版本号，而像版本号这种东西完全没必要暴露给用户，我们可以通过设置 `server_tokens off` 隐藏掉版本号。
+
+### X-Frame-Options
+
