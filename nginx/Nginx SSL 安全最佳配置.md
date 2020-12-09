@@ -30,9 +30,13 @@ server {
 	ssl_session_cache shared:SSL:50m;
 	ssl_session_timeout 1d;
 	ssl_session_tickets off;
+	
 	ssl_dhparam /etc/nginx/ssl/dhparam.pem;
+	
 	ssl_prefer_server_ciphers on;
+	
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	
 	ssl_ciphers 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS';
   
 	resolver 8.8.8.8 8.8.4.4;
@@ -113,8 +117,33 @@ includeSubDomains 是可选的，用来指定是否作用于子域名。
 
 支持 HSTS 的浏览器遇到这个响应头，会把当前网站加入 HSTS 列表，然后在 max-age 指定的秒数内，当前网站所有请求都会被重定向为 https。
 
+### ssl_session_cache
 
+网站启用 https 后，会加剧服务器的负担。每次新的 TLS 连接都需要握手。不过，通过重用 Session 可以提高 https 的性能。
 
+nginx 官方说只使用 shared，性能会更高，配置方法为：`ssl_session_cache shared:SSL:50m;`。
+
+### ssl_dhparam 
+
+openssl dhparam 用于生成和管理 dh 文件。dh（Diffie-Hellman）是著名的密钥交换协议，或称为密钥协商协议，它可以保证通信双方安全地交换密钥。注意，它不是加密算法，仅仅只是保护密钥交换的过程。在 openvpn 中就使用了该交换协议。
+
+dh 文件生成方法，执行前确保目录存在，
+
+```
+openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
+```
+
+### ssl_prefer_server_ciphers
+
+服务端加密算法优先。
+
+### resolver
+
+国外服务器建议 `resolver 8.8.8.8 8.8.4.4`。
+
+国内服务器建议 `resolver 223.5.5.5 223.6.6.6`。
+
+### ssl_stapling
 
 
 
