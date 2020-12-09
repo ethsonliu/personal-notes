@@ -40,7 +40,7 @@ server {
 	ssl_stapling_verify on;
 	ssl_trusted_certificate /etc/nginx/ssl/star_forgott_com.crt;
 
-  # ... 其他配置
+  	# ... 其他配置
 }
 ```
 
