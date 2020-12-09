@@ -93,6 +93,28 @@ X-Content-Type-Options: nosniff
 
 浏览器提供的 XSS 保护机制并不完美，但是开启后仍然可以提升攻击难度，总之没有特别的理由，不要关闭它。
 
+### Content-Security-Policy
+
+Content Security Policy，简称 CSP。顾名思义，这个规范与内容安全有关，主要是用来定义页面可以加载哪些资源，减少 XSS 的发生。
+
+### Strict-Transport-Security
+
+HTTP Strict Transport Security，简称为 HSTS，它要求浏览器总是通过 HTTPS 来访问一个网站。
+
+我们知道 HTTPS 相对于 HTTP 有更好的安全性，而很多 HTTPS 网站，也可以通过 HTTP 来访问。开发人员的失误或者用户主动输入地址，都有可能导致用户以 HTTP 访问网站，降低了安全性。一般，我们会通过 Web Server 发送 301/302 重定向来解决这个问题。现在有了 HSTS，可以让浏览器帮你做这个跳转，省一次 HTTP 请求。另外，浏览器本地替换可以保证只会发送 HTTPS 请求，避免被劫持。
+
+要使用 HSTS，只需要在你的 HTTPS 网站响应头中，加入下面这行：
+
+```
+add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
+```
+
+includeSubDomains 是可选的，用来指定是否作用于子域名。
+
+支持 HSTS 的浏览器遇到这个响应头，会把当前网站加入 HSTS 列表，然后在 max-age 指定的秒数内，当前网站所有请求都会被重定向为 https。
+
+
+
 
 
 
