@@ -146,7 +146,7 @@ openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
 
 ### ssl_stapling
 
-ssl_certificate 使用的是 fullchain.pem，带了中间证书，所以只需要指定 resolver 即可，ssl_trusted_certificate 和 ssl_stapling_file 不用也可。
+上述例子中 ssl_certificate 使用的是 fullchain.pem，带了中间证书，所以只需要指定 resolver 即可，ssl_trusted_certificate 和 ssl_stapling_file 不用也可。
 
 参考：
 
