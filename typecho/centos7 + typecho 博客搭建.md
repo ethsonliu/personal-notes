@@ -26,3 +26,20 @@ systemctl start php-fpm
 下载地址 <https://github.com/typecho/typecho>，安装见 <http://docs.typecho.org/install>
 
 注意，要现在 mysql 里创建数据库。
+
+## 五：typecho 安全加固
+
+### 修改 admin 目录
+
+打开 config.inc.php，建议用随机密码生成器生成，注意不要有特殊字符，大小写字母和数字即可。
+
+```
+/** 后台路径(相对路径) */
+define('__TYPECHO_ADMIN_DIR__', '/xxxxxxx---admin/');
+```
+
+### 删除安装页面
+
+把 install.php 删掉
+
+### 
