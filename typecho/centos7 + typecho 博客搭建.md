@@ -12,7 +12,14 @@ sudo systemctl start nginx
 
 ## 三：安装 php
 
-
+```bash
+yum -y install epel-release
+yum -y install php php-fpm
+php -v
+yum install php-mysql
+systemctl enable php-fpm
+systemctl start php-fpm
+```
 
 ## 四：安装 typecho
 
