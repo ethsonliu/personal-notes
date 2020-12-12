@@ -81,6 +81,15 @@ mysql> SHOW VARIABLES LIKE 'validate_password%';
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '你的密码';
 ```
 
+默认只能本地登录，可以修改为本地+外部都可登录，
+
+```
+use mysql;
+select host, user from user;
+update user set host = '%' where user = 'root';
+select host, user from user;
+```
+
 ## 参考：
 
 https://blog.csdn.net/liang19890820/article/details/81672538
