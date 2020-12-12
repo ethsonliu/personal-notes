@@ -42,4 +42,19 @@ define('__TYPECHO_ADMIN_DIR__', '/xxxxxxx---admin/');
 
 把 install.php 删掉
 
-### 
+### 屏蔽 usr、var 目录下 php 文件的访问
+
+屏蔽 usr、var 目录下 php 文件的访问可以阻止黑客访问到他上传的 php 木马，我们同时屏蔽 config.inc.php 的访问。
+
+屏蔽原理就是把要屏蔽的请求重定向到首页文件，首页文件会当成文章名来解析，没有同名文章就会返回 404 未找到，所以就算黑客上传了木马也只会得到 404 未找到的响应。
+
+在 nginx 的 server 中加入
+
+```
+    if (!-e $request_filename) {
+        rewrite ^(.*)$ /index.php$1 last;
+    }
+
+    rewrite /(var|usr)(.+ph*)$ /index.php;
+    rewrite /(config.inc.php|.htaccess)$ /index.php last;
+```
