@@ -23,7 +23,7 @@ systemctl start php-fpm
 
 ## 四：安装 typecho
 
-下载地址 <https://github.com/typecho/typecho>，安装见 <http://docs.typecho.org/install>
+下载地址 <https://github.com/typecho/typecho>，安装见 <http://docs.typecho.org/install>，使用 typecho 的 master 分支即可。
 
 注意，要现在 mysql 里创建数据库。
 
