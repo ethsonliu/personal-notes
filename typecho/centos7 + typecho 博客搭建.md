@@ -61,7 +61,7 @@ define('__TYPECHO_ADMIN_DIR__', '/xxxxxxx---admin/');
     rewrite /(config.inc.php|.htaccess)$ /index.php last;
 ```
 
-### 服务器永久禁止 ICMP
+## 五：服务器永久禁止 ICMP
 
 打开文件 /etc/sysctl.conf，加入
 
@@ -70,3 +70,7 @@ net.ipv4.icmp_echo_ignore_all=1
 ```
 
 然后执行命令 `sysctl -p` 生效。
+
+## 六：防火墙
+
+参考 <https://github.com/ethsonliu/personal-notes/blob/master/linux/Linux%20常用命令.md#防火墙>
