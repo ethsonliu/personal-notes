@@ -347,10 +347,10 @@ drwxrwxrwx 2 shawvyu shawvyu     4096 Jul 26 15:05 shawvyu/
 开启/关闭/查看防火墙/...
 
 ```shell
-service start firewalld   # 开启
-service stop firewalld    # 停止
-service restart firewalld # 重启
-service status firewalld  # 查看状态
+service firewalld start   # 开启
+service firewalld stop    # 停止
+service firewalld restart # 重启
+service firewalld status  # 查看状态
 
 systemctl disable firewalld # 禁止开机启动
 systemctl enable firewalld  # 允许开机启动
