@@ -60,3 +60,13 @@ define('__TYPECHO_ADMIN_DIR__', '/xxxxxxx---admin/');
     rewrite /(var|usr)(.+ph*)$ /index.php;
     rewrite /(config.inc.php|.htaccess)$ /index.php last;
 ```
+
+### 服务器永久禁止 ICMP
+
+打开文件 /etc/sysctl.conf，加入
+
+```
+net.ipv4.icmp_echo_ignore_all=1
+```
+
+然后执行命令 `sysctl -p` 生效。
