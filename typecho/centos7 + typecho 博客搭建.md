@@ -1,9 +1,11 @@
 ## 一：安装 nginx
 
 ```bash
-sudo yum install epel-release
-sudo yum install nginx
-sudo systemctl start nginx
+yum install epel-release
+yum install nginx
+systemctl enable nginx.service
+systemctl is-enabled nginx.service
+systemctl start nginx
 ```
 
 ## 二：安装 mysql
