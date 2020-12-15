@@ -2,8 +2,8 @@
 
 - [read&write 与 recv&send 区别](#read&write-与-recv&send-区别)
 - [getsockname 和 getpeername](#getsockname-和-getpeername)
-- [gethostname 和 gethostbyname 和 gethostbyname_r](#gethostname-和-gethostbyname-和-gethostbyname_r)
-- [gethostbyaddr](#gethostbyaddr)
+- [gethostbyname 和 gethostbyaddr](#gethostbyname-和-gethostbyaddr)
+- [gethostbyname_r](#gethostbyname_r)
 - [getaddrinfo](#getaddrinfo)
 
 # read&write 与 recv&send 区别
@@ -44,7 +44,7 @@ int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);
 
 参考：<https://blog.csdn.net/workformywork/article/details/24554813>
 
-# gethostname 和 gethostbyname 和 gethostbyname_r
+# gethostbyname 和 gethostbyaddr
 
 ```c
 // 返回本地主机的标准主机名。
@@ -153,7 +153,7 @@ hostname: www.server1.com
 ip: 69.172.201.208
 ```
 
-# gethostbyaddr
+# gethostbyname_r
 
 ```c
 // 与 gethostbyname 相反，这个是 ip 转域名
