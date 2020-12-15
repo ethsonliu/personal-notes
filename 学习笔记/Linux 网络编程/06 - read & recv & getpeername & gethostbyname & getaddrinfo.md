@@ -2,7 +2,7 @@
 
 - [read&write 与 recv&send 区别](#read&write-与-recv&send-区别)
 - [getsockname 和 getpeername](#getsockname-和-getpeername)
-- [gethostbyname 和 gethostbyaddr](#gethostbyname-和-gethostbyaddr)
+- [gethostbyname](#gethostbyname)
 - [gethostbyname_r](#gethostbyname_r)
 - [getaddrinfo](#getaddrinfo)
 
@@ -44,15 +44,15 @@ int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);
 
 参考：<https://blog.csdn.net/workformywork/article/details/24554813>
 
-# gethostbyname 和 gethostbyaddr
+# gethostbyname
 
 ```c
 #include <netdb.h>
 #include <sys/socket.h>
 
 // 作用：用域名或者主机名获取地址
-// 参数：name 可以一个域名（www.baidu.com）或者主机名（hapoa-virtual-machine）
-// 另：主机名就是终端输入 hostname 得到的值
+// 参数 name：域名（www.baidu.com）或者主机名（hapoa-virtual-machine）
+// 另注：主机名就是终端输入 hostname 得到的值
 struct hostent *gethostbyname(const char *name);
 ```
 
@@ -71,11 +71,15 @@ struct hostent
 #define h_addr h_addr_list[0] /* for backward compatibility */
 ```
 
+![](https://github.com/ethsonliu/personal-notes/blob/master/_image/033.png)
+
 - hostent->h_name，表示的是主机的规范名。  
 - hostent->h_aliases，表示的是主机的别名，有的时候，有的主机可能有好几个别名。
 - hostent->h_addrtype，表示的是主机 ip 地址的类型，到底是 ipv4(AF_INET)，还是 pv6(AF_INET6)。
 - hostent->h_length，表示的是主机 ip 地址的长度。
 - hostent->h_addr_list，表示的是主机的 ip 地址，注意，这个是以网络字节序存储的。不要直接用 printf 带 %s 参数来打这个东西，会有问题的。所以到真正需要打印出这个 IP 的话，需要调用 inet_ntop。
+
+以下是示例，
 
 ```c
 #include <stdio.h>
@@ -100,18 +104,14 @@ void handler(int sig){
 
 int main(void)
 {
-        char host[100] = {0};
-         if(gethostname(host,sizeof(host)) < 0){
-                ERR_EXIT("gethostname");
-        }
 
         struct hostent *hp;
-        if ((hp=gethostbyname(host)) == NULL){
+        if ((hp=gethostbyname("www.baidu.com")) == NULL){
                 ERR_EXIT("gethostbyname");
         }
 
         int i = 0;
-        while(hp->h_addr_list[i] != NULL)
+        while (hp->h_addr_list[i] != NULL)
         {
                 printf("hostname: %s\n",hp->h_name);
                 printf("      ip: %s\n",inet_ntoa(*(struct in_addr*)hp->h_addr_list[i]));
@@ -123,11 +123,13 @@ int main(void)
 
 输出如下：
 
-```
-# gcc -o getinfo getinfo.c
-# ./getinfo
-hostname: www.server1.com
-ip: 69.172.201.208
+```bash
+hapoa@hapoa-virtual-machine:~$ gcc -o main ./main.cpp
+hapoa@hapoa-virtual-machine:~$ ./main
+hostname: www.a.shifen.com
+      ip: 36.152.44.96
+hostname: www.a.shifen.com
+      ip: 36.152.44.95
 ```
 
 参考：
@@ -136,62 +138,71 @@ ip: 69.172.201.208
 
 # gethostbyname_r
 
+因为 gethostbyname 返回的是一个指向静态变量的指针，不可重入，很可能刚要读时值就被其它线程修改，所以新的 posix 中增加了另一个可重入的函数 gethostbyname_r。（在使用前需要看看所使用系统是否有这个函数）
+
 ```c
-// 与 gethostbyname 相反，这个是 ip 转域名
-#include <sys/socket.h>       /* for AF_INET */
-struct hostent *gethostbyaddr(const void *addr, socklen_t len, int type);
+// 参数 name：域名（www.baidu.com）或者主机名（hapoa-virtual-machine）
+// 参数 ret：
+// 参数 buf：
+// 参数 buflen：
+// 参数 result：
+// 参数 h_errnop：
+int gethostbyname_r(const char *name,
+                    struct hostent *ret,
+                    char *buf,
+                    size_t buflen,
+                    struct hostent **result,
+                    int *h_errnop);
 ```
 
+使用示例，摘自 <https://stackoverflow.com/questions/6517478/how-to-use-gethostbyname-r-in-linux>，
+
 ```c
+int rc, err;
+char *str_host;
+struct hostent hbuf;
+struct hostent *result;
 
-// 仅供参考，可能有错
+while ((rc = gethostbyname_r(str_host, &hbuf, buf, len, &result, &err)) == ERANGE) {
+    /* expand buf */
+    len *= 2;
+    void *tmp = realloc(buf, buflen);
+    if (NULL == tmp) {
+        free(buf);
+        perror("realloc");
+    }else{
+        buf = tmp;
+    }
+}
 
-#include <netdb.h>
-#include <sys/socket.h>
+if (0 != rc || NULL == result) {
+    perror("gethostbyname");
+}
+```
 
-int main(int argc, char **argv)
+另一个例子，
+
+```c++
+struct sockaddr_in server;
+
+int rc, err;
+struct hostent host;
+struct hostent *result;
+char buf[10240];
+rc = gethostbyname_r(m_host.c_str(), &host, buf, sizeof(buf), &result, &err);
+if (rc != 0 || result == 0)
 {
-    char *ptr, **pptr;
-    struct hostent *hptr;
-    char str[32];
-    char ipaddr[16];
-    struct in_addr *hipaddr;
-    /* 取得命令后第一个参数，即要解析的IP地址 */
-    ptr = argv[1];
-     /* 调用inet_aton()，ptr就是以字符串存放的地方的指针，hipaddr是in_addr形式的地址 */
-    if (!inet_aton(ptr, hipaddr))
-    {
-        printf("inet_aton error/n");
-        return 1;
-    }
-     /* 调用gethostbyaddr()。调用结果都存在hptr中 */
-    if ((hptr = gethostbyaddr(hipaddr, 4, AF_INET)) == NULL)
-    {
-        printf("gethostbyaddr error for addr:%s/n", ptr);
-        return 1; /* 如果调用gethostbyaddr发生错误，返回1 */
-    }
+    return false;
+}
 
-    /* 将主机的规范名打出来 */
-    printf("official hostname:%s/n", hptr->h_name);
-    /* 主机可能有多个别名，将所有别名分别打出来 */
-    for (pptr = hptr->h_aliases; *pptr != NULL; pptr++)
-        printf("  alias:%s/n", *pptr);
-
-    /* 根据地址类型，将地址打出来 */
-    switch (hptr->h_addrtype)
-    {
-        case AF_INET :
-        case AF_INET6 :
-             pptr = hptr->h_addr_list;
-             /* 将刚才得到的所有地址都打出来。其中调用了inet_ntop()函数 */
-             for (; *pptr != NULL; pptr++)
-                 printf("  address:%s/n", inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));
-             break;
-        default :
-            printf("unknown address type/n");
-            break;
-    }
-    return 0;
+memset(&server, 0, sizeof(server));
+server.sin_family = AF_INET;
+server.sin_port = htons(m_port);
+server.sin_addr = *((struct in_addr *)host.h_addr);
+int error = connect(m_socketfd, (struct sockaddr *)&server, sizeof(struct sockaddr));
+if (error == -1)
+{
+    return false;
 }
 ```
 
