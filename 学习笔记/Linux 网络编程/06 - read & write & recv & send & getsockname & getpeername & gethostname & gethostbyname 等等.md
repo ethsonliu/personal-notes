@@ -47,30 +47,17 @@ int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);
 # gethostbyname 和 gethostbyaddr
 
 ```c
-// 返回本地主机的标准主机名。
-
-#include <unistd.h>
-int gethostname(char *name, size_t len); // 不适用于多线程同时调用，建议使用下面讲解的 getaddrinfo
-```
-
-接收缓冲区 name，其长度必须为 len 字节或是更，存获得的主机名。
-
-接收缓冲区 name 的最大长度。
-
-返回值：如果函数成功，则返回 0。如果发生错误则返回 -1。错误号存放在外部变量 errno 中。
-
-```c
-// 域名或主机名获取IP地址
-
 #include <netdb.h>
 #include <sys/socket.h>
 
-// 这个函数的传入值是域名或者主机名，例如"www.google.cn"等等。传出值，是一个 hostent 的结构。如果函数调用失败，将返回 NULL。
+// 作用：用域名或者主机名获取地址
+// 参数：name 可以一个域名（www.baidu.com）或者主机名（hapoa-virtual-machine）
+// 另：主机名就是终端输入 hostname 得到的值
 struct hostent *gethostbyname(const char *name);
 ```
 
-返回 hostent 结构体类型指针
-          
+返回的 hostent 结构体类型指针，
+
 ```c
 struct hostent
 {
@@ -80,25 +67,15 @@ struct hostent
     int h_length;       /* length of address */
     char **h_addr_list; /* list of addresses */
 }
+
 #define h_addr h_addr_list[0] /* for backward compatibility */
 ```
 
-hostent->h_name，表示的是主机的规范名。
-    
-hostent->h_aliases，表示的是主机的别名，有的时候，有的主机可能有好几个别名，这些，其实都是为了易于用户记忆而为自己的网站多取的名字。
-
-hostent->h_addrtype，表示的是主机 ip 地址的类型，到底是 ipv4(AF_INET)，还是 pv6(AF_INET6)。
-
-hostent->h_length，表示的是主机 ip 地址的长度。
-
-hostent->h_addr_lisst，表示的是主机的 ip 地址，注意，这个是以网络字节序存储的。千万不要直接用 printf 带 %s 参数来打这个东西，会有问题的哇。所以到真正需要打印出这个 IP 的话，需要调用 inet_ntop()。
-
-```c
-// 这个函数，是将类型为 af 的网络地址结构 src，转换成主机序的字符串形式，存放在长度为 cnt 的字符串中。返回指向 dst 的一个指针。
-// 如果函数调用错误，返回值是 NULL。
-
-const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
-```
+- hostent->h_name，表示的是主机的规范名。  
+- hostent->h_aliases，表示的是主机的别名，有的时候，有的主机可能有好几个别名。
+- hostent->h_addrtype，表示的是主机 ip 地址的类型，到底是 ipv4(AF_INET)，还是 pv6(AF_INET6)。
+- hostent->h_length，表示的是主机 ip 地址的长度。
+- hostent->h_addr_list，表示的是主机的 ip 地址，注意，这个是以网络字节序存储的。不要直接用 printf 带 %s 参数来打这个东西，会有问题的。所以到真正需要打印出这个 IP 的话，需要调用 inet_ntop。
 
 ```c
 #include <stdio.h>
@@ -152,6 +129,10 @@ int main(void)
 hostname: www.server1.com
 ip: 69.172.201.208
 ```
+
+参考：
+
+- <https://blog.csdn.net/daiyudong2020/article/details/51946080>
 
 # gethostbyname_r
 
@@ -303,19 +284,9 @@ freeaddrinfo(servinfo); // all done with this structure
 可以参考 MSDN 上的完整例子 [server](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-server-code?redirectedfrom=MSDN)
  和 [client](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-client-code?redirectedfrom=MSDN)。
 
+参考：
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- <https://en.wikipedia.org/wiki/Getaddrinfo>
+- <https://gist.github.com/jirihnidek/bf7a2363e480491da72301b228b35d5d>
+- <https://www.cnblogs.com/welhzh/p/12123373.html>
+- <https://blog.csdn.net/prettyshuang/article/details/50457086>
