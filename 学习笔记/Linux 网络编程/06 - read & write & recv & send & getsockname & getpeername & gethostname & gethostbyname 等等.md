@@ -2,7 +2,7 @@
 
 - [read&write 与 recv&send 区别](#read&write-与-recv&send-区别)
 - [getsockname 和 getpeername](#getsockname-和-getpeername)
-- [gethostname 和 gethostbyname 和 gethostbyaddr](#gethostname-和-gethostbyname-和-gethostbyaddr)
+- [gethostname 和 gethostbyname](#gethostname-和-gethostbyname)
 - [gethostbyaddr](#gethostbyaddr)
 - [getaddrinfo](#getaddrinfo)
 
