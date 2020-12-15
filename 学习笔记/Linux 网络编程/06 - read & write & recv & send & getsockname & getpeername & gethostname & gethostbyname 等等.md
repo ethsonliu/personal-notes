@@ -38,9 +38,9 @@ int getsockname(int sockfd, struct sockaddr *localaddr, socklen_t *addrlen);
 int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);
 ```
 
-对于这两个函数，如果函数调用成功，则返回0，如果调用出错，则返回-1。
+对于这两个函数，如果函数调用成功，则返回 0，如果调用出错，则返回 -1。
 
-使用这两个函数，我们可以通过套接字描述符来获取自己的 IP 地址和连接对端的 IP 地址。如在未调用 bind 函数的 TCP 客户端程序上，可以通过调用getsockname() 函数获取由内核赋予该连接的本地 IP 地址和本地端口号，还可以在 TCP 的服务器端 accept 成功后，通过 getpeername() 函数来获取当前连接的客户端的 IP 地址和端口号。
+使用这两个函数，我们可以通过套接字描述符来获取自己的 IP 地址和连接对端的 IP 地址。如在未调用 bind 函数的 TCP 客户端程序上，可以通过调用 getsockname() 函数获取由内核赋予该连接的本地 IP 地址和本地端口号，还可以在 TCP 的服务器端 accept 成功后，通过 getpeername() 函数来获取当前连接的客户端的 IP 地址和端口号。
 
 参考：<https://blog.csdn.net/workformywork/article/details/24554813>
 
