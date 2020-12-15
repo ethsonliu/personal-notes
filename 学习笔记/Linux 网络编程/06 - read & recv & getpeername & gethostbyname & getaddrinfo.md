@@ -219,20 +219,22 @@ getaddrinfo() + addrinfo 是一对更现代、方便的组合，用于取代 get
 #include <sys/socket.h>
 #include <netdb.h>
 
-int getaddrinfo(const char *node,     // e.g. "www.example.com" or IP
-                const char *service,  // e.g. "http" or port number
-                const struct addrinfo *hints, //指定一些基本值
-                struct addrinfo **res);//得到链表
-```
-
-```c
-#include <netdb.h>
-
-struct addrinfo {
-    int              ai_flags; // 常用的值是 AIPASSIVE。与 node 为 NULL 作为组合，用来做服务端。（passive 就是被动、被动接入的意思）
-    int              ai_family; // 常用的值是 AFUNSPEC，表示 ipv4，ipv6 皆可
-    int              ai_socktype; //SOCK_STREAM SOCK_DGRAM
-    int              ai_protocol; //TCP UDP...
+// 返回：0 为成功，其它都为失败（可以使用 gai_strerror(int) 把错误码转换为易读的字符串格式）
+// 参数 node：
+// 参数 service：
+// 参数 hints：可以为空。
+// 参数 res：结果集
+int getaddrinfo(const char *node,
+                const char *service,
+                const struct addrinfo *hints,
+                struct addrinfo **res);
+                
+struct addrinfo
+{
+    int              ai_flags;
+    int              ai_family;
+    int              ai_socktype;
+    int              ai_protocol;
     socklen_t        ai_addrlen;
     struct sockaddr *ai_addr;
     char            *ai_canonname;
@@ -240,64 +242,95 @@ struct addrinfo {
 };
 ```
 
+- node：域名（www.example.com）、主机名、点分十进制的 ip。 如果 hints.ai_flags 中设置了 AI_NUMERICHOST 标志，那么该参数只能是点分十进制，不能是域名，该标志的作用就是阻止进行域名解析。nodename 和 servname 可以设置为 NULL，但是不能同时为 NULL。
+- service：端口号、服务名（比如 "http"、"echo"...）。如果 hints.ai_flags 设置了 AI_NUMERICSERV 标志并且该参数未设置为 NULL，那么该参数必须是一个指向 10 进制的端口号字符串，不能设定成服务名，该标志就是用来阻止服务名解析。
+- hints：该参数指向用户设定的 struct addrinfo 结构体，只能设定该结构体中 ai_family、ai_socktype、ai_protocol 和 ai_flags 四个域，其他域必须设置为 0 或者 NULL, 通常是申请结构体变量后使用memset 初始化再设定指定的四个域。该参数可以设置为 NULL，等价于 ai_socktype = 0， ai_protocol = 0，ai_family = AF_UNSPEC， ai_flags = 0 （在 GNU Linux 中ai_flag = AI_V4MAPPED | AI_ADDRCONFIG,可以看作是 GNU 的改进）
+- res：该参数获取一个指向存储结果的 struct addrinfo 结构体列表，使用完成后调用 freeaddrinfo 释放存储结果空间。
+
+对于 addrinfo 各成员的分析，
+
+- ai_family，指定返回地址的协议簇，取值范围：AF_INET(IPv4)、AF_INET6(IPv6)、AF_UNSPEC(IPv4 and IPv6)
+- ai_socktype，具体类型请查看 struct addrinfo 中的 `enum __socket_type` 类型，用于设定返回地址的 socke t类型，常用的有 SOCK_STREAM、SOCK_DGRAM、SOCK_RAW, 设置为 0 表示所有类型都可以。
+- ai_protocol，具体取值范围请查看 Ip Protocol ，常用的有 IPPROTO_TCP、IPPROTO_UDP 等，设置为 0 表示所有协议。
+- ai_flags，附加选项，多个选项可以使用或操作进行结合，具体取值范围请查看 struct addrinfo ，下面详细介绍它的选项。
+
+**AI_PASSIVE**，如果设置了 AI_PASSIVE 标志，并且 node 是 NULL, 那么返回的 socket 地址可以用于 bind 函数，返回的地址是通配符地址(wildcard address, IPv4 时是 INADDR_ANY，IPv6 时是IN6ADDR_ANY_INIT)，这样应用程序(典型是 server)就可以使用这个通配符地址用来接收任何请求主机地址的连接；如果 node 不是 NULL，那么 AI_PASSIVE 标志被忽略。
+
+如果未设置 AI_PASSIVE 标志，返回的 socket 地址可以用于 connect(), sendto(), 或者 sendmsg() 函数。如果 node 是 NULL，那么网络地址会被设置为 lookback 接口地址(IPv4 时是 INADDR_LOOPBACK，IPv6 时是 IN6ADDR_LOOPBACK_INIT)，这种情况下，应用是想与运行在同一个主机上另一个应用通信。
+
+**AI_CANONNAME**，请求 canonical(主机的 official name)名字。如果设置了该标志，那么 res 返回的第一个 struct addrinfo 中的 ai_canonname 域会存储 official name 的指针。
+
+**AI_NUMERICHOST**，阻止域名解析，具体见参数 node 中的说明。
+
+**AI_NUMERICSERV**，阻止服务名解析，具体见参数 service 中的说明。
+
+**AI_V4MAPPED**，当 ai_family 指定为 AF_INT6(IPv6) 时，如果没有找到 IPv6 地址，那么会返回 IPv4-mapped IPv6 地址。也就是说如果没有找到 AAAA record(用来将域名解析到 IPv6 地址的 DNS 记录),那么就查询 A record(IPv4)，将找到的 IPv4 地址映射到 IPv6 地址, IPv4-mapped IPv6 地址其实是 IPv6 内嵌 IPv4 的一种方式，地址的形式为 "0::FFFF:a.b.c.d"，例如 "::ffff:192.168.89.9"(混合格式)这个地址仍然是一个 IPv6 地址，只是"0000:0000:0000:0000:0000:ffff:c0a8:5909"(16 机制格式)的另外一种写法罢了。
+
+当 ai_family 不 是AF_INT6(IPv6)时，该标志被忽略。
+
+**AI_ALL**，查询 IPv4 和 IPv6 地址。
+
+**AI_ADDRCONFIG**，只有当主机配置了 IPv4 地址才进行查询 IPv4 地址；只有当主机配置了 IPv6 地址才进行查询 IPv6 地址。
+
 例子，
 
-```c
-#define PORT "3490"
-struct addrinfo hints;
+```c++
+struct addrinfo *result = NULL, hints;
 
-//Step1. 指定选项
-memset(&hints, 0, sizeof hints);
-hints.ai_family = AF_UNSPEC;
+memset(&hints, 0 , sizeof(hints));
+hints.ai_family = AF_INET;
 hints.ai_socktype = SOCK_STREAM;
-hints.ai_flags = AI_PASSIVE; // use my IP
-
-//Step2. 调用getaddrinfo
-if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0) {
-    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-    return 1;
+hints.ai_protocol = IPPROTO_TCP;
+int ret = getaddrinfo("www.baidu.com", 0, &hints, &result);
+if (ret)
+{
+    return false;
 }
 
-//Step3. Use the result
-// loop through all the results and bind to the first we can
-for(p = servinfo; p != NULL; p = p->ai_next) {
-    if ((sockfd = socket(p->ai_family, p->ai_socktype,
-            p->ai_protocol)) == -1) {
-        perror("server: socket");
-        continue;
-    }
-
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
-            sizeof(int)) == -1) {
-        perror("setsockopt");
-        exit(1);
-    }
-
-    if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-        close(sockfd);
-        perror("server: bind");
-        continue;
-    }
-
-    break;
+char ip[64] = {0};
+if (inet_ntop(AF_INET, &(((struct sockaddr_in *)(result->ai_addr))->sin_addr), ip, 64))
+{
+    m_host = ip; // 转成点分十进制
+    freeaddrinfo(result);
+    return true;
 }
 
-if (p == NULL)  {
-    fprintf(stderr, "server: failed to bind\n");
-    return 2;//不需要freeaddrinfo()
-}
-
-//Step4. Be tidy。释放得到的serverinfo。
-//注意该语句位置在return 之后
-//说明，只有成功时，才会分配内存（需要释放）
-freeaddrinfo(servinfo); // all done with this structure
+freeaddrinfo(result);
 ```
-可以参考 MSDN 上的完整例子 [server](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-server-code?redirectedfrom=MSDN)
- 和 [client](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-client-code?redirectedfrom=MSDN)。
+
+另一个例子，
+
+```c++
+struct addrinfo *result = NULL, hints;
+
+memset(&hints, 0 , sizeof(hints));
+hints.ai_family = AF_INET;
+hints.ai_socktype = SOCK_STREAM;
+hints.ai_protocol = IPPROTO_TCP;
+int ret = getaddrinfo(m_host.c_str(), Int_To_String(m_port).c_str(), &hints, &result);
+if (ret)
+{
+    return false;
+}
+
+ret = connect(m_socketfd, result->ai_addr, result->ai_addrlen);
+if (ret == -1)
+{
+    freeaddrinfo(result);
+    return false;
+}
+
+freeaddrinfo(result);
+```
+
 
 参考：
 
+- <https://man7.org/linux/man-pages/man3/getaddrinfo.3.html>
 - <https://en.wikipedia.org/wiki/Getaddrinfo>
 - <https://gist.github.com/jirihnidek/bf7a2363e480491da72301b228b35d5d>
 - <https://www.cnblogs.com/welhzh/p/12123373.html>
 - <https://blog.csdn.net/prettyshuang/article/details/50457086>
+
+注：Windows 端的使用可以参考 MSDN 上的完整例子 [server](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-server-code?redirectedfrom=MSDN)
+ 和 [client](https://docs.microsoft.com/zh-cn/windows/win32/winsock/complete-client-code?redirectedfrom=MSDN)。
