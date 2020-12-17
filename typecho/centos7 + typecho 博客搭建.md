@@ -15,10 +15,11 @@ systemctl start nginx
 ## 三：安装 php
 
 ```bash
-yum -y install epel-release
-yum -y install php php-fpm
-php -v
-yum install php-mysql
+yum install epel-release
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+yum install php70w-common php70w-fpm php70w-opcache php70w-gd php70w-mysqlnd php70w-mbstring php70w-pecl-redis php70w-pecl-memcached php70w-devel
+
 systemctl enable php-fpm
 systemctl start php-fpm
 ```
