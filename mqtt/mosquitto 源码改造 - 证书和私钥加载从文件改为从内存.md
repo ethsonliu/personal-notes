@@ -1,16 +1,85 @@
-首先找到设置证书和私钥的位置，下面这个接口，位置在：`libs/options.c`，
+首先找到设置证书和私钥的位置，下面这个接口，位置在：`libs/options.c`，修改如下，
 
 ```c++
-libmosq_EXPORT int mosquitto_tls_set(struct mosquitto *mosq,
-		const char *cafile, const char *capath,
-		const char *certfile, const char *keyfile,
-		int (*pw_callback)(char *buf, int size, int rwflag, void *userdata))
+int mosquitto_tls_set(struct mosquitto *mosq, const char *cafile, const char *capath, const char *certfile, const char *keyfile, int (*pw_callback)(char *buf, int size, int rwflag, void *userdata))
 {
-    mosq->tls_cafile      = mosquitto__strdup(cafile);
-    mosq->tls_capath      = mosquitto__strdup(capath);
-    mosq->tls_certfile    = mosquitto__strdup(certfile);
-    mosq->tls_keyfile     = mosquitto__strdup(keyfile);
-    mosq->tls_pw_callback = pw_callback;
+#ifdef WITH_TLS
+	FILE *fptr;
+
+	if(!mosq || (!cafile && !capath) || (certfile && !keyfile) || (!certfile && keyfile)) return MOSQ_ERR_INVAL;
+
+	mosquitto__free(mosq->tls_cafile);
+	mosq->tls_cafile = NULL;
+	if(cafile){
+		fptr = mosquitto__fopen(cafile, "rt", false); // 根证书名
+		if(fptr){
+			fclose(fptr);
+		}else{
+			return MOSQ_ERR_INVAL;
+		}
+		mosq->tls_cafile = mosquitto__strdup(cafile);
+
+		if(!mosq->tls_cafile){
+			return MOSQ_ERR_NOMEM;
+		}
+	}
+
+	mosquitto__free(mosq->tls_capath);
+	mosq->tls_capath = NULL;
+	if(capath){
+		mosq->tls_capath = mosquitto__strdup(capath); // 根证书所在路径
+		if(!mosq->tls_capath){
+			return MOSQ_ERR_NOMEM;
+		}
+	}
+
+	mosquitto__free(mosq->tls_certfile);
+	mosq->tls_certfile = NULL;
+	if(certfile)
+	{
+		mosq->tls_certfile = mosquitto__strdup(certfile); // 客户端证书
+		if(!mosq->tls_certfile)
+			return MOSQ_ERR_NOMEM;
+	}
+	else
+	{
+		mosquitto__free(mosq->tls_cafile);
+		mosq->tls_cafile = NULL;
+
+		mosquitto__free(mosq->tls_capath);
+		mosq->tls_capath = NULL;
+		return MOSQ_ERR_INVAL;
+	}
+
+	mosquitto__free(mosq->tls_keyfile);
+	mosq->tls_keyfile = NULL;
+	if(keyfile)
+	{
+		mosq->tls_keyfile = mosquitto__strdup(keyfile); // 客户端私钥
+		if(!mosq->tls_keyfile)
+			return MOSQ_ERR_NOMEM;
+	}
+	else
+	{
+		mosquitto__free(mosq->tls_cafile);
+		mosq->tls_cafile = NULL;
+
+		mosquitto__free(mosq->tls_capath);
+		mosq->tls_capath = NULL;
+
+		mosquitto__free(mosq->tls_certfile);
+		mosq->tls_certfile = NULL;
+		return MOSQ_ERR_INVAL;
+	}
+
+	mosq->tls_pw_callback = pw_callback;
+
+
+	return MOSQ_ERR_SUCCESS;
+#else
+	return MOSQ_ERR_NOT_SUPPORTED;
+
+#endif
 }
 ```
 
