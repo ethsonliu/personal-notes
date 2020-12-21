@@ -399,3 +399,12 @@ static int net__init_ssl_ctx(struct mosquitto *mosq)
 #include <stdlib.h>
 ```
 
+还有一处，这是在我做 windows 端客户端开发的时候发现的。某些情况下，mosq 无法自动重连 server，跟踪发现是以下这个位置的问题，`lib/loop.c` 中的 `mosquitto_loop_forever` 修改如下，
+
+```c
+#ifndef WIN32
+		if(errno == EPROTO){
+			return rc;
+		}
+#endif
+```
