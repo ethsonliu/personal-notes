@@ -89,7 +89,7 @@ int mosquitto_tls_set(struct mosquitto *mosq, const char *cafile, const char *ca
 
 `lib/net_mosq.c` 中的 `static int net__init_ssl_ctx(struct mosquitto *mosq)` 中实现了主要 SSL 处理，
 
-改造后的代码为（都打了中文注释）：
+改造后的代码为：
 
 ```c
 if(mosq->tls_certfile){
