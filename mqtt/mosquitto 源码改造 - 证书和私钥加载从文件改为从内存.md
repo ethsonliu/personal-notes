@@ -93,104 +93,105 @@ int mosquitto_tls_set(struct mosquitto *mosq, const char *cafile, const char *ca
 
 ```c
 if(mosq->tls_certfile){
-				BIO  *tls_cert_bio = BIO_new_mem_buf((void*)mosq->tls_certfile, -1);
-				if (tls_cert_bio == NULL)
-					log__printf(mosq, MOSQ_LOG_ERR, "Error: [net__init_ssl_ctx] BIO_new_mem_buf(tls_certfile) return NULL\n");
+	BIO  *tls_cert_bio = BIO_new_mem_buf((void*)mosq->tls_certfile, -1);
+	if (tls_cert_bio == NULL)
+		log__printf(mosq, MOSQ_LOG_ERR, "Error: [net__init_ssl_ctx] BIO_new_mem_buf(tls_certfile) return NULL\n");
 
-				X509 *tls_cert_x509 = PEM_read_bio_X509(tls_cert_bio, NULL, 0, NULL);
-				if (tls_cert_x509 == NULL)
-					log__printf(mosq, MOSQ_LOG_ERR, "[net__init_ssl_ctx] PEM_read_bio_X509 return NULL\n");
+	X509 *tls_cert_x509 = PEM_read_bio_X509(tls_cert_bio, NULL, 0, NULL);
+	if (tls_cert_x509 == NULL)
+		log__printf(mosq, MOSQ_LOG_ERR, "[net__init_ssl_ctx] PEM_read_bio_X509 return NULL\n");
 
-				ret = SSL_CTX_use_certificate(mosq->ssl_ctx, tls_cert_x509);
+	ret = SSL_CTX_use_certificate(mosq->ssl_ctx, tls_cert_x509);
 
-				X509_free(tls_cert_x509);
-				BIO_set_close(tls_cert_bio, BIO_NOCLOSE);
-				BIO_free(tls_cert_bio);
+	X509_free(tls_cert_x509);
+	BIO_set_close(tls_cert_bio, BIO_NOCLOSE);
+	BIO_free(tls_cert_bio);
 
-				if(ret != 1){
+	if(ret != 1){
 #ifdef WITH_BROKER
-					log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client certificate, check bridge_certfile \"%s\".", mosq->tls_certfile);
+	    log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client certificate, check bridge_certfile \"%s\".", mosq->tls_certfile);
 #else
-					log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client certificate \"%s\".", mosq->tls_certfile);
+		log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client certificate \"%s\".", mosq->tls_certfile);
 #endif
 #if !defined(OPENSSL_NO_ENGINE)
-					ENGINE_FINISH(engine);
+	    ENGINE_FINISH(engine);
 #endif
-					net__print_ssl_error(mosq);
-					return MOSQ_ERR_TLS;
-				}
-			}
-			if(mosq->tls_keyfile){
-				if(mosq->tls_keyform == mosq_k_engine){
+		net__print_ssl_error(mosq);
+		return MOSQ_ERR_TLS;
+	}
+}
+
+if(mosq->tls_keyfile){
+	if(mosq->tls_keyform == mosq_k_engine){
 #if !defined(OPENSSL_NO_ENGINE)
-					UI_METHOD *ui_method = net__get_ui_method();
-					if(mosq->tls_engine_kpass_sha1){
-						if(!ENGINE_ctrl_cmd(engine, ENGINE_SECRET_MODE, ENGINE_SECRET_MODE_SHA, NULL, NULL, 0)){
-							log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to set engine secret mode sha1");
-							ENGINE_FINISH(engine);
-							net__print_ssl_error(mosq);
-							return MOSQ_ERR_TLS;
-						}
-						if(!ENGINE_ctrl_cmd(engine, ENGINE_PIN, 0, mosq->tls_engine_kpass_sha1, NULL, 0)){
-							log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to set engine pin");
-							ENGINE_FINISH(engine);
-							net__print_ssl_error(mosq);
-							return MOSQ_ERR_TLS;
-						}
-						ui_method = NULL;
-					}
-					pkey = ENGINE_load_private_key(engine, mosq->tls_keyfile, ui_method, NULL);
-					if(!pkey){
-						log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load engine private key file \"%s\".", mosq->tls_keyfile);
-						ENGINE_FINISH(engine);
-						net__print_ssl_error(mosq);
-						return MOSQ_ERR_TLS;
-					}
-					if(SSL_CTX_use_PrivateKey(mosq->ssl_ctx, pkey) <= 0){
-						log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to use engine private key file \"%s\".", mosq->tls_keyfile);
-						ENGINE_FINISH(engine);
-						net__print_ssl_error(mosq);
-						return MOSQ_ERR_TLS;
-					}
+        UI_METHOD *ui_method = net__get_ui_method();
+        if(mosq->tls_engine_kpass_sha1){
+        	if(!ENGINE_ctrl_cmd(engine, ENGINE_SECRET_MODE, ENGINE_SECRET_MODE_SHA, NULL, NULL, 0)){
+        		log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to set engine secret mode sha1");
+        		ENGINE_FINISH(engine);
+        		net__print_ssl_error(mosq);
+        		return MOSQ_ERR_TLS;
+        	}
+        	if(!ENGINE_ctrl_cmd(engine, ENGINE_PIN, 0, mosq->tls_engine_kpass_sha1, NULL, 0)){
+        		log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to set engine pin");
+        		ENGINE_FINISH(engine);
+        		net__print_ssl_error(mosq);
+        		return MOSQ_ERR_TLS;
+        	}
+        	ui_method = NULL;
+        }
+        pkey = ENGINE_load_private_key(engine, mosq->tls_keyfile, ui_method, NULL);
+        if(!pkey){
+        	log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load engine private key file \"%s\".", mosq->tls_keyfile);
+        	ENGINE_FINISH(engine);
+        	net__print_ssl_error(mosq);
+        	return MOSQ_ERR_TLS;
+        }
+        if(SSL_CTX_use_PrivateKey(mosq->ssl_ctx, pkey) <= 0){
+        	log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to use engine private key file \"%s\".", mosq->tls_keyfile);
+        	ENGINE_FINISH(engine);
+        	net__print_ssl_error(mosq);
+        	return MOSQ_ERR_TLS;
+        }
 #endif
-				}else{
-					BIO  *tls_key_bio = BIO_new_mem_buf((void*)mosq->tls_keyfile, -1);
-					if (tls_key_bio == NULL)
-						log__printf(mosq, MOSQ_LOG_ERR, "[net__init_ssl_ctx] BIO_new_mem_buf(tls_keyfile) return NULL\n");
+	}else{
+		BIO  *tls_key_bio = BIO_new_mem_buf((void*)mosq->tls_keyfile, -1);
+		if (tls_key_bio == NULL)
+			log__printf(mosq, MOSQ_LOG_ERR, "[net__init_ssl_ctx] BIO_new_mem_buf(tls_keyfile) return NULL\n");
 
-					RSA  *tls_rsa_key = PEM_read_bio_RSAPrivateKey(tls_key_bio, NULL, 0, NULL);
-					if (tls_rsa_key == NULL)
-						log__printf(mosq, MOSQ_LOG_ERR, "[net__init_ssl_ctx] PEM_read_bio_RSAPrivateKey return NULL\n");
+		RSA  *tls_rsa_key = PEM_read_bio_RSAPrivateKey(tls_key_bio, NULL, 0, NULL);
+		if (tls_rsa_key == NULL)
+			log__printf(mosq, MOSQ_LOG_ERR, "[net__init_ssl_ctx] PEM_read_bio_RSAPrivateKey return NULL\n");
 
-					ret = SSL_CTX_use_RSAPrivateKey(mosq->ssl_ctx, tls_rsa_key);
+		ret = SSL_CTX_use_RSAPrivateKey(mosq->ssl_ctx, tls_rsa_key);
 
-					RSA_free(tls_rsa_key);
-					BIO_set_close(tls_key_bio, BIO_NOCLOSE);
-					BIO_free(tls_key_bio);
+		RSA_free(tls_rsa_key);
+		BIO_set_close(tls_key_bio, BIO_NOCLOSE);
+		BIO_free(tls_key_bio);
 
-					if(ret != 1){
+		if(ret != 1){
 #ifdef WITH_BROKER
-						log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client key file, check bridge_keyfile \"%s\".", mosq->tls_keyfile);
+			log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client key file, check bridge_keyfile \"%s\".", mosq->tls_keyfile);
 #else
-						log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client key file \"%s\".", mosq->tls_keyfile);
+			log__printf(mosq, MOSQ_LOG_ERR, "Error: Unable to load client key file \"%s\".", mosq->tls_keyfile);
 #endif
 #if !defined(OPENSSL_NO_ENGINE)
-						ENGINE_FINISH(engine);
+			ENGINE_FINISH(engine);
 #endif
-						net__print_ssl_error(mosq);
-						return MOSQ_ERR_TLS;
-					}
-				}
-				ret = SSL_CTX_check_private_key(mosq->ssl_ctx);
-				if(ret != 1){
-					log__printf(mosq, MOSQ_LOG_ERR, "Error: Client certificate/key are inconsistent.");
+			net__print_ssl_error(mosq);
+			return MOSQ_ERR_TLS;
+		}
+	}
+	ret = SSL_CTX_check_private_key(mosq->ssl_ctx);
+    if(ret != 1){
+		log__printf(mosq, MOSQ_LOG_ERR, "Error: Client certificate/key are inconsistent.");
 #if !defined(OPENSSL_NO_ENGINE)
-					ENGINE_FINISH(engine);
+		ENGINE_FINISH(engine);
 #endif
-					net__print_ssl_error(mosq);
-					return MOSQ_ERR_TLS;
-				}
-			}
+		net__print_ssl_error(mosq);
+		return MOSQ_ERR_TLS;
+	}
+}
 ```
 
 从注释就可以看出来了，改的地方就两处：在注释 “改为内存加载” 那里。参考：<https://stackoverflow.com/questions/3810058/read-certificate-files-from-memory-instead-of-a-file-using-openssl>
