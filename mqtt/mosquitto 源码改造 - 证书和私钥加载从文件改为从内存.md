@@ -228,3 +228,5 @@ if(mosq->tls_keyfile){
 		}
 #endif
 ```
+
+在此次改造中还发现，keepalive 的值不能小于 5，否则会报错，参见 <https://github.com/eclipse/mosquitto/commit/8e7e4a9d9a682c710268e050d3c3db1e9e372501>。
