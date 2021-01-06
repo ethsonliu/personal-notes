@@ -73,6 +73,8 @@ Program terminated with signal 11, Segmentation fault.
 
 可以清楚地看到，程序在第 10 行代码， func() 函数内，执行 `*p = 3` 时发生了 segment 错误。
 
+另外，输入 `bt` 可以查看整个调用树。
+
 ## release 版调试
 
 众所周知，发布程序时必须是 release 版的，杜绝 debug 版。下面就来看看如何调试 release 版程序生成的 core 文件。
