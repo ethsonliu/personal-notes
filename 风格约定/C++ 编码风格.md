@@ -826,6 +826,8 @@ private slots:
 
 其它项目视风格统一而定。
 
+其实放在左边还是右边都是可以的，但只要保证一个项目里的代码风格保持一致，就可以了。
+
 ## 参考
 
 - [Google 开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/contents/)
