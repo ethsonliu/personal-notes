@@ -321,7 +321,7 @@ drwxrwxrwx 2 root    root        4096 Jun 14 13:28 php-version/
 -rw-r--r-- 1 root    root         746 Sep 20 17:00 setting.json
 drwxrwxrwx 2 shawvyu shawvyu     4096 Jul 26 15:05 shawvyu/
 
-## 列出文件和文件夹（按大小排序 du -s * | sort -nr），大小是 KB。
+## 列出当前目录下的所有文件和文件夹大小（若按大小排序，则是 du -s * | sort -nr），大小是 KB
 [root@EMQ home]# du -s *
 4	au.sh
 68	certbot-auto
