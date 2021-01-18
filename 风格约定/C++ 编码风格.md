@@ -319,6 +319,18 @@ void func()
 const int kDaysInAWeek = 7;
 ```
 
+对于全局变量，C++ 不建议使用全局变量，而是用类的 static 代替，必要时带有 static 的 init 函数初始化，如果非要使用，按如下规则，
+
+```c++
+#include <iostream>
+
+int gCount = 0; // 以小写的 g 开头，后面的单词首字母大写
+
+void func()
+{
+}
+```
+
 ### 函数命名
 
 常规函数，除第一个单词首字母小写外，后面的都大写，例如：
