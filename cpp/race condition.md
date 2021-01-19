@@ -1,0 +1,2 @@
+- <https://stackoverflow.com/questions/34510/what-is-a-race-condition>
+- <https://zh.wikipedia.org/wiki/%E7%AB%B6%E7%88%AD%E5%8D%B1%E5%AE%B3>
