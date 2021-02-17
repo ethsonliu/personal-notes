@@ -63,17 +63,23 @@
 
 **解释类模板和模板类的区别**
 
+参考 <https://blog.csdn.net/sunxx1986/article/details/6619144>
+
 **简述内联函数**
+
+参考 <https://blog.csdn.net/zqixiao_09/article/details/50877383>
 
 **C++ 是如何进行内存管理的**
 
+参考 <https://blog.csdn.net/qq_29229045/article/details/79530173>
+
 **父类和子类是不是在同一个虚函数表**
+
+参考 <https://blog.csdn.net/haoel/article/details/1948051> 和 <https://blog.csdn.net/lihao21/article/details/50688337>
 
 **lambda 函数的特点，和普通函数相比有什么优点**
 
-**简述 C++ 的内存分区**
-
-
+参考 <https://www.zhihu.com/question/20125256>
 
 ## GoLang
 
