@@ -81,6 +81,22 @@
 
 参考 <https://www.zhihu.com/question/20125256>
 
+**C++ 中，一个类的成员函数为什么不能既是 template 又是 virtual 的**
+
+```c++
+class Animal{
+  public:
+      template<typename T>
+      virtual void make_sound(){
+        //...
+      }
+};
+```
+  
+为啥勒？这个问题涉及到一点 C++ 的（实现）机制，所以很少人能一下子答上来。
+
+因为 C++ 的编译与链接模型是"分离"的(至少是部分原因吧)。从 Unix/C 开始，一个 C/C++ 程序就可以被分开编译，然后用一个 linker 链接起来。这种模型有一个问题，就是各个编译单元可能对另一个编译单元一无所知。一个 function template 最后到底会被 instantiate 为多少个函数，要等整个程序(所有的编译单元)全部被编译完成才知道。同时，virtual function 的实现是利用了一个虚函数表的东西，这种实现中，一个类的内存布局(或者说虚函数表的内存布局)需要在这个类编译完成的时候就被完全确定。所以，由上面的矛盾可知，C++ 的 member function 不能既是 template 又是 virtual 的。
+
 ## GoLang
 
 
