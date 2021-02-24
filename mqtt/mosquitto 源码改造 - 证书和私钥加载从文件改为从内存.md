@@ -93,6 +93,7 @@ int mosquitto_tls_set(struct mosquitto *mosq, const char *cafile, const char *ca
 
 ```c
 if(mosq->tls_certfile){
+	// 改为内存加载
 	BIO  *tls_cert_bio = BIO_new_mem_buf((void*)mosq->tls_certfile, -1);
 	if (tls_cert_bio == NULL)
 		log__printf(mosq, MOSQ_LOG_ERR, "Error: [net__init_ssl_ctx] BIO_new_mem_buf(tls_certfile) return NULL\n");
@@ -155,6 +156,7 @@ if(mosq->tls_keyfile){
         }
 #endif
 	}else{
+		// 改为内存加载
 		BIO  *tls_key_bio = BIO_new_mem_buf((void*)mosq->tls_keyfile, -1);
 		if (tls_key_bio == NULL)
 			log__printf(mosq, MOSQ_LOG_ERR, "[net__init_ssl_ctx] BIO_new_mem_buf(tls_keyfile) return NULL\n");
