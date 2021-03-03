@@ -92,7 +92,7 @@ func main() {
 ```
 
 ```golang
-// 客户端发送
+// 客户端接收
 package main
 
 import (
@@ -159,7 +159,7 @@ func main() {
 ```
 
 ```golang
-// 服务端接收
+// 服务端发送
 package main
 
 import (
