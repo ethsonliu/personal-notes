@@ -1,5 +1,5 @@
 ```golang
-// server 端
+// server 端发送
 func main() {
   http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
     flusher, ok := w.(http.Flusher)
@@ -21,7 +21,7 @@ func main() {
 ```
 
 ```golang
-// client 端
+// client 端发送
 package main
 
 import (
@@ -90,6 +90,8 @@ func main() {
 
 }
 ```
+
+流的接收可以参考 <https://stackoverflow.com/questions/59170937/golang-parsing-chunked-http-responses-from-socket-read-chunk-by-chunk>
 
 ## 参考
 
