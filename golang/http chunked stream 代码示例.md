@@ -95,3 +95,4 @@ func main() {
 
 - <https://stackoverflow.com/questions/26769626/send-a-chunked-http-response-from-a-go-server>
 - <https://gist.github.com/yinchunxiang/ef170ce11927a2f057a32870e2dd4cd2>
+- <https://stackoverflow.com/questions/19267336/golang-http-handle-big-file-upload>
