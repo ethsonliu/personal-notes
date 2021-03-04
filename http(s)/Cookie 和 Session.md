@@ -1,0 +1,2 @@
+- [聊一聊 cookie](https://segmentfault.com/a/1190000004556040)
+- [Cookie/Session 的机制与安全 ](https://harttle.land/2015/08/10/cookie-session.html)
