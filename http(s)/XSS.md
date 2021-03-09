@@ -1,1 +1,2 @@
-
+- [xss 漏洞攻击与防御](https://www.jianshu.com/p/790fb57f3acb)
+- [前端安全系列（一）：如何防止 XSS 攻击？](https://tech.meituan.com/2018/09/27/fe-security.html)
