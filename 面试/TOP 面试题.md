@@ -31,7 +31,7 @@
 
 **简述 C++ 编译的过程**
 
-参考 <https://tech.meituan.com/2020/12/10/apache-kylin-practice-in-meituan.html>
+参考 <https://tech.meituan.com/2020/12/10/apache-kylin-practice-in-meituan.html>、<https://tech.meituan.com/2020/12/10/apache-kylin-practice-in-meituan.html>
 
 **什么是菱形继承问题**
 
