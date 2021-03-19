@@ -1,4 +1,5 @@
 - [SSL 双向认证和 SSL 单向认证的区别](https://www.jianshu.com/p/fb5fe0165ef2)
+- [安全背后: 浏览器是如何校验证书的](https://cjting.me/2021/03/02/how-to-validate-tls-certificate/)
 
 证书包含：签发者、证书用途、公钥、加密算法、hash 算法、签发和到期时间...私钥在 CA 手中。
 
