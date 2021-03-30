@@ -54,7 +54,7 @@ pthread_mutex_unlock(&mutex);
 
 If a signal is delivered to a thread waiting for a condition variable, upon return from the signal handler the thread resumes waiting for the condition variable as if it was not interrupted, or it shall return zero due to spurious wakeup.
 
-也就是说，唤醒条件的信号，可以唤醒多个线程，但是只能允许一个信号访问，也就是说，因此等待线程需要不断的用 while 轮询一直到达到条件了才行。
+也就是说，唤醒条件的信号，可以唤醒多个线程，但是只能允许一个信号访问，也就是说，等待线程需要不断的用 while 轮询一直到达到条件了才行。
 
 ## pthread_cond_wait
 
