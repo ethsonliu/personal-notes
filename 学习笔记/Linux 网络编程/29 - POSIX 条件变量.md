@@ -56,6 +56,25 @@ If a signal is delivered to a thread waiting for a condition variable, upon retu
 
 也就是说，唤醒条件的信号，可以唤醒多个线程，但是只能允许一个信号访问，也就是说，等待线程需要不断的用 while 轮询一直到达到条件了才行。
 
+假设有两个线程（我就用伪代码了）：
+
+```
+//thread 1
+while(0<x<10)
+    pthread_cond_wait(); // I
+
+//thread 2
+while(5<x<15)
+    pthread_cond_wait(); // II
+```
+
+如果某段时间内 x == 8，那么两个线程相继进入等待。thread 1 停留在 I 处等待 phtread_cond_signal 到来 thread 2 停留在 II 处等待 phtread_cond_signal 到来。
+
+然后，另一个线程 3 修改 x = 12，然后执行了 phtread_cond_signal。
+
+如果 while 都换成 if 的话，那么线程 1、2 都被唤醒了，但是，此时 x==12，应该线程 1 继续等待才对，换成 while 的话就可避免了。
+
+
 ## pthread_cond_wait
 
 关于 pthread_cond_wait 的具体实现，
