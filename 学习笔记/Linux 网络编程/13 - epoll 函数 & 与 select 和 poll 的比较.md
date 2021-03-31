@@ -24,6 +24,14 @@ epoll 除了提供 select/poll 那种 IO 事件的水平触发 （Level Triggere
 
 ![](https://github.com/ethsonliu/personal-notes/blob/master/_image/038.png)
 
+**总结：**
+
+**一颗红黑树，一张准备就绪句柄链表，少量的内核 cache，就帮我们解决了大并发下的 socket 处理问题。**
+
+- 执行 epoll_create 时，创建了红黑树和就绪链表；
+- 执行 epoll_ctl 时，如果增加 socket 句柄，则检查在红黑树中是否存在，存在立即返回，不存在则添加到树干上，然后向内核注册回调函数，用于当中断事件来临时向准备就绪链表中插入数据；
+- 执行 epoll_wait 时立刻返回准备就绪链表里的数据即可。
+
 epoll 操作过程需要三个接口，分别如下：
 
 ```c
