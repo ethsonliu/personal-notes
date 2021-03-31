@@ -14,6 +14,8 @@ epoll 除了提供 select/poll 那种 IO 事件的水平触发 （Level Triggere
 
 ### epoll 实现机制
 
+![](https://github.com/ethsonliu/personal-notes/blob/master/_image/037.webp)
+
 epoll 在被内核初始化时（操作系统启动），同时会开辟出 epoll 自己的内核高速 cache 区，用于安置每一个我们想监控的 socket。这些 socket 会以红黑树的形式保存在内核 cache 里，以支持快速的查找、插入、删除。
 
 这个内核高速 cache 区，就是建立连续的物理内存页，然后在之上建立 slab 层。简单的说，就是物理上分配好你想要的 size 的内存对象，每次使用时都是使用空闲的已分配好的对象。
