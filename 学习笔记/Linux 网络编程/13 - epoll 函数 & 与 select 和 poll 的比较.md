@@ -22,6 +22,8 @@ epoll 除了提供 select/poll 那种 IO 事件的水平触发 （Level Triggere
 
 那么，这个准备就绪 list 链表是怎么维护的呢？当我们执行 epoll_ctl 时，除了把 socket 放到 epoll 文件系统里 file 对象对应的红黑树上之外，还会给内核中断处理程序注册一个回调函数，告诉内核，如果这个句柄的中断到了，就把它放到准备就绪 list 链表里。所以，当一个 socket 上有数据到了，内核在把网卡上的数据 copy 到内核中后，就来把 socket 插入到准备就绪链表里了。
 
+![](https://github.com/ethsonliu/personal-notes/blob/master/_image/038.png)
+
 epoll 操作过程需要三个接口，分别如下：
 
 ```c
