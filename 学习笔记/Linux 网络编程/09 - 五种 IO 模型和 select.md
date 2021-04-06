@@ -1,6 +1,6 @@
 ## 五种 I/O 模型
 
-参考 [5 种网络 IO 模型](https://www.cnblogs.com/findumars/p/6361627.html) 或者网络编程 6.2 节。
+参考 <https://blog.csdn.net/xiexievv/article/details/44976215> 
 
 ## 使用 select 改写回射客户端程序
 
