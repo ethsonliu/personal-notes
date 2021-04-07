@@ -4,6 +4,7 @@
 - [POSIX 互斥锁](#POSIX-互斥锁)
 - [自旋锁和读写锁](#自旋锁和读写锁)
 - [信号量互斥锁实现消费者生产者](#信号量互斥锁实现消费者生产者)
+- [乐观锁悲观锁自旋锁](#乐观锁悲观锁自旋锁)
 
 ## POSIX 信号量
 
@@ -433,3 +434,14 @@ int main(int argc, char** argv)
     return 0;
 }
 ```
+
+## 乐观锁悲观锁自旋锁
+
+**乐观锁悲观锁**
+
+https://www.cnblogs.com/kismetv/p/10787228.html
+
+**自旋锁**
+
+https://www.cnblogs.com/cxuanBlog/p/11679883.html
+
