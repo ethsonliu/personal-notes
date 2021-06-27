@@ -90,6 +90,12 @@ export Ali_Key=""
 export Ali_Secret=""
 
 acme.sh --issue --dns dns_ali -d example.com -d www.example.com
+
+acme.sh --install-cert -d example.com \
+--key-file       /usr/local/cert/ethsonliu.com/key.pem  \
+--fullchain-file /usr/local/cert/ethsonliu.com/fullchain.pem \
+--reloadcmd     "service nginx force-reload"
+
 ```
 
 参考：<https://github.com/acmesh-official/acme.sh>
