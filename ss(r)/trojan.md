@@ -81,7 +81,7 @@ iperf3 -s -p 9999
 ## acme 证书生成
 
 ```shell
-# 如果执行超时，请参考 https://github.com/acmesh-official/acme.sh#1-how-to-install
+# 如果执行超时，请参考 https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E
 curl  https://get.acme.sh | sh
 
 alias acme.sh=~/.acme.sh/acme.sh
