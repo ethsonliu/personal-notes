@@ -91,8 +91,10 @@ alias acme.sh=~/.acme.sh/acme.sh
 export Ali_Key=""
 export Ali_Secret=""
 
+# 申请证书
 acme.sh --issue --dns dns_ali -d example.com -d www.example.com
 
+# 安装证书到指定目录
 acme.sh --install-cert -d example.com \
 --key-file       /usr/local/cert/ethsonliu.com/key.pem  \
 --fullchain-file /usr/local/cert/ethsonliu.com/fullchain.pem \
