@@ -12,6 +12,15 @@ systemctl start nginx
 
 参考 <https://github.com/ethsonliu/personal-notes/blob/master/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/CentOS%207%20%E5%AE%89%E8%A3%85%20MySQL%208.md>
 
+不要安装版本 8。如果要安装，要注意在 `/etc/my.cnf` 中加入，
+
+```
+[mysqld]
+default_authentication_plugin=mysql_native_password
+```
+
+然后重启。
+
 ## 三：安装 php
 
 ```bash
