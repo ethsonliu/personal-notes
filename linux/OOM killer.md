@@ -7,7 +7,7 @@ Linux 内核有个机制叫 OOM killer(Out Of Memory killer)，该机制会监�
 **如何查看**
 
 ```
-grep "Out of memory" /var/log/messages`
+grep "Out of memory" /var/log/messages
 ```
 
 查看系统日志方法，
