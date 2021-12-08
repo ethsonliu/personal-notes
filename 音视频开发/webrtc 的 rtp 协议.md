@@ -195,11 +195,13 @@ WebRtc中，RTT的计算代码
 
 ### Jitter的计算
 
+```
 Jitter的统计：D(i,j) = (Rj - Ri) - (Sj - Si) = (Rj - Sj) - (Ri - Si)
-  
 平均Jitter的统计：J(i) = J(i-1) + (|D(i-1,i)| - J(i-1))/16
+```
 
 Webrtc中Jitter的计算代码
+
 ```
   void StreamStatisticianImpl::UpdateJitter(const RTPHeader& header,
                                     NtpTime receive_time) {
