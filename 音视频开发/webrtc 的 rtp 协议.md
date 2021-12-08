@@ -1,3 +1,5 @@
+# 第一部分
+
 WebRTC 使用 RTP 协议传输音视频，也依赖于 RTP 协议提供的信息处理丢包。本文尝试结合 [RFC 3350](https://tools.ietf.org/html/rfc3550) 对 RTP 协议做一个较为简洁的介绍，方便大家查阅。
 
 RTP（Real-time Transport Protocol，实时传输协议）是一种运行在 OSI 应用层的协议，通常基于 UDP 协议，但也支持 TCP 协议。它提供了端到端的实时传输数据的功能，但不包含资源预留存 [^1]（resource reservation）、不保证实时传输质量，这些功能都需要 WebRTC 自己实现。
@@ -159,6 +161,104 @@ SR 和 RR 具有相同的 report block 结构，其中各个字段的含义分�
 图中 RR 的 LSR 为 t1，且 DLSR 为 `t3 - t2` ，而 Sender 在 t4 收到 RR。所以 `RTT = t4 - t3 + t2 - t1 = t4 - (t3 - t2) - t1 = t4 - DLSR - LSR` 。
 
 以上就是本文对 RTP 协议的全部介绍内容了。虽然不够全面，但对于我们理解 WebRTC 的丢包处理已然足够。若想要了解更多 RTP 协议的细节，建议直接直接查阅 [RFC 3350](https://tools.ietf.org/html/rfc3550)。
+
+# 第二部分：在WEBRTC中，RTT,Jitter以及丢包率的计算方法
+
+### RTT的计算
+
+```
+time ArriveTime =  this reception report block is received
+RTT = ArriveTime - LSR - DLSR
+```
+
+WebRtc中，RTT的计算代码
+
+```
+  void RTCPReceiver::HandleReportBlock(const ReportBlock& report_block,
+                                       PacketInformation* packet_information,
+                                       uint32_t remote_ssrc) {
+  	......
+
+		uint32_t send_time_ntp = report_block.last_sr();
+
+  	uint32_t delay_ntp = report_block.delay_since_last_sr();
+
+  	// Local NTP time.
+  	uint32_t receive_time_ntp = CompactNtp(clock_->CurrentNtpTime());
+  	
+  	// RTT in 1/(2^16) seconds.
+  	uint32_t rtt_ntp = receive_time_ntp - delay_ntp - send_time_ntp;
+
+  	......
+  }
+```
+
+### Jitter的计算
+
+Jitter的统计：D(i,j) = (Rj - Ri) - (Sj - Si) = (Rj - Sj) - (Ri - Si)
+  
+平均Jitter的统计：J(i) = J(i-1) + (|D(i-1,i)| - J(i-1))/16
+
+Webrtc中Jitter的计算代码
+```
+  void StreamStatisticianImpl::UpdateJitter(const RTPHeader& header,
+                                    NtpTime receive_time) {
+    uint32_t receive_time_rtp =
+        NtpToRtp(receive_time, header.payload_type_frequency);
+    uint32_t last_receive_time_rtp =
+        NtpToRtp(last_receive_time_ntp_, header.payload_type_frequency);
+    int32_t time_diff_samples = (receive_time_rtp - last_receive_time_rtp) -
+        (header.timestamp - last_received_timestamp_);
+  
+    time_diff_samples = std::abs(time_diff_samples);
+  
+    // lib_jingle sometimes deliver crazy jumps in TS for the same stream.
+    // If this happens, don't update jitter value. Use 5 secs video frequency
+    // as the threshold.
+    if (time_diff_samples < 450000) {
+      // Note we calculate in Q4 to avoid using float.
+      int32_t jitter_diff_q4 = (time_diff_samples << 4) - jitter_q4_;
+      jitter_q4_ += ((jitter_diff_q4 + 8) >> 4);
+      
+      .......
+  }
+}
+```
+
+### 丢包率的计算
+
+```
+fraction lost = 此次的丢包数*255/100
+cumulative loss = 累计丢包数
+```
+
+Webrtc中的丢包率计算代码
+
+```
+  RtcpStatistics StreamStatisticianImpl::CalculateRtcpStatistics() {
+    RtcpStatistics stats;
+    
+  ...
+   
+    int32_t missing = 0;
+    if (exp_since_last > rec_since_last) {
+      missing = (exp_since_last - rec_since_last);
+    }
+    uint8_t local_fraction_lost = 0;
+    if (exp_since_last) {
+      // Scale 0 to 255, where 255 is 100% loss.
+      local_fraction_lost =
+          static_cast<uint8_t>(255 * missing / exp_since_last);
+    }
+    stats.fraction_lost = local_fraction_lost;
+  
+    // We need a counter for cumulative loss too.
+    // TODO(danilchap): Ensure cumulative loss is below maximum value of 2^24.
+    cumulative_loss_ += missing;
+    stats.cumulative_lost = cumulative_loss_;
+
+```
+
 
 [^1]: 参见维基百科 [资源预留协议](https://zh.wikipedia.org/wiki/%E8%B5%84%E6%BA%90%E9%A2%84%E7%95%99%E5%8D%8F%E8%AE%AE)
 [^2]: 引用自维基百科 [Real-time Transport Protocol](https://en.m.wikipedia.org/wiki/Real-time_Transport_Protocol)
