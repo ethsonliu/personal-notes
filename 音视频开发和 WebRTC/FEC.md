@@ -1,3 +1,10 @@
+## 目录
+
+- [基础知识](#基础知识)
+- [webrtc 中的 fec](#webrtc-中的-fec)
+
+## 基础知识
+
 FEC（Forward Error Correction）前向纠错，是一种通过在网络传输中增加数据包的冗余信息，使得接收端能够在网络发生丢包后利用这些冗余信息直接恢复出丢失的数据包的一种方法。
 
 **FEC 的基础理论是异或**。异或的规则如下，
@@ -63,6 +70,61 @@ c = (a ^ a) ^ (b ^ b) ^ c = (a ^ b) ^ (a ^ b ^ c) = a ^ b ^ d
 ```
 由上述公式推导即可知道，这 4 个 packet，任意丢失 1 个 packet，均可以由其他 3 个 packet 恢复出来。
 
+## webrtc 中的 fec
 
+解 fec 包，源码实现在 ulpfec_receiver_impl.cc，如下，
 
+```
+//初始化对象
+void init() {
+    std::unique_ptr<webrtc::UlpfecReceiver> fec_receiver_;
+ 
+    fec_receiver_.reset(webrtc::UlpfecReceiver::Create(this));
+}  
+ 
+//添加rtp包并解析
+void addAndParse(packet) {
+    webrtc::RTPHeader hacky_header;
+    hacky_header.headerLength = rtp_header->getHeaderLength();
+    hacky_header.sequenceNumber = rtp_header->getSeqNumber();
+    if (fec_receiver_->AddReceivedRedPacket(hacky_header,(const uint8_t*) packet->data, packet->length, external_ulp_pt_) == 0 {
+   fec_receiver_->ProcessReceivedFec(); //会间接调用到callback
+    }
+}
+ 
+//callback 
+//需要继承类 ： public webrtc::RtpData
+OnRecoveredPacket(const uint8_t* rtp_packet, size_t rtp_packet_length) {
+// 处理rtp包
+}
+```
 
+封fec包，一般都使用red封装格式，如下，
+
+```
+void init() {
+ 
+    webrtc::FecProtectionParams key_fec_params_{1, 60, webrtc::kFecMaskRandom}
+    fec_generator_.reset(new webrtc::UlpfecGenerator());
+        fec_generator_->SetFecParameters(key_fec_params_);
+}
+ 
+void buildFec(rtp) {
+    red_packet = buildRedPacket(rtp);
+ 
+    //发送red_packet
+ 
+    fec_generator_->AddRtpPacketAndGenerateFec((const uint8_t *)rtp->data, payload_length, header_length);
+ 
+uint16_t num_fec_packets = fec_generator_->NumAvailableFecPackets();
+ 
+    if (num_fec_packets > 0) {
+        uint16_t first_fec_sequence_number = AllocateSequenceNumber(num_fec_packets); //fec 包分配序列号， 紧随在原始rtp包之后
+ 
+        fec_packets = fec_generator_->GetUlpfecPacketsAsRed(external_red_pt_, external_ulp_pt_, first_fec_sequence_number,header_length);
+    }
+    for (const auto& fec_packet : fec_packets) {
+    //直接发送fec包
+    ｝
+}
+```
