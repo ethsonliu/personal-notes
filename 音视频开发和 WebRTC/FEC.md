@@ -112,7 +112,36 @@ c = (a ^ a) ^ (b ^ b) ^ c = (a ^ b) ^ (a ^ b ^ c) = a ^ b ^ d
 
 ## webrtc 中的 fec
 
-解 fec 包，源码实现在 ulpfec_receiver_impl.cc，如下，
+webrtc 中使用的是 ULP FEC，ULP 是 Uneven Level Protection 的缩写，意为不均等保护，可以针对数据的重要程度提供不同级别的保护。一般音视频的媒体数据，不同部分的重要程度是不一样的，越靠前的数据越重要，对靠前的数据使用更多的 FEC 包来保护，靠后的数据使用更少的 FEC 包来保护，这样就可更充分的利用带宽。
+
+**fec 包结构**
+
+![image](https://user-images.githubusercontent.com/33995130/146920102-5d82a821-f050-45c1-ab78-7fb1749eb6f2.png)
+
+RTP Header 就是标准的 RTP 头， FEC Header 固定为 10 个字节，FEC Header 后面可以跟着多个 Level，每个 Level 保护着不同的数据。
+
+**fec header 结构**
+
+![image](https://user-images.githubusercontent.com/33995130/146920171-afcadb41-71bf-4a6e-98fa-6fe6c6163122.png)
+
+- E: 保留的扩展标志位，必须设置为 0
+- L:长掩码标志位。当 L 设置为 0 时，ulp header 的 mask 长度为 16bits，当 L 设置为 1 时，ulp header 的 mask 长度为 48bits。
+- P、X、CC、PT 的值由此 fec 包所保护的 RTP 包的对应值通过 XOR 运算得到。
+- SN base: 设置为此 fec 包所保护的 RTP 包中的最小序列号。
+- TS recovery: 由此 fec 包所保护的 RTP 包的 timestamps 通过 XOR 运算得到。
+- Length recovery：由此 fec 包所保护的 RTP 包的长度通过 XOR 运算得到。
+
+**ulp header 结构**
+
+![image](https://user-images.githubusercontent.com/33995130/146920343-116339b9-21c3-4aac-8ad3-73dd8cf0a323.png)
+
+- Protection Length: 此级别所保护的数据的长度。
+- mask: 保护掩码，长度为 2 个字节或者 6 个字节（由 fec header 的 L 标志位决定）。通过 mask 可以知道此级别保护了哪些 RTP 包，例如 SN base 等于 100，mask 值等于 9b80，对应的二进制为  1001 1011 1000 0000，那么就可以知道第 0、3、4、6、7、8 个 RTP  包被此级别所保护，被保护的 RTP 包的序列号分别是 100、103、104、10106、107、108。
+
+
+
+
+**解 fec 包**，源码实现在 ulpfec_receiver_impl.cc，如下，
 
 ```
 //初始化对象
@@ -139,7 +168,7 @@ OnRecoveredPacket(const uint8_t* rtp_packet, size_t rtp_packet_length) {
 }
 ```
 
-封fec包，一般都使用red封装格式，如下，
+**封 fec 包**，一般都使用 red 封装格式，如下，
 
 ```
 void init() {
