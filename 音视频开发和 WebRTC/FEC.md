@@ -138,6 +138,30 @@ RTP Header 就是标准的 RTP 头， FEC Header 固定为 10 个字节，FEC He
 - Protection Length: 此级别所保护的数据的长度。
 - mask: 保护掩码，长度为 2 个字节或者 6 个字节（由 fec header 的 L 标志位决定）。通过 mask 可以知道此级别保护了哪些 RTP 包，例如 SN base 等于 100，mask 值等于 9b80，对应的二进制为  1001 1011 1000 0000，那么就可以知道第 0、3、4、6、7、8 个 RTP  包被此级别所保护，被保护的 RTP 包的序列号分别是 100、103、104、10106、107、108。
 
+**webrtc 中 ulp fec 的启用**
+
+如果采用 H264 编码，则不会启用 ULP FEC 功能，见代码 call/RtpVideoSender::ShouldDisableRedAndUlpfec，
+
+编码生成 fec 包的个数由保护系数 protection_factor 和媒体包个数决定。protection_factor 是一个由丢包率和有效比率决定的值，计算公式：
+
+```
+protection_factor = kFecRateTable[k];
+k = rate_i * 129 + loss_j;
+loss_j = 0, 1, .. 128;
+rate_i 是在某个范围内变化的值。
+```
+
+kFecRateTable 是一个静态数组，在 modules/video_coding/fec_rate_table.h 文件中定义，具体的 protection_factor 计算过程在 modules/video_coding/media_opt_util.cc 文件的 VCMFecMethod::ProtectionFactor 函数。
+
+一般网络畅通的时候不会生成 fec 包，只有在丢包的情况下 protection_factor 才不会为 0，接下来才会生成 fec 编码包。
+
+**掩码表的作用**
+
+在 ulpfec 协议中，一个 fec 包可以保护多个媒体包，而一个媒体包也可以被多个 fec 包所保护。假设 m 个媒体包需要使用 k 个 fec 包来保护，那么可以通过一个掩码表来表示媒体包和 fec 包的关系。ULP Leave Header 的 mask 字段可以是 2 个字节或者 6 个字节。
+
+下面以 2 个字节为例，假如有 12 个媒体包需要 3 个 fec 包来保护，那么其掩码表 packet_masks 为: 9b 80 4f 10 3c 60，其中 9b 80 表示第一个 fec 包所保护的媒体包，4f 10 和 3c 60 分别表示第二个、第三个 fec 包所保护的媒体包。以 9b 80 为例进行分析，9b 80 的二进制表示为：1001 1011 1000 0000，表明此 fec 包保护了第 0、3、4、6、7、8 个媒体包，假设基准序列号为 27176，那么此 fec 包所保护的 RTP 包的序号就分别是 27176、27179、27180、27182、27183、27184。
+
+webrtc 在 modules/rtp_rtcp_source/fec_private_tables_bursty 和 fec_private_tables_random 文件中预定义了两个掩码表 kPacketMaskBurstyTbl 和 kPacketMaskRandomTbl，其中 kPacketMaskBurstyTbl 用于阵发性或者连续性的网络丢包环境，而 kPacketMaskRandomTbl 用于随机性的丢包环境。上面举例的掩码表 packet_masks 就是由 kPacketMaskBurstyTbl 或者 kPacketMaskRandomTbl 中得到。
 
 
 
@@ -197,3 +221,7 @@ uint16_t num_fec_packets = fec_generator_->NumAvailableFecPackets();
     ｝
 }
 ```
+
+参考：
+
+- https://blog.csdn.net/weixin_29405665/article/details/107250663
