@@ -163,64 +163,282 @@ kFecRateTable 是一个静态数组，在 modules/video_coding/fec_rate_table.h 
 
 webrtc 在 modules/rtp_rtcp_source/fec_private_tables_bursty 和 fec_private_tables_random 文件中预定义了两个掩码表 kPacketMaskBurstyTbl 和 kPacketMaskRandomTbl，其中 kPacketMaskBurstyTbl 用于阵发性或者连续性的网络丢包环境，而 kPacketMaskRandomTbl 用于随机性的丢包环境。上面举例的掩码表 packet_masks 就是由 kPacketMaskBurstyTbl 或者 kPacketMaskRandomTbl 中得到。
 
+**webrtc 中 fec 包的生成**
 
+编码生成 fec 包的流程如下：
 
-**解 fec 包**，源码实现在 ulpfec_receiver_impl.cc，如下，
+![image](https://user-images.githubusercontent.com/33995130/147025397-a9dda890-ae9d-47d5-8be0-dfd197f166b8.png)
+
+下面是 EncodeFec 函数的实现代码：
 
 ```
-//初始化对象
-void init() {
-    std::unique_ptr<webrtc::UlpfecReceiver> fec_receiver_;
+int ForwardErrorCorrection::EncodeFec(const PacketList& media_packets,
+                                      uint8_t protection_factor,
+                                      int num_important_packets,
+                                      bool use_unequal_protection,
+                                      FecMaskType fec_mask_type,
+                                      std::list<Packet*>* fec_packets) {
+  const size_t num_media_packets = media_packets.size();
  
-    fec_receiver_.reset(webrtc::UlpfecReceiver::Create(this));
-}  
+  // Sanity check arguments.
+  RTC_DCHECK_GT(num_media_packets, 0);
+  RTC_DCHECK_GE(num_important_packets, 0);
+  RTC_DCHECK_LE(num_important_packets, num_media_packets);
+  RTC_DCHECK(fec_packets->empty());
+  const size_t max_media_packets = fec_header_writer_->MaxMediaPackets();
+  if (num_media_packets > max_media_packets) {
+    RTC_LOG(LS_WARNING) << "Can't protect " << num_media_packets
+                        << " media packets per frame. Max is "
+                        << max_media_packets << ".";
+    return -1;
+  }
  
-//添加rtp包并解析
-void addAndParse(packet) {
-    webrtc::RTPHeader hacky_header;
-    hacky_header.headerLength = rtp_header->getHeaderLength();
-    hacky_header.sequenceNumber = rtp_header->getSeqNumber();
-    if (fec_receiver_->AddReceivedRedPacket(hacky_header,(const uint8_t*) packet->data, packet->length, external_ulp_pt_) == 0 {
-   fec_receiver_->ProcessReceivedFec(); //会间接调用到callback
+  // Error check the media packets.
+  for (const auto& media_packet : media_packets) {
+    RTC_DCHECK(media_packet);
+    if (media_packet->data.size() < kRtpHeaderSize) {
+      RTC_LOG(LS_WARNING) << "Media packet " << media_packet->data.size()
+                          << " bytes "
+                             "is smaller than RTP header.";
+      return -1;
     }
-}
- 
-//callback 
-//需要继承类 ： public webrtc::RtpData
-OnRecoveredPacket(const uint8_t* rtp_packet, size_t rtp_packet_length) {
-// 处理rtp包
-}
-```
-
-**封 fec 包**，一般都使用 red 封装格式，如下，
-
-```
-void init() {
- 
-    webrtc::FecProtectionParams key_fec_params_{1, 60, webrtc::kFecMaskRandom}
-    fec_generator_.reset(new webrtc::UlpfecGenerator());
-        fec_generator_->SetFecParameters(key_fec_params_);
-}
- 
-void buildFec(rtp) {
-    red_packet = buildRedPacket(rtp);
- 
-    //发送red_packet
- 
-    fec_generator_->AddRtpPacketAndGenerateFec((const uint8_t *)rtp->data, payload_length, header_length);
- 
-uint16_t num_fec_packets = fec_generator_->NumAvailableFecPackets();
- 
-    if (num_fec_packets > 0) {
-        uint16_t first_fec_sequence_number = AllocateSequenceNumber(num_fec_packets); //fec 包分配序列号， 紧随在原始rtp包之后
- 
-        fec_packets = fec_generator_->GetUlpfecPacketsAsRed(external_red_pt_, external_ulp_pt_, first_fec_sequence_number,header_length);
+    // Ensure the FEC packets will fit in a typical MTU.
+    if (media_packet->data.size() + MaxPacketOverhead() + kTransportOverhead >
+        IP_PACKET_SIZE) {
+      RTC_LOG(LS_WARNING) << "Media packet " << media_packet->data.size()
+                          << " bytes "
+                             "with overhead is larger than "
+                          << IP_PACKET_SIZE << " bytes.";
     }
-    for (const auto& fec_packet : fec_packets) {
-    //直接发送fec包
-    ｝
+  }
+ 
+  // Prepare generated FEC packets.
+  int num_fec_packets = NumFecPackets(num_media_packets, protection_factor);
+  if (num_fec_packets == 0) {
+    return 0;
+  }
+  for (int i = 0; i < num_fec_packets; ++i) {
+    generated_fec_packets_[i].data.EnsureCapacity(IP_PACKET_SIZE);
+    memset(generated_fec_packets_[i].data.data(), 0, IP_PACKET_SIZE);
+    // Use this as a marker for untouched packets.
+    generated_fec_packets_[i].data.SetSize(0);
+    fec_packets->push_back(&generated_fec_packets_[i]);
+  }
+ 
+  internal::PacketMaskTable mask_table(fec_mask_type, num_media_packets);
+  packet_mask_size_ = internal::PacketMaskSize(num_media_packets);
+  memset(packet_masks_, 0, num_fec_packets * packet_mask_size_);
+  internal::GeneratePacketMasks(num_media_packets, num_fec_packets,
+                                num_important_packets, use_unequal_protection,
+                                &mask_table, packet_masks_);
+ 
+  // Adapt packet masks to missing media packets.
+  int num_mask_bits = InsertZerosInPacketMasks(media_packets, num_fec_packets);
+  if (num_mask_bits < 0) {
+    RTC_LOG(LS_INFO) << "Due to sequence number gaps, cannot protect media "
+                        "packets with a single block of FEC packets.";
+    fec_packets->clear();
+    return -1;
+  }
+  packet_mask_size_ = internal::PacketMaskSize(num_mask_bits);
+ 
+  // Write FEC packets to |generated_fec_packets_|.
+  GenerateFecPayloads(media_packets, num_fec_packets);
+  // TODO(brandtr): Generalize this when multistream protection support is
+  // added.
+  const uint32_t media_ssrc = ParseSsrc(media_packets.front()->data.data());
+  const uint16_t seq_num_base =
+      ParseSequenceNumber(media_packets.front()->data.data());
+  FinalizeFecHeaders(num_fec_packets, media_ssrc, seq_num_base);
+ 
+  return 0;
 }
 ```
+
+EncodeFec 函数的大概流程就是根据媒体包个数和保护系数 protection_factor 确定需要需要生成的 fec 包的个数 num_fec_packets，如果 num_fec_packets 为 0 则函数返回，否则获取生成 fec 包所需要的掩码表并存放在 packet_masks_ 变量中，然后调用 GenerateFecPayloads 生成所有的 fec 包，这个时候得到的 fec 包并不是最终的状态，还需要调用 FinalizeFecHeaders 来调整 fec 包的头部。
+
+下面来看下 GenerateFecPayload 函数的实现：
+
+```
+void ForwardErrorCorrection::GenerateFecPayloads(
+    const PacketList& media_packets,
+    size_t num_fec_packets) {
+  RTC_DCHECK(!media_packets.empty());
+  for (size_t i = 0; i < num_fec_packets; ++i) {
+    Packet* const fec_packet = &generated_fec_packets_[i];
+    size_t pkt_mask_idx = i * packet_mask_size_;
+    const size_t min_packet_mask_size = fec_header_writer_->MinPacketMaskSize(
+        &packet_masks_[pkt_mask_idx], packet_mask_size_);
+    const size_t fec_header_size =
+        fec_header_writer_->FecHeaderSize(min_packet_mask_size);
+ 
+    size_t media_pkt_idx = 0;
+    auto media_packets_it = media_packets.cbegin();
+    uint16_t prev_seq_num =
+        ParseSequenceNumber((*media_packets_it)->data.data());
+    while (media_packets_it != media_packets.end()) {
+      Packet* const media_packet = media_packets_it->get();
+      const uint8_t* media_packet_data = media_packet->data.cdata();
+      // Should |media_packet| be protected by |fec_packet|?
+      if (packet_masks_[pkt_mask_idx] & (1 << (7 - media_pkt_idx))) {
+        size_t media_payload_length =
+            media_packet->data.size() - kRtpHeaderSize;
+ 
+        bool first_protected_packet = (fec_packet->data.size() == 0);
+        size_t fec_packet_length = fec_header_size + media_payload_length;
+        if (fec_packet_length > fec_packet->data.size()) {
+          // Recall that XORing with zero (which the FEC packets are prefilled
+          // with) is the identity operator, thus all prior XORs are
+          // still correct even though we expand the packet length here.
+          fec_packet->data.SetSize(fec_packet_length);
+        }
+        if (first_protected_packet) {
+          uint8_t* data = fec_packet->data.data();
+          // Write P, X, CC, M, and PT recovery fields.
+          // Note that bits 0, 1, and 16 are overwritten in FinalizeFecHeaders.
+          memcpy(&data[0], &media_packet_data[0], 2);
+          // Write length recovery field. (This is a temporary location for
+          // ULPFEC.)
+          ByteWriter<uint16_t>::WriteBigEndian(&data[2], media_payload_length);
+          // Write timestamp recovery field.
+          memcpy(&data[4], &media_packet_data[4], 4);
+          // Write payload.
+          if (media_payload_length > 0) {
+            memcpy(&data[fec_header_size], &media_packet_data[kRtpHeaderSize],
+                   media_payload_length);
+          }
+        } else {
+          XorHeaders(*media_packet, fec_packet);
+          XorPayloads(*media_packet, media_payload_length, fec_header_size,
+                      fec_packet);
+        }
+      }
+      media_packets_it++;
+      if (media_packets_it != media_packets.end()) {
+        uint16_t seq_num =
+            ParseSequenceNumber((*media_packets_it)->data.data());
+        media_pkt_idx += static_cast<uint16_t>(seq_num - prev_seq_num);
+        prev_seq_num = seq_num;
+      }
+      pkt_mask_idx += media_pkt_idx / 8;
+      media_pkt_idx %= 8;
+    }
+    RTC_DCHECK_GT(fec_packet->data.size(), 0)
+        << "Packet mask is wrong or poorly designed.";
+  }
+}
+```
+
+GenerateFecPayloads 函数的处理流程如下：
+
+1. 取 fec 包列表 generated_fec_packets_ 中的一个包 fec_packet，计算此 fec 包所对应的掩码表的索引 pkt_mask_idx，计算此 fec 包的头部大小 fec_header_size，计算媒体包列表 media_packets 的第一个包的序号 prev_seq_num。
+2. 取 media_packets_ 的一个包 media_packet 进行处理，通过掩码值和 media_packet 的序列号来判断此 media_packet 是否是被 fec_packet 所保护。如果不受保护则转到 5 处理。如果受保护，则判断此 media_packet 是否此 fec_packet 保护的第一个包，如果是则转到 3 处理，否则转到 4 处理。
+3. 第一部分，media_packet 头两个字节拷贝 fec_packet 的头两个字节，因为 RTP 头部的第一个字节的开始两位是版本事情，而 FEC 头部第一个字节的开始两位是是 E 和 L，所以可以使用 memcpy 直接复制，后面调用 FinazlizeFecHeaders 函数再对 E、L 位进行修正。第二部分，将 media_packet 的负载长度临时写到 fec_packet 的第 3、4 个字节，后面调用 FinazlizeFecHeaders 函数再对长度进行修正。第三部分，将 media_packet 的时间戳写到 fec_packet。第四部分，将 media_packet 的负载数据写到 fec_packet。转到 5 处理。
+4. 将 media_packet 与 fec_packet 的头部进行 xor 运算，运算结果写到 fec_packet 的头部。将 media_packet 与 fec_packet 的负载数据进行 xor 运算，运算结果写到 fec_packet 的负载部分。
+5. 取 media_packets_ 的下一个包，转 2 继续处理。遍历 media_packets_ 后结束循环。
+6. 取 generated_fec_packets_ 的下一个包，转 1 继续处理。遍历 generated_fec_packets 后结束循环，至此所有的 fec 包基本都构建好了。
+
+接下来再看 FinalizeFecHeaders 函数的代码：
+
+```
+void ForwardErrorCorrection::FinalizeFecHeaders(size_t num_fec_packets,
+                                                uint32_t media_ssrc,
+                                                uint16_t seq_num_base) {
+  for (size_t i = 0; i < num_fec_packets; ++i) {
+    fec_header_writer_->FinalizeFecHeader(
+        media_ssrc, seq_num_base, &packet_masks_[i * packet_mask_size_],
+        packet_mask_size_, &generated_fec_packets_[i]);
+  }
+}
+ 
+void UlpfecHeaderWriter::FinalizeFecHeader(
+    uint32_t /* media_ssrc */,
+    uint16_t seq_num_base,
+    const uint8_t* packet_mask,
+    size_t packet_mask_size,
+    ForwardErrorCorrection::Packet* fec_packet) const {
+  uint8_t* data = fec_packet->data.data();
+  // Set E bit to zero.
+  data[0] &= 0x7f;
+  // Set L bit based on packet mask size. (Note that the packet mask
+  // can only take on two discrete values.)
+  bool l_bit = (packet_mask_size == kUlpfecPacketMaskSizeLBitSet);
+  if (l_bit) {
+    data[0] |= 0x40;  // Set the L bit.
+  } else {
+    RTC_DCHECK_EQ(packet_mask_size, kUlpfecPacketMaskSizeLBitClear);
+    data[0] &= 0xbf;  // Clear the L bit.
+  }
+  // Copy length recovery field from temporary location.
+  memcpy(&data[8], &data[2], 2);
+  // Write sequence number base.
+  ByteWriter<uint16_t>::WriteBigEndian(&data[2], seq_num_base);
+  // Protection length is set to entire packet. (This is not
+  // required in general.)
+  const size_t fec_header_size = FecHeaderSize(packet_mask_size);
+  ByteWriter<uint16_t>::WriteBigEndian(
+      &data[10], fec_packet->data.size() - fec_header_size);
+  // Copy the packet mask.
+  memcpy(&data[12], packet_mask, packet_mask_size);
+}
+```
+
+FinalizeFecHeader 函数修正了 fec 头的 E 和 L 标志位，同时写入了基准序列号，更正了 length recovery 字段的值，最后写入 ulp level header。ulp level header 由保护长度（2 个字节）和掩码（2 个或者 6 个字节）组成。由 FinilizeFecHeader 函数可以看出，虽然 ulp fec 协议支持在一个 fec 包里面封装多个保护级别的数据，但 webrtc 实际上只用到了一个级别。
+
+**利用 fec 包恢复丢失的 rtp 包**
+
+fec 包的解析就是 fec 包封装的逆过程，代码就不贴了，可以参见 modules/rtc_rtcp/source/forward_error_correction.cc::DecodeFec 以及相关函数，下面简要下收到 RTP 包后恢复丢失的 RTP 包的处理流程。
+
+1. 判断此 RTP 包是否是 fec 包，如果是那么把这个包放到队列 received_fec_packets_ 里面，并通过 fec 包里面的 mask 字段解析出此 fec 包所保护的所有 RTP 包，把这些被保护的 RTP 包存放到此 fec 包下面。
+2. 如果此 RTP 包是媒体包，那么更新 received_fec_packets 中对应的 fec 包的保护包接收情况。
+3. 尝试恢复丢失的包。遍历 received_fec_packets_，如果其中的一个 fec 包的所保护的 RTP 包的缺失数 packets_missing 刚好是 1，那么就利用此 fec 包恢复缺失的 RTP 包。如果 packets_missing 为 0，证明此 fec 包所保护的 RTP 包均已收到，丢弃此 fec 包。如果 packets_missing 大于 1 则处理下一个 fec 包。
+
+**Red 打包格式**
+
+Red(Redundant coding)编码是 webrtc 中采用的一种编码方式，虽然 modules/rtp_rtcp/source/ulpfec_receiver_impl.cc 文件中存在 red 格式的定义，如下：
+
+     0                   1                    2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3  4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |F|   block PT  |  timestamp offset         |   block length    |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+但实际上调试发现 webrtc 在采用 red 编码时打包 RTP 包仅仅是改变了原 RTP 包的 payload 类型，同时在原有的 payload 前增加多一个字节的 red_payload。假设原有的 RTP 的的负载类型是 96，而 red 负载类型是 122，那么包结构如下：
+
+```
+原 rtp 包：        RTP Header(PT = 96  ) + payload
+red 格式 rtp 包:  RTP Header(PT = 122) + red_payload(一字节, 值为 96) + payload
+```
+
+payload 部分没有任何改变，如果是 fec 类型的包，那么 red_payload = 122, 这样接收端就可以通过 red_payload 的值来区分此 RTP 包是普通媒体包还是 fec 包。
+
+**fec 打包和 RTP 包加密的先后顺序**
+
+fec 打包在加密操作之前进行。所有的音视频 RTP 包、fec 类型的 RTP 包都会被送到 pacing 模块，再由 pacing 模块传到 pc_network_thread 线程进行发送，在调用 socket 发送数据包之前才调用 libsrtp 模块进行加密，加密是针对 RTP 包的 payload 部分进行。收端接收到 RTP 包后需要先解密再进行解析。
+
+**如何区分音频 RTP 包和视频 RTP 包**
+
+当 webrtc 使用同一个 udp 端口来传输音视频数据时，需要能够区分音频、视频 RTP 包。可以通过 RTP 包中的SSRC来区分。音频、视频的 RTP 包的 SSRC 不同，接收端在得到 RTP 包的 SSRC 后，根据 SSRC 来进行不同的处理。
+
+**如何区分 RTP 包和 RTCP 包**
+
+通过负载类型来区分，
+
+```
+// For additional details, see http://tools.ietf.org/html/rfc5761.
+bool IsRtcpPacket(rtc::ArrayView<const char> packet) {
+  if (packet.size() < kMinRtcpPacketLen ||
+      !HasCorrectRtpVersion(
+          rtc::reinterpret_array_view<const uint8_t>(packet))) {
+    return false;
+  }
+ 
+  char pt = packet[1] & 0x7F;
+  return (63 < pt) && (pt < 96);
+}
+```
+
+
 
 参考：
 
