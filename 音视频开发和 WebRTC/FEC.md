@@ -111,6 +111,17 @@ c = (a ^ a) ^ (b ^ b) ^ c = (a ^ b) ^ (a ^ b ^ c) = a ^ b ^ d
 
 **webrtc 中使用的是 ULP FEC**，ULP 是 Uneven Level Protection 的缩写，意为不均等保护，可以针对数据的重要程度提供不同级别的保护。一般音视频的媒体数据，不同部分的重要程度是不一样的，越靠前的数据越重要，对靠前的数据使用更多的 FEC 包来保护，靠后的数据使用更少的 FEC 包来保护，这样就可更充分的利用带宽。
 
+大致原理如下，
+
+![image](https://user-images.githubusercontent.com/33995130/147198071-fe0ce2ff-1793-4694-8e54-dcf6e5b697de.png)
+
+FEC 包 1 在 0 级别保护了数据包 A、B，
+
+FEC 包 2 在 0 级别保护了数据包 C、D，同时在 1 级别保护了数据包 A、B、C、D。
+
+![image](https://user-images.githubusercontent.com/33995130/147198151-4bb898d5-5edc-4120-9efd-79960fb2b097.png)
+
+
 **ulp fec 包结构**
 
 ![image](https://user-images.githubusercontent.com/33995130/146920102-5d82a821-f050-45c1-ab78-7fb1749eb6f2.png)
