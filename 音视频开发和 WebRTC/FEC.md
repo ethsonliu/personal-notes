@@ -105,22 +105,19 @@ c = (a ^ a) ^ (b ^ b) ^ c = (a ^ b) ^ (a ^ b ^ c) = a ^ b ^ d
 假设数据 D1，D4，C2 丢失了，
 
 1. 对矩阵 B 和 D，分别取没有丢失的行构成 B‘ 和 G’
-
 2. 根据如下公式，即可计算恢复出有效数据向量 D，即 `D = B' x G'`
-
-
 
 ## webrtc 中的 fec
 
-webrtc 中使用的是 ULP FEC，ULP 是 Uneven Level Protection 的缩写，意为不均等保护，可以针对数据的重要程度提供不同级别的保护。一般音视频的媒体数据，不同部分的重要程度是不一样的，越靠前的数据越重要，对靠前的数据使用更多的 FEC 包来保护，靠后的数据使用更少的 FEC 包来保护，这样就可更充分的利用带宽。
+**webrtc 中使用的是 ULP FEC**，ULP 是 Uneven Level Protection 的缩写，意为不均等保护，可以针对数据的重要程度提供不同级别的保护。一般音视频的媒体数据，不同部分的重要程度是不一样的，越靠前的数据越重要，对靠前的数据使用更多的 FEC 包来保护，靠后的数据使用更少的 FEC 包来保护，这样就可更充分的利用带宽。
 
-**fec 包结构**
+**ulp fec 包结构**
 
 ![image](https://user-images.githubusercontent.com/33995130/146920102-5d82a821-f050-45c1-ab78-7fb1749eb6f2.png)
 
 RTP Header 就是标准的 RTP 头， FEC Header 固定为 10 个字节，FEC Header 后面可以跟着多个 Level，每个 Level 保护着不同的数据。
 
-**fec header 结构**
+**ulp fec header 结构**
 
 ![image](https://user-images.githubusercontent.com/33995130/146920171-afcadb41-71bf-4a6e-98fa-6fe6c6163122.png)
 
@@ -163,7 +160,7 @@ kFecRateTable 是一个静态数组，在 modules/video_coding/fec_rate_table.h 
 
 webrtc 在 modules/rtp_rtcp_source/fec_private_tables_bursty 和 fec_private_tables_random 文件中预定义了两个掩码表 kPacketMaskBurstyTbl 和 kPacketMaskRandomTbl，其中 kPacketMaskBurstyTbl 用于阵发性或者连续性的网络丢包环境，而 kPacketMaskRandomTbl 用于随机性的丢包环境。上面举例的掩码表 packet_masks 就是由 kPacketMaskBurstyTbl 或者 kPacketMaskRandomTbl 中得到。
 
-**webrtc 中 fec 包的生成**
+**webrtc 中 ulp fec 包的生成**
 
 编码生成 fec 包的流程如下：
 
@@ -385,7 +382,7 @@ void UlpfecHeaderWriter::FinalizeFecHeader(
 
 FinalizeFecHeader 函数修正了 fec 头的 E 和 L 标志位，同时写入了基准序列号，更正了 length recovery 字段的值，最后写入 ulp level header。ulp level header 由保护长度（2 个字节）和掩码（2 个或者 6 个字节）组成。由 FinilizeFecHeader 函数可以看出，虽然 ulp fec 协议支持在一个 fec 包里面封装多个保护级别的数据，但 webrtc 实际上只用到了一个级别。
 
-**利用 fec 包恢复丢失的 rtp 包**
+**利用 ulp fec 包恢复丢失的 rtp 包**
 
 fec 包的解析就是 fec 包封装的逆过程，代码就不贴了，可以参见 modules/rtc_rtcp/source/forward_error_correction.cc::DecodeFec 以及相关函数，下面简要下收到 RTP 包后恢复丢失的 RTP 包的处理流程。
 
