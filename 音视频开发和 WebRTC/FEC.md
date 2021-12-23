@@ -165,11 +165,22 @@ kFecRateTable 是一个静态数组，在 modules/video_coding/fec_rate_table.h 
 
 **掩码表的作用**
 
-在 ulpfec 协议中，一个 fec 包可以保护多个媒体包，而一个媒体包也可以被多个 fec 包所保护。假设 m 个媒体包需要使用 k 个 fec 包来保护，那么可以通过一个掩码表来表示媒体包和 fec 包的关系。ULP Leave Header 的 mask 字段可以是 2 个字节或者 6 个字节。
+在 ulpfec 协议中，一个 fec 包可以保护多个媒体包，而一个媒体包也可以被多个 fec 包所保护。假设 m 个媒体包需要使用 k 个 fec 包来保护，则可以定义一个如下图所示的二维的 m * n 零一矩阵来描述媒体数据包在 fec 包中的保护分布情况：
 
-下面以 2 个字节为例，假如有 12 个媒体包需要 3 个 fec 包来保护，那么其掩码表 packet_masks 为: 9b 80 4f 10 3c 60，其中 9b 80 表示第一个 fec 包所保护的媒体包，4f 10 和 3c 60 分别表示第二个、第三个 fec 包所保护的媒体包。以 9b 80 为例进行分析，9b 80 的二进制表示为：1001 1011 1000 0000，表明此 fec 包保护了第 0、3、4、6、7、8 个媒体包，假设基准序列号为 27176，那么此 fec 包所保护的 RTP 包的序号就分别是 27176、27179、27180、27182、27183、27184。
+![image](https://user-images.githubusercontent.com/33995130/147198439-f48d779b-b4c1-4959-b0df-2824e6156912.png)
 
-webrtc 在 modules/rtp_rtcp_source/fec_private_tables_bursty 和 fec_private_tables_random 文件中预定义了两个掩码表 kPacketMaskBurstyTbl 和 kPacketMaskRandomTbl，其中 kPacketMaskBurstyTbl 用于阵发性或者连续性的网络丢包环境，而 kPacketMaskRandomTbl 用于随机性的丢包环境。上面举例的掩码表 packet_masks 就是由 kPacketMaskBurstyTbl 或者 kPacketMaskRandomTbl 中得到。
+
+1. 矩阵中元素 m[i, j] 置 1 表示第 j 个媒体数据包需要第 i 个 FEC 包保护。
+2. 从行角度来看，第 i 行元素表示第 i 个 FEC 包保护的媒体数据包的集合；
+3. 从列角度讲，第 j 列元素表示保护第 j 个媒体数据包的 FEC 包的集合。
+
+由于该矩阵是零一矩阵，因此在存储上可以采用掩码来存储。这个掩码也就是 FEC Level Header 中所定义的 mask 掩码。
+
+那么掩码中的 0、1 如何分布？现实世界中网络丢包分为随机丢包、突发丢包两种情况，FEC 包需要能够针对这两种情况对媒体数据包进行保护。WebRTC 预先构造两个掩码表 kPacketMaskRandomTbl 和 kPacketMaskBurstyTbl，以模拟在随机情况和突发情况下媒体数据包在 FEC 包中的保护分配情况。
+
+假设在随机丢包场景下，对于 m * n 的情况，我们只需要从 kPacketMaskRandomTbl[m][n] 就可以获取 FEC 包所需要的全部掩码，然后该掩码为基础，构造 FEC 数据包。
+
+webrtc 在 modules/rtp_rtcp_source/fec_private_tables_bursty 和 fec_private_tables_random 文件中预定义了两个掩码表 kPacketMaskBurstyTbl 和 kPacketMaskRandomTbl，其中 kPacketMaskBurstyTbl 用于阵发性或者连续性的网络丢包环境，而 kPacketMaskRandomTbl 用于随机性的丢包环境。
 
 **webrtc 中 ulp fec 包的生成**
 
