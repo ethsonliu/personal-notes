@@ -84,6 +84,10 @@ while(5<x<15)
 - <https://www.zhihu.com/question/24116967>
 - <https://android.googlesource.com/platform/external/pthreads/+/216eb8153b2455d1e15f8fbf84d4413ddcc40adc/pthread_cond_wait.c>
 
+## 多个互斥量使用一个条件变量会有问题么
+
+https://stackoverflow.com/questions/46461509/one-condition-variable-multiple-mutexes ，取决于实现，所以不推荐这么用。
+
 ## 条件变量和互斥量实现生产者消费者
 
 ```c++
