@@ -57,7 +57,7 @@ typedef noncopyable_::noncopyable noncopyable;
 
 1. 为什么上面开头的代码要用私有继承呢？
     
-    boost::noncopyable does not declare a virtual destructor, i.e. is not designed to be the base of public inheritance chain. Always inherit from it privately. 私有继承下 noncopyable 指针无法指向它的父类。
+    boost::noncopyable does not declare a virtual destructor, i.e. is not designed to be the base of public inheritance chain. Always inherit from it privately. 私有继承下 noncopyable 指针无法直接指向它的父类，需要强转。
 
 2. 构造函数和析构函数为什么用 protected 修饰？
 
