@@ -1,4 +1,4 @@
-- [HTTPS 篇之 SSL 握手过程详解](https://razeencheng.com/post/ssl-handshake-detail)
+- [HTTPS 篇之 SSL 握手过程详解](https://razeen.me/posts/ssl-handshake-detail/)
 - [安全背后: 浏览器是如何校验证书的](https://cjting.me/2021/03/02/how-to-validate-tls-certificate/)
 - [SSL 双向认证和 SSL 单向认证的区别](https://www.jianshu.com/p/fb5fe0165ef2)
 
