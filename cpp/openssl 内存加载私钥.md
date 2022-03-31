@@ -375,7 +375,7 @@ bool HttpsClient::verify()
         return false;
     }
 
-    /** 验证服务端证书 */
+    // 这个地方写 SSL_VERIFY_NONE 可能有问题，见 https://www.openssl.org/docs/man1.0.2/man3/SSL_CTX_set_verify.html
     SSL_CTX_set_verify(m_sslContext, SSL_VERIFY_NONE, NULL);
 
     /** 从内存中加载客户端证书 */
