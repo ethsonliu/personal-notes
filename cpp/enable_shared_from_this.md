@@ -73,8 +73,7 @@ Bad::~Bad() called
 
 为什么中间那个会抛异常呢？
 
-这要从 enable_shared_from_this 这个类说起，这个类的核心在于其内部维护了一个 weak_ptr，通过 weak_ptr 可以把没有关系的 shared_ptr 联系起来，增加引用计数。但是，weak_ptr 的初始化操作在 
-std::make_shared 函数里面完成，并不是在 enable_shared_from_this 类的构造中完成，所以凡是没调用 std::make_shared 的对象，均会因为 weak_ptr 没初始化导致异常。
+这要从 enable_shared_from_this 这个类说起，这个类的核心在于其内部维护了一个 weak_ptr，通过 weak_ptr 可以把没有关系的 shared_ptr 联系起来，增加引用计数。但是，weak_ptr 的初始化操作在 std::shared_ptr 构造函数里面完成，并不是在 enable_shared_from_this 类的构造中完成，所以凡是没调用 std::make_shared 的对象，均会因为 weak_ptr 没初始化导致异常。
 
 源码参见，
 
@@ -84,71 +83,20 @@ std::make_shared 函数里面完成，并不是在 enable_shared_from_this 类�
 
 那么对象中的 `_M_weak_this` 是何时初始化的呢？
 
-在 share_ptr 构造时候，会检查是否继承了类 enable_shared_from_this，如果继承了，就将 `_M_weak_this` 初始化赋值。如:
+在 share_ptr 构造时候，会调用下面这个函数，
 
 ```c++
-// class __shared_ptr
-
-template <typename _Yp, typename = _SafeConv<_Yp>>
-explicit __shared_ptr(_Yp* __p__p)
-    : _M_ptr(__p), _M_refcount(__p, typename is_array<_Tp>::type()) {
-    static_assert(!is_void<_Yp>::value, "incomplete type");
-    static_assert(sizeof(_Yp) > 0, "incomplete type");
-    _M_enable_shared_from_this_with(__p);   // 检测是否继承enable_shared_from_this，并复制
-}
-
-// class __shared_ptr
-
-template <typename _Yp>
-using __esft_base_t = decltype(__enable_shared_from_this_base(
-    std::declval<const __shared_count<_Lp>&>(), std::declval<_Yp*>()));
-
-// Detect an accessible and unambiguous enable_shared_from_this base.
-template <typename _Yp, typename = void>
-struct __has_esft_base : false_type {};
-
-template <typename _Yp>
-struct __has_esft_base<_Yp, __void_t<__esft_base_t<_Yp>>>
-    : __not_<is_array<_Tp>> {
-};  // No enable shared_from_this for arrays
-//-------------------------1
-
-template <typename _Yp, typename _Yp2 = typename remove_cv<_Yp>::type>
-typename enable_if<__has_esft_base<_Yp2>::value>::type
-_M_enable_shared_from_this_with(_Yp* __p) noexcept {
-    if (auto __base = __enable_shared_from_this_base(_M_refcount, __p))
-        __base->_M_weak_assign(const_cast<_Yp2*>(__p), _M_refcount);
-}
-
-template <typename _Yp, typename _Yp2 = typename remove_cv<_Yp>::type>
-typename enable_if<!__has_esft_base<_Yp2>::value>::type
-_M_enable_shared_from_this_with(_Yp*) noexcept {}
-
-// __weak_ptr 类
-class __weak_ptr {
-    ......
-
-    // Used by __enable_shared_from_this.
-    void _M_assign(_Tp* __ptr,
-                    const __shared_count<_Lp>& __refcount) noexcept {
-        if (use_count() == 0) {
-            _M_ptr = __ptr;
-            _M_refcount = __refcount;
+// class enable_shared_from_this
+	public: // actually private, but avoids compiler template friendship issues
+    // Note: invoked automatically by shared_ptr; do not call
+    template<class X, class Y> void _internal_accept_owner( shared_ptr<X> const * ppx, Y * py ) const
+    {
+        if( weak_this_.expired() )
+        {
+            weak_this_ = shared_ptr<T>( *ppx, py );
         }
     }
-    ......
-};
-
-// class enable_shared_from_this
-
-   friend const enable_shared_from_this*
-      __enable_shared_from_this_base(const __shared_count<>&,
-				     const enable_shared_from_this* __p)
-      { return __p; }
-
 ```
-
-上述的代码实现了检测与赋值的功能，这里使用了 SFINAE 的技术：如果匹配到继承（enable_shared_from_this）的模板，就进行赋值，如果匹配到无继承的模板，则什么也不做。
 
 ## 参考：
 
