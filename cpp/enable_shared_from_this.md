@@ -73,7 +73,7 @@ Bad::~Bad() called
 
 为什么中间那个会抛异常呢？
 
-这要从 enable_shared_from_this 这个类说起，这个类的核心在于其内部维护了一个 weak_ptr，通过 weak_ptr 可以把没有关系的 shared_ptr 联系起来，增加引用计数。但是，weak_ptr 的初始化操作在 std::shared_ptr 构造函数里面完成，并不是在 enable_shared_from_this 类的构造中完成，所以凡是没调用 std::make_shared 的对象，均会因为 weak_ptr 没初始化导致异常。
+这要从 enable_shared_from_this 这个类说起，这个类的核心在于其内部维护了一个 weak_ptr，通过 weak_ptr 可以把没有关系的 shared_ptr 联系起来，增加引用计数。但是，weak_ptr 的初始化操作在 std::shared_ptr 构造函数里面完成，并不是在 enable_shared_from_this 类的构造中完成。所以想使用 enable_shared_from_this 的功能，得先创建 shared_ptr 对象，直接赤裸裸地创建对象，会因为 weak_ptr 没初始化导致异常。
 
 源码参见，
 
