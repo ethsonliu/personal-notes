@@ -187,10 +187,227 @@ bool RtpPacketHistory::VerifyRtt(
 }
 ```
 
+## 发送
 
+首先是 NackTracker 的创建，
 
+```c++
+class NackTracker {
+ public:
+  // A limit for the size of the NACK list.
+  static const size_t kNackListSizeLimit = 500;  // 10 seconds for 20 ms frame
+                                                 // packets.
+  NackTracker();
+};
 
+void NetEqImpl::EnableNack(size_t max_nack_list_size) {
+  rtc::CritScope lock(&crit_sect_);
+  if (!nack_enabled_) {
+    const int kNackThresholdPackets = 2;  创建时这个值=2，是表示有 2 个 seq 间隔是就要重传了，很重要
+    nack_.reset(NackTracker::Create(kNackThresholdPackets));
+    nack_enabled_ = true;
+    nack_->UpdateSampleRate(fs_hz_);
+  }
+  nack_->SetMaxNackListSize(max_nack_list_size);
+}
+```
 
+有新的包到来时，需要 insert 进去，
 
+```c++
+void NackTracker::UpdateLastReceivedPacket(uint16_t sequence_number, uint32_t timestamp)
+{
+  // Just record the value of sequence number and timestamp if this is the
+  // first packet.
+  // 如果是第一个包，就只是保存
+  if (!any_rtp_received_) {
+    sequence_num_last_received_rtp_ = sequence_number;
+    timestamp_last_received_rtp_ = timestamp;
+    any_rtp_received_ = true;
+    // If no packet is decoded, to have a reasonable estimate of time-to-play
+    // use the given values.
+    if (!any_rtp_decoded_) {
+      sequence_num_last_decoded_rtp_ = sequence_number;
+      timestamp_last_decoded_rtp_ = timestamp;
+    }
+    return;
+  }
 
+  // 如果是上一个包，就不保存了
+  if (sequence_number == sequence_num_last_received_rtp_)
+    return;
 
+  // 从nack 的list 中，重传的包到了之后，从nack 的list 中去掉
+  // Received RTP should not be in the list.
+  nack_list_.erase(sequence_number);
+
+  // 和上一个包进行对比，如果是false，走下边
+  // If this is an old sequence number, no more action is required, return.
+  if (IsNewerSequenceNumber(sequence_num_last_received_rtp_, sequence_number))
+    return;
+
+  // 计算samples_per_packet_ 每个包的平均增长数
+  UpdateSamplesPerPacket(sequence_number, timestamp);
+  
+  // 更新list，很重要
+  UpdateList(sequence_number);
+  
+  // 保存这次的信息
+  sequence_num_last_received_rtp_ = sequence_number;
+  timestamp_last_received_rtp_ = timestamp;
+  
+  // 根据limit 删除不要nack 的包，及丢帧了
+  LimitNackListSize();
+}
+
+void NackTracker::UpdateList(uint16_t sequence_number_current_received_rtp)
+{
+  // Some of the packets which were considered late, now are considered missing.
+  ChangeFromLateToMissing(sequence_number_current_received_rtp);
+
+  if (IsNewerSequenceNumber(sequence_number_current_received_rtp,
+                            sequence_num_last_received_rtp_ + 1))
+    // 添加到list 中
+    AddToList(sequence_number_current_received_rtp);
+}
+
+void NackTracker::ChangeFromLateToMissing(uint16_t sequence_number_current_received_rtp)
+{
+  // 根据2分法，如果有 nack_threshold_packets_ = 2个间隔
+  NackList::const_iterator lower_bound =
+      nack_list_.lower_bound(static_cast<uint16_t>(
+          sequence_number_current_received_rtp - nack_threshold_packets_));
+
+  // 前面的is_missing 就设置成true
+  for (NackList::iterator it = nack_list_.begin(); it != lower_bound; ++it)
+    it->second.is_missing = true;
+}
+
+void NackTracker::AddToList(uint16_t sequence_number_current_received_rtp)
+{
+  assert(!any_rtp_decoded_ ||
+         IsNewerSequenceNumber(sequence_number_current_received_rtp,
+                               sequence_num_last_decoded_rtp_));
+
+  // Packets with sequence numbers older than |upper_bound_missing| are
+  // considered missing, and the rest are considered late.
+  uint16_t upper_bound_missing =
+      sequence_number_current_received_rtp - nack_threshold_packets_;
+
+  for (uint16_t n = sequence_num_last_received_rtp_ + 1;
+       IsNewerSequenceNumber(sequence_number_current_received_rtp, n); ++n) {
+    bool is_missing = IsNewerSequenceNumber(upper_bound_missing, n);
+    
+    uint32_t timestamp = EstimateTimestamp(n);
+    NackElement nack_element(TimeToPlay(timestamp), timestamp, is_missing);
+    nack_list_.insert(nack_list_.end(), std::make_pair(n, nack_element));
+  }
+}
+
+void NackTracker::LimitNackListSize()
+{
+  // 这里丢弃小于 limit 的数据
+  uint16_t limit = sequence_num_last_received_rtp_ -
+                   static_cast<uint16_t>(max_nack_list_size_) - 1;
+  nack_list_.erase(nack_list_.begin(), nack_list_.upper_bound(limit));
+}
+
+std::vector<uint16_t> NackTracker::GetNackList(int64_t round_trip_time_ms) const
+{
+  RTC_DCHECK_GE(round_trip_time_ms, 0);
+  std::vector<uint16_t> sequence_numbers;
+  for (NackList::const_iterator it = nack_list_.begin(); it != nack_list_.end();
+       ++it) {
+    if (it->second.is_missing &&
+        it->second.time_to_play_ms > round_trip_time_ms)
+      sequence_numbers.push_back(it->first);
+  }
+  return sequence_numbers;
+}
+```
+
+当 GetNackList() 之后，就需要发送，发送的接口如下，
+
+```c++
+// Send a Negative acknowledgment packet.
+int32_t ModuleRtpRtcpImpl::SendNACK(const uint16_t* nack_list,
+                                    const uint16_t size) {
+  // 保存记录
+  for (int i = 0; i < size; ++i) {
+    receive_loss_stats_.AddLostPacket(nack_list[i]);
+  }
+
+  uint16_t nack_length = size;
+  uint16_t start_id = 0;
+  int64_t now = clock_->TimeInMilliseconds();
+  if (TimeToSendFullNackList(now)) {
+    nack_last_time_sent_full_ = now;
+    nack_last_time_sent_full_prev_ = now;
+  } else {
+    // 如果是已经发送过的Seq，就直接返回
+    // Only send extended list.
+    if (nack_last_seq_number_sent_ == nack_list[size - 1]) {
+      // Last sequence number is the same, do not send list.
+      return 0;
+    }
+
+     // 获取新的Seq list 位置，这里只发送新的Seq，已经发送过的，就不在发送了
+    // Send new sequence numbers.
+    for (int i = 0; i < size; ++i) {
+      if (nack_last_seq_number_sent_ == nack_list[i]) {
+        start_id = i + 1;
+        break;
+      }
+    }
+    nack_length = size - start_id;
+  }
+
+  // 最大重传数目
+  // Our RTCP NACK implementation is limited to kRtcpMaxNackFields sequence
+  // numbers per RTCP packet.
+  if (nack_length > kRtcpMaxNackFields) {
+    nack_length = kRtcpMaxNackFields;
+  }
+  
+  // 记录本次发送的最大重传Seq
+  nack_last_seq_number_sen_ = nack_list[start_id + nack_length - 1];
+  
+  // 重传
+  return rtcp_sender_.SendRTCP(GetFeedbackState(), kRtcpNack, nack_length,
+                               &nack_list[start_id]);
+}
+
+```
+
+IsNewerSequenceNumber 的含义如下，
+
+```
+t1 = last
+t2 = current
+
+if t1 > t2 && |t1-t2| == kBreakPoint;
+if t1 = max && t2 = 0 return true
+if t1 = 0 && t2 = max return false
+else
+if t1 - t2 < kBreakPoint return true
+if t1 - t2 > kBreakPoint return false
+总结：t1 < t2 && t1 - t2 < kBreakpoint return false，这个时候t2 是 t1 的下一个包
+```
+
+最后，这里有两个问题，
+
+**nack 包什么时候发送呢？**
+
+因为报文有可能出现乱序抖动情况，不能说检测出丢包就立即重传，需要等待 rtt_ms。因为 NACK 产生的延时主要在 RTT 环路延时上，所以再次重传的时间一定要大于 rtt_ms。
+
+**rtp 的最大重传次数是多少？**
+
+```c++
+const int kMaxPacketAge = 10000;
+const int kMaxNackPackets = 1000;
+const int kDefaultRttMs = 100;
+const int kMaxNackRetries = 10; // 最大重传10次
+const int kMaxReorderedPackets = 128;
+const int kNumReorderingBuckets = 10;
+const int kDefaultSendNackDelayMs = 0;
+```
