@@ -1,0 +1,2 @@
+- https://segmentfault.com/a/1190000022124534
+- https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-array-and-slice/
