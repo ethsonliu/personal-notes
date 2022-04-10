@@ -4,9 +4,9 @@ Slices in Go can be represented by 3 elements:
 - len - length, number of elements in the slice
 - cap - capacity, number of elements in the underlying data array, starting from the element pointed by the ptr
 
-A nil slice declared as var s1 []string has no underlying data array - it points to nothing. An empty slice, declared as s2 := []string{} or s3 := make([]string, 0) points to an empty, non-nil array.
+A nil slice declared as `var s1 []string` has no underlying data array - it points to nothing.
 
-See also in detail what is the difference between length and capacity of slices
+An empty slice, declared as `s2 := []string{}` or `s3 := make([]string, 0)` points to an empty, non-nil array.
 
 See the table to compare the properties of the nil and empty slices.
 
@@ -42,7 +42,9 @@ s2 is nil: false, len: 0, cap: 0
 s3 is nil: false, len: 0, cap: 0
 ```
   
-Empty and nil slices behave in the same way that is the built-in functions like len(), cap(), append(), and for .. range loop return the same results. So, since the nil slice declaration is simpler, you should prefer it to creating an empty slice. However, there are some cases when you may need the empty, non-nil slice. For instance, when you want to return an empty JSON array [] as an HTTP response, you should create the empty slice ([]string{} or make([]string, 0)) because if you use a nil slice, you will get a null JSON array after encoding:
+Empty and nil slices behave in the same way that is the built-in functions like len(), cap(), append(), and for .. range loop return the same results. So, since the nil slice declaration is simpler, you should prefer it to creating an empty slice. 
+
+However, there are some cases when **you may need the empty, non-nil slice**. For instance, when you want to return an empty JSON array [] as an HTTP response, you should create the empty slice ([]string{} or make([]string, 0)) because if you use a nil slice, you will get a null JSON array after encoding:
 
 ```go
 package main
