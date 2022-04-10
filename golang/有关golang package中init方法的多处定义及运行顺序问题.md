@@ -1,1 +1,2 @@
-https://blog.csdn.net/zhuxinquan61/article/details/73712251
+- https://blog.csdn.net/zhuxinquan61/article/details/73712251
+- https://stackoverflow.com/questions/24790175/when-is-the-init-function-run/49831018#49831018
