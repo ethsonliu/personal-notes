@@ -1,0 +1,3 @@
+- https://stackoverflow.com/questions/20509734/null-vs-nullptr-why-was-it-replaced
+- https://stackoverflow.com/questions/25060413/what-is-operator-t-where-t-is-a-template-parameter-in-c
+- https://www.cnblogs.com/porter/p/3611718.html
