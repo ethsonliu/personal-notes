@@ -411,3 +411,7 @@ const int kMaxReorderedPackets = 128;
 const int kNumReorderingBuckets = 10;
 const int kDefaultSendNackDelayMs = 0;
 ```
+
+**NackTracker 的一个 bug**
+
+如果第一个 rtp 包没收到，nack 是处理不了的。
