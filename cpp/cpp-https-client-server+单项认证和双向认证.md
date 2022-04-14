@@ -8,7 +8,7 @@ SSL_CTX_use_certificate_file----加载自己的证书
 
 SSL_CTX_use_PrivateKey_file----加载自己的私钥
 
-SSL_get_peer_certificate 和 SSL_get_verify_result----真正进行验证，一定要调用这个函数不然前面四个光配置而已并不会进行双向验证
+SSL_get_peer_certificate 和 SSL_get_verify_result----真正进行验证，一定要调用这个函数不然前面四个光配置而已并不会进行双向验证（**这地方说的并不对，详见 https://www.openssl.org/docs/man3.0/man3/SSL_connect.html 的描述**）
 
 ## 服务端
 
