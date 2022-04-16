@@ -71,13 +71,3 @@ QObject::~QObject()
         d->setParent_helper(nullptr); // 与父对象脱离
 }
 ```
-
-那什么情况下用 deletelater，什么时候直接用 delete 呢？
-
- If you use delete directly you must make sure that:
-
-- There are no pending events that m_timer should receive (in this case a timerEvent) or it might crash
-- You must make sure m_timer lives in the same thread as the one you are calling delete from
-- You must make sure the method in which you call delete is not a slot triggerd by the object you are trying to delete or it might crash
-- 
-Basically, life is too short to care about all the above and the performance improvement is negligible **so using deleteLater() is just better.（大多数情况还是用 deletelater）**
