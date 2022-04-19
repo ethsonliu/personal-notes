@@ -1,4 +1,6 @@
 
+## 锁的介绍
+
 
 
 
@@ -31,3 +33,7 @@ BEGIN [ DEFERRED | IMMEDIATE | EXCLUSIVE ] TRANSACTION
 
 - 单线程模式，使用一个专门线程访问数据库
 - 单线程模式，使用一个线程队列访问数据库（队列里线程共用一个数据库连接）
+
+## 参考
+
+- https://my.oschina.net/u/587236/blog/129022
