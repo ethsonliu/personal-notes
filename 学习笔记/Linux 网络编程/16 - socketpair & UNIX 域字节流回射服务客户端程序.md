@@ -205,7 +205,7 @@ int socketpair(int domain, int type, int protocol, int sv[2]);
 创建一个全双工的流管道。
 
 - domain: 协议家族, 可以使用 AF_UNIX(AF_LOCAL)UNIX 域协议, 而且在 Linux 上, 该函数也就只支持这一种协议
-- type: 套接字类型, 可以使用 SOCK_STREAM
+- type: 表示协议，可以是 SOCK_STREAM 或者 SOCK_DGRAM。用 SOCK_STREAM 建立的套接字对是管道流，**与一般的管道相区别的是，套接字对建立的通道是双向的，即每一端都可以进行读写**。
 - protocol: 协议类型, 一般填充为 0
 - sv: 返回的套接字对
 - 返回值：成功返回 0，失败返回 -1
