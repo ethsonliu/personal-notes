@@ -1,6 +1,8 @@
 ```bash
 git status                                                # 查看当前版本状态（是否修改）
 
+git clone ssh://git@example.com/central ~/central
+
 git add .                                                 # 增加当前子目录下所有更改过的文件至index
 git commit -m 'xxx'                                       # 提交
 
