@@ -4,7 +4,7 @@
 unable to access 'https://github.com/ethsonliu/typecho-theme-wab.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443
 ```
 
-在使用 HTTPS 连接 GitHub 进行 push/pull 时（即 origin 地址为 https://github.com/xxx/xxx.git），需要更改本地 git 的配置，使用代理向 GitHub 发起请求。
+在使用 HTTPS 连接 GitHub 进行 push/pull 时（即 origin 地址为 https://github.com/xxx/xxx.git ），需要更改本地 git 的配置，使用代理向 GitHub 发起请求。
 
 执行如下命令：
 
