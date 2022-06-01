@@ -6,6 +6,10 @@ git commit -m 'xxx'                                       # 提交
 
 git commit -am 'xxx'                                      # 将上述的 add 和 commit 合为一步
 
+git add forgotten_file                                    # 上一次提交有漏的或者还未修改完的文件，修改完后
+git commit --amend --no-edit                              # 重新提交，并且上次提交的信息不作修改
+git push -f origin FixForBug                              # 最后提交到云端，-f 表示 force，是因为你应该先 pull 然后再 push
+
 git log -n 3                                              # 显示最近的三次提交
 
 git branch                                                # 显示本地分支
