@@ -79,8 +79,8 @@ open CONSOLA*.TTF
 
 
 ```shell
-chsh -s /bin/bash
-sudo chmod o+w etc/profile # 赋予写权限
+chsh -s /bin/bash # 更改用户登录 shell
+sudo chmod o+w /etc/profile # 赋予写权限
 vi /etc/profile
 ```
 
