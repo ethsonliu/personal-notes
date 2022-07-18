@@ -26,3 +26,4 @@ sudo apt-get install libc6-dev
 ## reference
 
 - https://blog.csdn.net/itas109/article/details/104226783
+- https://www.cnblogs.com/bigben0123/p/12594972.html
