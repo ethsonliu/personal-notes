@@ -22,7 +22,7 @@ git checkout -b master_copy                               # 从当前分支创�
 git checkout features/performance                         # checkout 到已存在的 features/performance 分支
 git checkout -b devel origin/develop                      # 从远程分支 develop 创建新本地分支 devel 并 checkout 到它
 
-git push origin BUG-local:BUG-origin                      # 将本地分支（云端不存在这个分支） BUG-local 推送到云端，命令为 BUG-origin
+git push origin BUG-local:BUG-origin                      # 将本地分支（云端不存在这个分支） BUG-local 推送到云端，分支名为 BUG-origin
 
 git stash                                                 # 暂存当前修改，将所有至为HEAD状态
 git stash list                                            # 查看所有暂存
