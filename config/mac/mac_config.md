@@ -25,10 +25,10 @@ HOMEBREW_PREFIX = "/usr/local".freeze
 HOMEBREW_REPOSITORY = "/usr/local/Homebrew".freeze
 HOMEBREW_CACHE = "#{ENV["HOME"]}/Library/Caches/Homebrew".freeze
 HOMEBREW_OLD_CACHE = "/Library/Caches/Homebrew".freeze
-#BREW_REPO = "https://github.com/Homebrew/brew".freeze
-BREW_REPO = "https://mirrors.aliyun.com/homebrew/brew.git".freeze # 这里
-#CORE_TAP_REPO = "https://github.com/Homebrew/homebrew-core".freeze
-CORE_TAP_REPO = "https://mirrors.aliyun.com/homebrew/homebrew-core.git".freeze # 这里可能已经没有了
+#BREW_REPO = "https://github.com/Homebrew/brew".freeze # 注释
+BREW_REPO = "https://mirrors.aliyun.com/homebrew/brew.git".freeze # 加一句
+#CORE_TAP_REPO = "https://github.com/Homebrew/homebrew-core".freeze # 注释
+CORE_TAP_REPO = "https://mirrors.aliyun.com/homebrew/homebrew-core.git".freeze # 加一句
 ```
 
 修改好之后，按 ESC，输入 :wq 保存退出，执行 brew_install，
