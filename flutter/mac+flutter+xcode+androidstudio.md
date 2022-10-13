@@ -37,6 +37,15 @@ export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
 打开 android studio —> preference —> android sdk —> sdk tools —> Android SDK Command-line Tools(latest) 点应用会自行下载安装。
 
+**添加平台支持**
+
+```
+flutter config --enable-windows-desktop  
+
+flutter config --enable-macos-desktop  
+
+flutter config --enable-linux-desktop  
+```
 
 ## 参考
 
