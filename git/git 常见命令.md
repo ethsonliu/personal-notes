@@ -29,7 +29,7 @@ git stash list                                            # 查看所有暂存
 git stash apply stash@{0}                                 # 应用第一次暂存
 git stash clear                                           # 清除所有暂存
 
-git pull origin master                                    # 获取远程分支 master 并 merge 到当前分支
+git pull origin master                                    # 获取远程分支 master 并 merge 到当前分支 (option: --rebase)
 
 git branch -d local-branch
 
