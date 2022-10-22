@@ -35,6 +35,11 @@ hapoa@virtual-machine:~/projects/my_project$ go mod init github.com/EthsonLiu/my
 go: creating new go.mod: module github.com/EthsonLiu/my_project
 ```
 
+## go.mod 和 go.sum
+
+- https://colobu.com/2021/06/28/dive-into-go-module-1/
+- https://my.oschina.net/renhc/blog/3171035
+
 ## 编译
 
 ```bash
