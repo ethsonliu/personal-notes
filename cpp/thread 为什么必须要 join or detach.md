@@ -1,1 +1,3 @@
-https://stackoverflow.com/questions/57066847/why-must-one-call-join-or-detach-before-thread-destruction
+- https://stackoverflow.com/questions/57066847/why-must-one-call-join-or-detach-before-thread-destruction
+- https://codebrowser.dev/glibc/include/c++/11/bits/std_thread.h.html#_ZNSt6threadD1Ev
+- 
