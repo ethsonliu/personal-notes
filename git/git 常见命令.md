@@ -25,6 +25,7 @@ git checkout -b devel origin/develop                      # 从远程分支 deve
 git push origin BUG-local:BUG-origin                      # 将本地分支（云端不存在这个分支） BUG-local 推送到云端，分支名为 BUG-origin
 
 git stash                                                 # 暂存当前修改，将所有至为HEAD状态
+git stash save 'stashed message'                          # 功能与git stash一样，但message是自己决定的，方便查找
 git stash list                                            # 查看所有暂存
 git stash apply stash@{0}                                 # 应用第一次暂存
 git stash clear                                           # 清除所有暂存
