@@ -25,6 +25,28 @@ source /etc/profile
 # 刷新源
 $ brew update
 ```
+**可能遇到的问题**
+
+```
+ethson@macbookpro:~$ brew update
+Error:
+  homebrew-core is a shallow clone.
+  homebrew-cask is a shallow clone.
+To `brew update`, first run:
+  git -C /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core fetch --unshallow
+  git -C /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask fetch --unshallow
+These commands may take a few minutes to run due to the large size of the repositories.
+This restriction has been made on GitHub's request because updating shallow
+clones is an extremely expensive operation due to the tree layout and traffic of
+Homebrew/homebrew-core and Homebrew/homebrew-cask. We don't do this for you
+automatically to avoid repeatedly performing an expensive unshallow operation in
+CI systems (which should instead be fixed to not use shallow clones). Sorry for
+the inconvenience!
+```
+
+解决办法：
+
+
 
 ## consolas
 
