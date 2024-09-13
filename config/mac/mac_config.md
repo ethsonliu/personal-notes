@@ -46,7 +46,12 @@ the inconvenience!
 
 解决办法：
 
-
+```
+git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" fetch
+git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" fetch --unshallow
+git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask" fetch
+git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask" fetch --unshallow
+```
 
 ## consolas
 
