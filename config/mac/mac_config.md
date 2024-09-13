@@ -1,57 +1,9 @@
 ## 目录
 
-- [homebrew](#homebrew)
 - [consolas](#consolas)
 - [终端](#终端)
 - [访达显示当前目录路径](#访达显示当前目录路径)
 - [vim 高亮](#vim-高亮)
-
-## homebrew
-
-1. 安装 homebrew，https://github.com/Homebrew/brew/releases ，下载 pkg 安装包，安装完 `brew --version` 测试是否安装，不成功需要加入环境变量，见下。
-2. (可选) `whereis brew` 查看所在位置，并加入 `/etc/proile`。
-
-安装成功，设置国内源，
-
-```
-# 替换各个源
-git -C "$(brew --repo)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
-git -C "$(brew --repo homebrew/core)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
-git -C "$(brew --repo homebrew/cask)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git
-
-# 打开 /etc/profile 并加入 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles
-source /etc/profile
-
-# 刷新源
-$ brew update
-```
-**可能遇到的问题**
-
-```
-ethson@macbookpro:~$ brew update
-Error:
-  homebrew-core is a shallow clone.
-  homebrew-cask is a shallow clone.
-To `brew update`, first run:
-  git -C /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core fetch --unshallow
-  git -C /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask fetch --unshallow
-These commands may take a few minutes to run due to the large size of the repositories.
-This restriction has been made on GitHub's request because updating shallow
-clones is an extremely expensive operation due to the tree layout and traffic of
-Homebrew/homebrew-core and Homebrew/homebrew-cask. We don't do this for you
-automatically to avoid repeatedly performing an expensive unshallow operation in
-CI systems (which should instead be fixed to not use shallow clones). Sorry for
-the inconvenience!
-```
-
-解决办法：
-
-```
-git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" fetch
-git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" fetch --unshallow
-git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask" fetch
-git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask" fetch --unshallow
-```
 
 ## consolas
 
