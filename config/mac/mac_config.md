@@ -8,7 +8,7 @@
 
 ## homebrew
 
-1. 安装 homebrew，[https://github.com/Homebrew/brew/releases]，下载 pkg 安装包，安装完 `brew --version` 测试是否安装，不成功需要加入环境变量，见下。
+1. 安装 homebrew，https://github.com/Homebrew/brew/releases ，下载 pkg 安装包，安装完 `brew --version` 测试是否安装，不成功需要加入环境变量，见下。
 2. (可选) `whereis brew` 查看所在位置，并加入 `/etc/proile`。
 
 安装成功，设置国内源，
