@@ -8,53 +8,22 @@
 
 ## homebrew
 
-```shell
-cd ~
-curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install >> brew_install
-vim brew_install
-```
+1. 安装 homebrew，https://github.com/Homebrew/brew/releases，下载 pkg 安装包，安装完 `brew --version` 测试是否安装，不成功需要加入环境变量，见下。
+2. (可选) `whereis brew` 查看所在位置，并加入 `/etc/proile`。
 
-修改为
+安装成功，设置国内源，
 
 ```
-#!/System/Library/Frameworks/Ruby.framework/Versions/Current/usr/bin/ruby
-# This script installs to /usr/local only. To install elsewhere you can just
-# untar https://github.com/Homebrew/brew/tarball/master anywhere you like or
-# change the value of HOMEBREW_PREFIX.
-HOMEBREW_PREFIX = "/usr/local".freeze
-HOMEBREW_REPOSITORY = "/usr/local/Homebrew".freeze
-HOMEBREW_CACHE = "#{ENV["HOME"]}/Library/Caches/Homebrew".freeze
-HOMEBREW_OLD_CACHE = "/Library/Caches/Homebrew".freeze
-#BREW_REPO = "https://github.com/Homebrew/brew".freeze # 注释
-BREW_REPO = "https://mirrors.aliyun.com/homebrew/brew.git".freeze # 加一句
-#CORE_TAP_REPO = "https://github.com/Homebrew/homebrew-core".freeze # 注释
-CORE_TAP_REPO = "https://mirrors.aliyun.com/homebrew/homebrew-core.git".freeze # 加一句
-```
+# 替换各个源
+git -C "$(brew --repo)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
+git -C "$(brew --repo homebrew/core)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
+git -C "$(brew --repo homebrew/cask)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git
 
-修改好之后，按 ESC，输入 :wq 保存退出，执行 brew_install，
+# 打开 /etc/profile 并加入 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles
+source /etc/profile
 
-```shell
-/usr/bin/ruby ~/brew_install
-```
-
-1. 替换 homebrew 默认源
-
-```shell
-cd "$(brew --repo)"
-git remote set-url origin https://mirrors.aliyun.com/homebrew/brew.git
-```
-
-2. 替换 homebrew-core 源
-
-```shell
-cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
-git remote set-url origin https://mirrors.aliyun.com/homebrew/brew.git
-```
-
-3. 更新 brew
-
-```shell
-brew update
+# 刷新源
+$ brew update
 ```
 
 ## consolas
