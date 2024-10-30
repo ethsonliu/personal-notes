@@ -21,6 +21,7 @@ git branch                                                # 显示本地分支
 git checkout -b master_copy                               # 从当前分支创建新分支 master_copy 并 checkout 到它
 git checkout features/performance                         # checkout 到已存在的 features/performance 分支
 git checkout -b devel origin/develop                      # 从远程分支 develop 创建新本地分支 devel 并 checkout 到它
+git checout -b <new_branch_name> <commid_id>
 
 git push origin BUG-local:BUG-origin                      # 将本地分支（云端不存在这个分支） BUG-local 推送到云端，分支名为 BUG-origin
 
