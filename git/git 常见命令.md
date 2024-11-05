@@ -38,6 +38,8 @@ git branch -d local-branch
 git branch -r -d origin/feat1                             # delete remote-tracking branch
 git push origin :feat1
 
+git reflog show local_branch                              # 查看 local_branch 是基于哪个分支创建
+
 ```
 
 git cherry-pick: https://ruanyifeng.com/blog/2020/04/git-cherry-pick.html
