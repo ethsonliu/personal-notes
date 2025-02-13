@@ -24,6 +24,8 @@
   - [CPU](#CPU)
   - [内存](#内存)
   - [网络](#网络)
+- [nm]
+
 
 ## vi
 
@@ -815,3 +817,14 @@ NetHogs version 0.8.5
   TOTAL                                                                                                      1.436       0.757 KB/sec
  
 ```
+
+## nm
+
+```shell
+user@:/user/$ nm -g ./myexe |grep myfunc
+00000000019c63d1 T myfunc
+```
+```
+nm -g ./myexe | grep " T " | grep myfunc | head -n 1 | cut -d ' ' -f 3 | tr -d '\n';
+```
+
