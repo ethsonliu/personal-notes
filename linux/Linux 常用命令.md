@@ -607,22 +607,30 @@ nginx     5325  0.2  0.2 125680  8252 ?        S    Dec02  44:27 nginx: worker p
 
 **查看整体内存状况**
 
-```shell
-[root@vultr ~]# free -h
-             total       used       free     shared    buffers     cached
-Mem:          995M       364M       631M       472K        21M       270M
--/+ buffers/cache:        72M       923M
-Swap:           0B         0B         0B
-# 995M = 72M + 923M
-
-[root@iZ94xyihsxsZ ~]# free -h
+```
               total        used        free      shared  buff/cache   available
-Mem:           3.7G        1.4G        684M         48M        1.6G        2.0G
-Swap:            0B          0B          0B
-# 3.7G = 1.6G + 2.0G
+Mem:           15Gi       5.0Gi       6.0Gi       0.0Gi       4.0Gi       9.0Gi
+Swap:         2.0Gi       0.0Gi       2.0Gi
 ```
 
-含义参考：<https://blog.51cto.com/ixdba/541355>
+Mem行：物理内存（RAM）的使用情况。
+Swap行：交换空间（磁盘上的虚拟内存）的使用情况。
+
+| 字段 | 含义 | 解释 |
+|------|------|------|
+| **total** | 总物理内存 | 系统安装的总RAM大小 15G | 
+| **used** | 已使用内存 | 当前被占用的内存 5G，​**注意**​：这个值包括了缓存和缓冲区内存|
+| **free** | 空闲内存 | 完全未被使用的内存 6G ，这个值通常很小，因为Linux会尽量使用空闲内存作缓存| 
+| **shared** | 共享内存 | 多个进程共享的内存。主要是tmpfs（/dev/shm、/run等） |
+| **buff/cache** | 缓冲/缓存 | 内核缓冲区 + 页面缓存（4G)。这部分内存在需要时可以被快速释放 | 
+| **available** | 可用内存 |≈ free + 可回收的 buff/cache。在不使用swap的情况下，可供新应用程序使用的内存估计值（9GiB）。**最重要的指标！**  |
+
+**缓存（cache）的作用**：Linux 会将空闲内存用作磁盘缓存以提高性能：
+- 页面缓存（Page Cache）：缓存读取过的文件
+- 缓冲区（Buffer）：缓存磁盘写入操作
+这些内存在应用程序需要时会自动释放
+
+物理内存不足，大量使用swap，系统性能会显著下降。
 
 **查看单个进程内存使用状况**
 
