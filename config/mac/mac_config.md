@@ -25,6 +25,34 @@ open CONSOLA*.TTF
 
 ## 终端
 
+vscode settings json add below,
+
+```
+"workbench.colorCustomizations": {
+        "terminal.background": "#292A44",
+        "terminal.foreground": "#F1EFF8",
+        "terminalCursor.background": "#F1EFF8",
+        "terminalCursor.foreground": "#F1EFF8",
+        "terminal.ansiBlack": "#292A44",
+        "terminal.ansiBlue": "#2DE0A7",
+        "terminal.ansiBrightBlack": "#666699",
+        "terminal.ansiBrightBlue": "#2DE0A7",
+        "terminal.ansiBrightCyan": "#8EAEE0",
+        "terminal.ansiBrightGreen": "#6DFEDF",
+        "terminal.ansiBrightMagenta": "#7AA5FF",
+        "terminal.ansiBrightRed": "#A0A0C5",
+        "terminal.ansiBrightWhite": "#53495D",
+        "terminal.ansiBrightYellow": "#AE81FF",
+        "terminal.ansiCyan": "#8EAEE0",
+        "terminal.ansiGreen": "#6DFEDF",
+        "terminal.ansiMagenta": "#7AA5FF",
+        "terminal.ansiRed": "#A0A0C5",
+        "terminal.ansiWhite": "#F1EFF8",
+        "terminal.ansiYellow": "#AE81FF"
+    }
+```
+
+
 切换至 zsh，并
 
 ```
